@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-import com.grabdeals.shop.LoginActivity;
-
 public class SplashScreenActivity extends AppCompatActivity {
 
     // Splash screen timer

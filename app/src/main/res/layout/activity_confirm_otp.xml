@@ -7,98 +7,86 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.grabdeals.shop.ui.LoginActivity">
-
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+    tools:context="com.grabdeals.shop.ui.ConfirmOTPActivity">
 
 
     <ScrollView
-        android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                >
+                <com.grabdeals.shop.util.NetworkImageViewRounded
+                    android:id="@+id/image"
+                    style="@style/ProfileImageView"/>
+
+            </RelativeLayout>
+
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 style="@style/TitleTextViewStyle"
-                android:text="Shop Sign in"/>
+                android:text="Verify Phone number"/>
             <View
                 android:layout_width="45dp"
                 android:layout_height="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="15dp"
                 android:background="@color/btn_background"></View>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/phone_no"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_mobile_no"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="phone|numberDecimal"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OTP SMS sent to "/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/enter_otp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
+                    android:hint="@string/prompt_enter_otp"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+
+
 
             <Button
-                android:id="@+id/btn_sign_in"
+                android:id="@+id/btn_verify"
                 style="@style/SubmitButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/action_sign_in"
-                 />
-
-            <Button
-                android:id="@+id/btn_forgot_pass"
+                android:text="@string/action_verify"
+                />
+            <TextView
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TransButton"
-                android:text="@string/action_forgot_your_details"/>
+                android:text="@string/msg_otp_resend"/>
 
             <Button
-                android:id="@+id/btn_create_acc"
+                android:id="@+id/btn_resend_otp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TransButton"
                 android:textStyle="bold"
-                android:text="@string/action_create_new_acc"/>
+                android:text="@string/action_resend_otp"/>
 
         </LinearLayout>
     </ScrollView>
