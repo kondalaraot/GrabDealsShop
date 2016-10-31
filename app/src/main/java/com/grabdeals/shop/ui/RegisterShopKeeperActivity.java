@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,15 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.NetworkManager;
+import com.grabdeals.shop.util.VolleyCallbackListener;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 
-public class RegisterShopKeeperActivity extends AppCompatActivity implements View.OnClickListener{
+public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
 
     private static final int TAKE_PICTURE = 100;
     private static final int REQUEST_CAMERA = 101;
@@ -40,7 +45,7 @@ public class RegisterShopKeeperActivity extends AppCompatActivity implements Vie
     private NetworkImageViewRounded mImage;
     private ImageView mImageCamera;
     private EditText mPhoneNo;
-    private EditText mDisplayName;
+    private EditText mShopName;
     private EditText mPassword;
     private Button mBtnCreateAcc;
     private Button mBtnLogin;
@@ -75,7 +80,7 @@ public class RegisterShopKeeperActivity extends AppCompatActivity implements Vie
         mImageCamera = (ImageView) findViewById( R.id.iv_camera );
 
         mPhoneNo = (EditText)findViewById( R.id.phone_no );
-        mDisplayName = (EditText)findViewById( R.id.display_name );
+        mShopName = (EditText)findViewById( R.id.shop_name );
         mPassword = (EditText)findViewById( R.id.password );
         mBtnCreateAcc = (Button)findViewById( R.id.btn_create_acc );
         mBtnLogin = (Button)findViewById( R.id.btn_login );
@@ -98,7 +103,7 @@ public class RegisterShopKeeperActivity extends AppCompatActivity implements Vie
     public void onClick(View v) {
         if ( v == mBtnCreateAcc ) {
             // Handle clicks for mBtnCreateAcc
-            startActivity(new Intent(this,ConfirmOTPActivity.class));
+            NetworkManager.getInstance().postRequest(Constants.COMMAND_REGISTER_SHOPKEEPER,preparePostParams(),this);
         } else if ( v == mBtnLogin ) {
             // Handle clicks for mBtnLogin
         }else if (v == mImageCamera){
@@ -106,6 +111,14 @@ public class RegisterShopKeeperActivity extends AppCompatActivity implements Vie
         }
     }
 
+    private HashMap<String,String> preparePostParams(){
+        HashMap<String, String> jsonParams = new HashMap<>();
+        jsonParams.put("param1",mPhoneNo.getText().toString());
+        jsonParams.put("param2",mShopName.getText().toString());
+        jsonParams.put("param3",mPassword.getText().toString());
+
+        return jsonParams;
+    }
 
 
     private void selectImage() {
@@ -205,5 +218,19 @@ public class RegisterShopKeeperActivity extends AppCompatActivity implements Vie
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+
+    @Override
+    public void getResult(Object object) {
+        if (object != null) {
+            JSONObject jsonObject = (JSONObject) object;
+            startActivity(new Intent(this,ConfirmOTPActivity.class));
+
+        }
+    }
+
+    @Override
+    public void getErrorResult(Object object) {
+
     }
 }

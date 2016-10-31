@@ -6,14 +6,16 @@
     <string name="prompt_mobile_no">Mobile Number</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_display_name">Display Name</string>
+    <string name="prompt_shop_name">Shop Name</string>
     <string name="prompt_enter_otp">Enter OTP</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_forgot_your_details">Forgot your details ?</string>
     <string name="action_create_new_acc">Create New account</string>
     <string name="action_sign_in_short">Sign in</string>
 
+    <string name="action_create_new_shop">Create new shop</string>
     <string name="action_create_acc">Create account</string>
-    <string name="action_already_acc_login">Already have account? Sign in </string>
+    <string name="action_already_acc_login">Already have shop account? Sign in </string>
     <string name="action_verify">Verify</string>
     <string name="action_resend_otp">Resend OTP</string>
 
