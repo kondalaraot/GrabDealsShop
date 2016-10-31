@@ -70,6 +70,21 @@ public class VolleyCustomRequest extends Request<JSONObject> {
         if (headers == null
                 || headers.equals(Collections.emptyMap())) {
             headers = new HashMap<String, String>();
+            /*Map<String, String> params = new HashMap<String, String>();
+		params.put("Content-Type","application/json");
+		params.put("Accept", "application/json");*/
+//		params.put("X-client-identifier", UserInfo.getDeviceId());
+            //params.put("X-client-identifier", UserInfo.getUAChannelID());
+//		params.put("X-client-version", UserInfo.getAndroidVersion());
+//		params.put("X-client-platform", UserInfo.getPlatform());
+//		params.put("X-client-type", UserInfo.getClientType());
+
+
+		/*TimeZone tz	= TimeZone.getDefault();
+		Date now	= new Date();
+		String offsetFromUtc	= "" + (tz.getOffset(now.getTime()) / 1000);
+		System.out.println("Offset" + offsetFromUtc);
+//		params.put("X-client-timezone", offsetFromUtc);*/
         }
 
 //            AppController.getInstance().addSessionCookie(headers);
