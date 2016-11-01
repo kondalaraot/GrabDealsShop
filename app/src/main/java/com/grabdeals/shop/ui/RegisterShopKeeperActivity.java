@@ -19,9 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.grabdeals.shop.R;
-import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
-import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONObject;
@@ -37,7 +35,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
 
     private static final int TAKE_PICTURE = 100;
     private static final int REQUEST_CAMERA = 101;
-    private static final int SELECT_FILE = 103;
+    private static final int SELECT_FILE = 102;
     private final String TAG = "RegisterShopKeeperActivity";
 
     private ScrollView mCreateNewAcForm;
@@ -89,7 +87,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         mBtnLogin.setOnClickListener( this );
         mImageCamera.setOnClickListener( this );
 
-        mImage.setDefaultImageResId(R.drawable.default_user);
+        mImage.setDefaultImageResId(R.drawable.office_building_icon);
 
     }
 
@@ -103,7 +101,9 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     public void onClick(View v) {
         if ( v == mBtnCreateAcc ) {
             // Handle clicks for mBtnCreateAcc
-            NetworkManager.getInstance().postRequest(Constants.COMMAND_REGISTER_SHOPKEEPER,preparePostParams(),this);
+            startActivity(new Intent(this,ConfirmOTPActivity.class));
+
+//            NetworkManager.getInstance().postRequest(Constants.COMMAND_REGISTER_SHOPKEEPER,preparePostParams(),this);
         } else if ( v == mBtnLogin ) {
             // Handle clicks for mBtnLogin
         }else if (v == mImageCamera){

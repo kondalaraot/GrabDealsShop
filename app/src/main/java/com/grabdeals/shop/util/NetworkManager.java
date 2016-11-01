@@ -51,7 +51,7 @@ public class NetworkManager
         return instance;
     }
 
-    public void postRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<String> listener)
+    public void postRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
     {
 
         String url = prefixURL + urlSuffix;
@@ -64,7 +64,40 @@ public class NetworkManager
                     {
                         if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
                         if(null != response.toString())
-                            listener.getResult(response.toString());
+                            listener.getResult(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        if (null != error.networkResponse)
+                        {
+                            if (Constants.DEBUG) Log.d(TAG + ": ", "Error Response code: " + error.networkResponse.statusCode);
+
+                            listener.getErrorResult(null);
+                        }
+                    }
+                });
+
+        requestQueue.add(request);
+    }
+
+    public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
+    {
+
+        String url = prefixURL + urlSuffix;
+
+        VolleyCustomRequest request = new VolleyCustomRequest(Request.Method.GET, url, (Map<String, String>) postParams,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
+                        if(null != response.toString())
+                            listener.getResult(response);
                     }
                 },
                 new Response.ErrorListener()

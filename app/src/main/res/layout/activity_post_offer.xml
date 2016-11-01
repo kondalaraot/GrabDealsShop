@@ -1,0 +1,184 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.grabdeals.shop.ui.EnterShopDetailsActivity">
+
+    <include layout="@layout/tool_bar" />
+
+    <ScrollView
+        android:id="@+id/create_new_ac_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <!--  <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="15dp">
+
+                  <com.grabdeals.shop.util.NetworkImageViewRounded
+                      android:id="@+id/image"
+                      style="@style/ProfileImageView" />
+
+                  <ImageView
+                      android:id="@+id/iv_camera"
+                      android:layout_width="50dp"
+                      android:layout_height="50dp"
+                      android:layout_alignBottom="@+id/image"
+                      android:layout_alignEnd="@+id/image"
+                      android:layout_alignRight="@+id/image"
+                      android:src="@android:drawable/ic_menu_camera" />
+              </RelativeLayout>-->
+
+
+            <TextView
+                style="@style/TitleTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:gravity="left"
+                android:text="@string/title_activity_post_an_offer" />
+
+            <View style="@style/TitleViewLine"></View>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/offer_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_offer_title"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/spinner_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:entryValues="@array/offer_categories"
+                    android:hint="@string/prompt_select_category"
+                    android:imeOptions="actionNext" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/from_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                    android:hint="@string/prompt_start_date"
+                    android:imeActionId="@+id/login"
+                    android:imeOptions="actionDone"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+
+                <EditText
+                    android:id="@+id/to_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                    android:hint="@string/prompt_end_date"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/locations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_locations"
+                    android:imeOptions="actionNext"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/offer_descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_offer_description"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+            .
+
+            <EditText
+                android:id="@+id/upload_offer_pics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@android:drawable/ic_menu_camera"
+                android:hint="@string/prompt_upload_offer_pics"
+                android:imeOptions="actionDone"
+                android:inputType="none" />
+
+
+            <!--  <TextView
+                  android:id="@+id/calc_txt_Prise"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="20dp"
+                  android:gravity="center_vertical"
+                  android:text="Image Name .png"
+                  android:drawableRight="@android:drawable/ic_menu_delete"
+                  android:singleLine="true" />-->
+
+
+            <Button
+                android:id="@+id/btn_post_offer"
+                style="@style/SubmitButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_post_an_offer" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

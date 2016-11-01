@@ -8,6 +8,20 @@
     <string name="prompt_display_name">Display Name</string>
     <string name="prompt_shop_name">Shop Name</string>
     <string name="prompt_enter_otp">Enter OTP</string>
+    <string name="prompt_about_your_shop">About your shop</string>
+    <string name="prompt_select_category">Select Category</string>
+    <string name="prompt_website">website (e.g www.shopname.com)</string>
+    <string name="prompt_location">Location/Area Name (e.g Ameerpet)</string>
+    <string name="prompt_full_address">Full Address</string>
+    <string name="prompt_phone_no">Phone Number</string>
+    <string name="prompt_offer_title">Offer Title</string>
+    <string name="prompt_start_date">Start Date</string>
+    <string name="prompt_end_date">End Date</string>
+    <string name="prompt_locations">Location (s)</string>
+    <string name="prompt_offer_description">Offer Description</string>
+    <string name="prompt_upload_offer_pics">Upload Offer Pictures (s)</string>
+
+
     <string name="action_sign_in">Sign in</string>
     <string name="action_forgot_your_details">Forgot your details ?</string>
     <string name="action_create_new_acc">Create New account</string>
@@ -18,6 +32,9 @@
     <string name="action_already_acc_login">Already have shop account? Sign in </string>
     <string name="action_verify">Verify</string>
     <string name="action_resend_otp">Resend OTP</string>
+    <string name="action_save_details">Save Details</string>
+    <string name="action_add_more_locations">+ Add more locations</string>
+    <string name="action_post_an_offer">Post an Offer</string>
 
     <string name="msg_otp_resend">If you dont receive OTP after 30 seconds ,tap Resend OTP link</string>
 
@@ -31,4 +48,22 @@
     <string name="title_login">Login</string>
     <string name="title_activity_register_shop_keeper">Register ShopKeeper</string>
     <string name="title_activity_confirm_otp">Confirm OTP</string>
+    <string name="title_activity_enter_shop_details">Enter Shop Details</string>
+    <string name="title_activity_post_an_offer">Post an Offer</string>
+
+    <string-array name="shop_categories">
+        <item>Select Category</item>
+        <item>shop category 2</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+    </string-array>
+
+    <string-array name="offer_categories">
+        <item>Select Category</item>
+        <item>shop category 2</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+    </string-array>
 </resources>

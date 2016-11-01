@@ -1,5 +1,6 @@
 package com.grabdeals.shop.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -25,7 +26,7 @@ public class ConfirmOTPActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_confirm_otp);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-
+        findViews();
 
     }
     /**
@@ -39,7 +40,7 @@ public class ConfirmOTPActivity extends AppCompatActivity implements View.OnClic
         mEnterOtp = (EditText)findViewById( R.id.enter_otp );
         mBtnVerify = (Button)findViewById( R.id.btn_verify );
         mBtnResendOtp = (Button)findViewById( R.id.btn_resend_otp );
-        mImage.setDefaultImageResId(R.drawable.default_user);
+        mImage.setDefaultImageResId(R.drawable.office_building_icon);
         mBtnVerify.setOnClickListener( this );
         mBtnResendOtp.setOnClickListener( this );
     }
@@ -54,6 +55,7 @@ public class ConfirmOTPActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         if ( v == mBtnVerify ) {
             // Handle clicks for mBtnVerify
+            startActivity(new Intent(this,EnterShopDetailsActivity.class));
         } else if ( v == mBtnResendOtp ) {
             // Handle clicks for mBtnResendOtp
         }

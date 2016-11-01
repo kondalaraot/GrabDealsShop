@@ -7,4 +7,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="btn_background">#e25d58</color>
+    <color name="body_font_color">#4d606f</color>
+    <color name="img_background_color">#323c46</color>
+    <color name="line_color">#e5e5e5</color>
+    <color name="hint_text_color">#bec0c2</color>
 </resources>
