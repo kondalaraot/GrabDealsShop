@@ -19,7 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.APIParams;
+import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONObject;
@@ -30,13 +33,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
+
+    private final String TAG = "RegisterShopKeeperActivity";
 
     private static final int TAKE_PICTURE = 100;
     private static final int REQUEST_CAMERA = 101;
     private static final int SELECT_FILE = 102;
-    private final String TAG = "RegisterShopKeeperActivity";
+
 
     private ScrollView mCreateNewAcForm;
     private LinearLayout mLlParentCreateAcc;
@@ -101,9 +107,8 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     public void onClick(View v) {
         if ( v == mBtnCreateAcc ) {
             // Handle clicks for mBtnCreateAcc
-            startActivity(new Intent(this,ConfirmOTPActivity.class));
-
-//            NetworkManager.getInstance().postRequest(Constants.COMMAND_REGISTER_SHOPKEEPER,preparePostParams(),this);
+            showProgress("PLease wait...");
+            NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this);
         } else if ( v == mBtnLogin ) {
             // Handle clicks for mBtnLogin
         }else if (v == mImageCamera){
@@ -111,12 +116,10 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private HashMap<String,String> preparePostParams(){
-        HashMap<String, String> jsonParams = new HashMap<>();
-        jsonParams.put("param1",mPhoneNo.getText().toString());
-        jsonParams.put("param2",mShopName.getText().toString());
-        jsonParams.put("param3",mPassword.getText().toString());
-
+    private Map<String,String> preparePostParams(){
+        Map<String, String> jsonParams = new HashMap<>();
+        jsonParams.put(APIParams.PARAM_MOBILE_NO, mPhoneNo.getText().toString());
+        jsonParams.put(APIParams.PARAM_SHOP_NAME, mShopName.getText().toString());
         return jsonParams;
     }
 
@@ -222,15 +225,20 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
 
     @Override
     public void getResult(Object object) {
+        dismissProgress();
         if (object != null) {
             JSONObject jsonObject = (JSONObject) object;
-            startActivity(new Intent(this,ConfirmOTPActivity.class));
+            Intent intent = new Intent(this,ConfirmOTPActivity.class);
+            intent.putExtra("KEY_PASSWORD",mPassword.getText());
+            startActivity(intent);
+            finish();
 
         }
     }
 
     @Override
     public void getErrorResult(Object object) {
+        dismissProgress();
 
     }
 }

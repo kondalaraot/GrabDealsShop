@@ -1,15 +1,8 @@
 package com.grabdeals.shop.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,13 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.VolleyCallbackListener;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseAppCompatActivity  {
+public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallbackListener{
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -37,7 +32,7 @@ public class LoginActivity extends BaseAppCompatActivity  {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+//    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private EditText mPhoneNoView;
@@ -101,7 +96,7 @@ public class LoginActivity extends BaseAppCompatActivity  {
         getLoaderManager().initLoader(0, null, this);
     }*/
 
-    private boolean mayRequestContacts() {
+   /* private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -121,7 +116,7 @@ public class LoginActivity extends BaseAppCompatActivity  {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
         return false;
-    }
+    }*/
 
     /**
      * Callback received when a permissions request has been completed.
@@ -143,9 +138,9 @@ public class LoginActivity extends BaseAppCompatActivity  {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        /*if (mAuthTask != null) {
             return;
-        }
+        }*/
 
         // Reset errors.
         mPhoneNoView.setError(null);
@@ -170,7 +165,7 @@ public class LoginActivity extends BaseAppCompatActivity  {
             mPhoneNoView.setError(getString(R.string.error_field_required));
             focusView = mPhoneNoView;
             cancel = true;
-        } else if (!isEmailValid(poneNo)) {
+        } else if (!isValidMobile(poneNo)) {
             mPhoneNoView.setError(getString(R.string.error_invalid_email));
             focusView = mPhoneNoView;
             cancel = true;
@@ -183,10 +178,11 @@ public class LoginActivity extends BaseAppCompatActivity  {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(poneNo, password);
-            mAuthTask.execute((Void) null);
+            showProgress("please wait...");
+           /* mAuthTask = new UserLoginTask(poneNo, password);
+            mAuthTask.execute((Void) null);*/
 //            startActivity(new Intent(this,ConfirmOTPActivity.class));
+
 
         }
     }
@@ -195,15 +191,19 @@ public class LoginActivity extends BaseAppCompatActivity  {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
+    private boolean isValidMobile(String phone)
+    {
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
-    /**
+   /* *//**
      * Shows the progress UI and hides the login form.
-     */
+     *//*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -235,6 +235,30 @@ public class LoginActivity extends BaseAppCompatActivity  {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }*/
+
+    @Override
+    public void getResult(Object object) {
+        dismissProgress();
+        try {
+            JSONObject jsonObject = (JSONObject) object;
+
+            if (jsonObject!=null && jsonObject.getInt("code") == 200) {
+                finish();
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void getErrorResult(Object object) {
+        dismissProgress();
+        showAlert("API call failed..");
+
     }
 
     /*@Override
@@ -295,7 +319,7 @@ public class LoginActivity extends BaseAppCompatActivity  {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    /*public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mPhoneNo;
         private final String mPassword;
@@ -339,6 +363,6 @@ public class LoginActivity extends BaseAppCompatActivity  {
             mAuthTask = null;
             showProgress(false);
         }
-    }
+    }*/
 }
 

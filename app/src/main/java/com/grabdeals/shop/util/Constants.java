@@ -7,6 +7,11 @@ package com.grabdeals.shop.util;
 public class Constants {
     public static final boolean DEBUG = true;
 
-    public static final String COMMAND_REGISTER_SHOPKEEPER = "";
+    public static final String HOST_URL = "http://tag.tollymovies.com/v1/";
+
+
+    public static final String API_IS_REGISTER = "shop/is_register";
+    public static final String API_SIGN_UP = "shop/signup";
+
 
 }

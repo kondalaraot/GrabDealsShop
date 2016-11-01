@@ -38,7 +38,7 @@
 
     <string name="msg_otp_resend">If you dont receive OTP after 30 seconds ,tap Resend OTP link</string>
 
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_mobile">This mobile no is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>

@@ -1,5 +1,7 @@
 package com.grabdeals.shop.util;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -21,13 +23,14 @@ import java.util.Map;
 
 public class VolleyCustomRequest extends Request<JSONObject> {
 
+    private static final String TAG ="VolleyCustomRequest" ;
     private Response.Listener<JSONObject> listener;
     private Map<String, String> params;
 
     public VolleyCustomRequest(String url, Map<String, String> params,
-                               Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
+                               Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
-        this.listener = reponseListener;
+        this.listener = responseListener;
         this.params = params;
     }
 
@@ -70,21 +73,34 @@ public class VolleyCustomRequest extends Request<JSONObject> {
         if (headers == null
                 || headers.equals(Collections.emptyMap())) {
             headers = new HashMap<String, String>();
-            /*Map<String, String> params = new HashMap<String, String>();
-		params.put("Content-Type","application/json");
-		params.put("Accept", "application/json");*/
-//		params.put("X-client-identifier", UserInfo.getDeviceId());
-            //params.put("X-client-identifier", UserInfo.getUAChannelID());
-//		params.put("X-client-version", UserInfo.getAndroidVersion());
-//		params.put("X-client-platform", UserInfo.getPlatform());
-//		params.put("X-client-type", UserInfo.getClientType());
-
 
 		/*TimeZone tz	= TimeZone.getDefault();
 		Date now	= new Date();
 		String offsetFromUtc	= "" + (tz.getOffset(now.getTime()) / 1000);
 		System.out.println("Offset" + offsetFromUtc);
 //		params.put("X-client-timezone", offsetFromUtc);*/
+            StringBuilder sb = new StringBuilder();
+            sb.append(UserAgent.getAppCode());
+            sb.append(";");
+            sb.append(UserAgent.getAppVersion());
+            sb.append(";");
+            sb.append(UserAgent.getOsName());
+            sb.append(";");
+            sb.append(UserAgent.getOsVersion());
+            sb.append(";");
+            sb.append(UserAgent.getDeviceMake());
+            sb.append(";");
+            sb.append(UserAgent.getDeviceModel());
+            sb.append(";");
+            sb.append(UserAgent.getNotificationID());
+            sb.append(";");
+            sb.append(UserAgent.getMacAddr());
+            String userAgent = sb.toString();
+            if (Constants.DEBUG) Log.d(TAG,"userAgent--->"+userAgent );
+            headers.put("Authorization","0");
+            headers.put("User Agent",userAgent);
+            params.put("Content-Type","application/json");
+            params.put("Accept", "application/json");
         }
 
 //            AppController.getInstance().addSessionCookie(headers);
