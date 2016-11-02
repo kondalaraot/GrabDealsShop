@@ -160,13 +160,13 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid mobile number.
         if (TextUtils.isEmpty(poneNo)) {
             mPhoneNoView.setError(getString(R.string.error_field_required));
             focusView = mPhoneNoView;
             cancel = true;
         } else if (!isValidMobile(poneNo)) {
-            mPhoneNoView.setError(getString(R.string.error_invalid_email));
+            mPhoneNoView.setError(getString(R.string.error_invalid_mobile));
             focusView = mPhoneNoView;
             cancel = true;
         }

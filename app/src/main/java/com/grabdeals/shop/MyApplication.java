@@ -30,9 +30,10 @@ public class MyApplication extends Application {
     public void onCreate()
     {
         super.onCreate();
+//        MultiDex.install(this);
         MyApplication.context = getApplicationContext();
         NetworkManager.getInstance(this);
-        getRegId();
+//        getRegId();
     }
 
     public void getRegId(){
