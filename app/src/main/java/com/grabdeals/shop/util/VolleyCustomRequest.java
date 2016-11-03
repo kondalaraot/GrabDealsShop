@@ -97,10 +97,10 @@ public class VolleyCustomRequest extends Request<JSONObject> {
             sb.append(UserAgent.getMacAddr());
             String userAgent = sb.toString();
             if (Constants.DEBUG) Log.d(TAG,"userAgent--->"+userAgent );
-            headers.put("Authorization","0");
-            headers.put("User Agent",userAgent);
-            params.put("Content-Type","application/json");
-            params.put("Accept", "application/json");
+            headers.put("authorization","0");
+            headers.put("user_agent",userAgent);
+            headers.put("Content-Type","application/x-www-form-urlencoded");
+            headers.put("Accept", "application/json");
         }
 
 //            AppController.getInstance().addSessionCookie(headers);

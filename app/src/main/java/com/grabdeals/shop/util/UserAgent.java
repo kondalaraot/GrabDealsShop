@@ -50,7 +50,7 @@ public class UserAgent {
     }
     public static String getNotificationID() {
 
-        return "";
+        return "testid";
     }
     public static String getDeviceMacAddress() {
 

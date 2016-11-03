@@ -21,10 +21,11 @@ import android.widget.ScrollView;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
-import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.ImageUtils;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -46,7 +47,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
 
     private ScrollView mCreateNewAcForm;
     private LinearLayout mLlParentCreateAcc;
-    private NetworkImageViewRounded mImage;
+    private ImageView mImage;
     private ImageView mImageCamera;
     private EditText mPhoneNo;
     private EditText mShopName;
@@ -80,7 +81,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     private void findViews() {
         mCreateNewAcForm = (ScrollView)findViewById( R.id.create_new_ac_form );
         mLlParentCreateAcc = (LinearLayout)findViewById( R.id.ll_parent_create_acc );
-        mImage = (NetworkImageViewRounded)findViewById( R.id.image );
+        mImage = (ImageView) findViewById( R.id.image_shop );
         mImageCamera = (ImageView) findViewById( R.id.iv_camera );
 
         mPhoneNo = (EditText)findViewById( R.id.phone_no );
@@ -93,15 +94,13 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         mBtnLogin.setOnClickListener( this );
         mImageCamera.setOnClickListener( this );
 
-        mImage.setDefaultImageResId(R.drawable.office_building_icon);
+//        mImage.setDefaultImageResIdsetDefaultImageResId(R.drawable.office_building_icon);
 
     }
 
     /**
      * Handle button click events<br />
-     * <br />
-     * Auto-created on 2016-10-29 18:26:58 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
+     *
      */
     @Override
     public void onClick(View v) {
@@ -176,7 +175,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
                             btmapOptions);
 
                     // bm = Bitmap.createScaledBitmap(bm, 70, 70, true);
-                    mImage.setLocalImageBitmap(bm);
+                    mImage.setImageBitmap(ImageUtils.getRoundedCornerBitmap(bm));
 
                     String path = android.os.Environment
                             .getExternalStorageDirectory()
@@ -208,7 +207,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
                 Bitmap bm;
                 BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
                 bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
-                mImage.setLocalImageBitmap(bm);
+                mImage.setImageBitmap(ImageUtils.getRoundedCornerBitmap(bm));
 
             }
         }
@@ -228,10 +227,24 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         dismissProgress();
         if (object != null) {
             JSONObject jsonObject = (JSONObject) object;
-            Intent intent = new Intent(this,ConfirmOTPActivity.class);
-            intent.putExtra("KEY_PASSWORD",mPassword.getText());
-            startActivity(intent);
-            finish();
+
+            try {
+                if(jsonObject.getInt("code") == 200){
+                    Intent intent = new Intent(this,ConfirmOTPActivity.class);
+                    intent.putExtra("KEY_MOBILE_NO",mPhoneNo.getText().toString());
+                    intent.putExtra("KEY_PASSWORD",mPassword.getText().toString());
+                    intent.putExtra("KEY_SHOP_NAME",mShopName.getText().toString());
+                    intent.putExtra("KEY_IMAGE",mShopName.getText().toString());
+
+                    startActivity(intent);
+                    finish();
+                }else{
+                    showAlert(jsonObject.getString("message"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
 
         }
     }

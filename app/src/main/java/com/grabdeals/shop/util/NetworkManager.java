@@ -22,7 +22,7 @@ public class NetworkManager
     private static final String TAG = "NetworkManager";
     private static NetworkManager instance = null;
 
-    private static final String prefixURL = "http://some/url/prefix/";
+//    private static final String prefixURL = "http://some/url/prefix/";
 
     //for Volley API
     public RequestQueue requestQueue;
@@ -54,7 +54,7 @@ public class NetworkManager
     public void postRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
     {
 
-        String url = prefixURL + urlSuffix;
+        String url = Constants.HOST_URL + urlSuffix;
 
         VolleyCustomRequest request = new VolleyCustomRequest(Request.Method.POST, url, (Map<String, String>) postParams,
                 new Response.Listener<JSONObject>()
@@ -87,7 +87,7 @@ public class NetworkManager
     public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
     {
 
-        String url = prefixURL + urlSuffix;
+        String url = Constants.HOST_URL + urlSuffix;
 
         VolleyCustomRequest request = new VolleyCustomRequest(Request.Method.GET, url, (Map<String, String>) postParams,
                 new Response.Listener<JSONObject>()
