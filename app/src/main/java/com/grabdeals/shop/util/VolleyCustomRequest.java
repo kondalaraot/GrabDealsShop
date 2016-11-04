@@ -8,6 +8,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.grabdeals.shop.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ public class VolleyCustomRequest extends Request<JSONObject> {
     private static final String TAG ="VolleyCustomRequest" ;
     private Response.Listener<JSONObject> listener;
     private Map<String, String> params;
-
+    private PreferenceManager manager = new PreferenceManager(MyApplication.getAppContext());
     public VolleyCustomRequest(String url, Map<String, String> params,
                                Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
@@ -97,7 +98,8 @@ public class VolleyCustomRequest extends Request<JSONObject> {
             sb.append(UserAgent.getMacAddr());
             String userAgent = sb.toString();
             if (Constants.DEBUG) Log.d(TAG,"userAgent--->"+userAgent );
-            headers.put("authorization","0");
+            if (Constants.DEBUG) Log.d(TAG,"authorization--->"+manager.getAuthToken() );
+            headers.put("authorization",manager.getAuthToken());
             headers.put("user_agent",userAgent);
             headers.put("Content-Type","application/x-www-form-urlencoded");
             headers.put("Accept", "application/json");

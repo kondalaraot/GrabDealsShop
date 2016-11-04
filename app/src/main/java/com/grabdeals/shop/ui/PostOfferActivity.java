@@ -13,6 +13,7 @@ import com.grabdeals.shop.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class PostOfferActivity extends BaseAppCompatActivity implements View.OnClickListener{
 
@@ -27,7 +28,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
     private DatePickerDialog mFromDatePickerDialog;
     private DatePickerDialog mToDatePickerDialog;
-    private SimpleDateFormat dateFormatter;
+    private SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd-MM-yyyy", Locale.US);;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

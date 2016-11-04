@@ -1,18 +1,33 @@
 package com.grabdeals.shop.ui;
 
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
-import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.FileUtils;
+import com.grabdeals.shop.util.ImageUtils;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +35,12 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
 
     private static final String TAG = "";
 
-    private NetworkImageViewRounded mImage;
+    private static final int PICK_FROM_CAMERA = 1;
+    private static final int CROP_FROM_CAMERA = 2;
+    private static final int PICK_FROM_FILE = 3;
+
+    private ImageView mImage;
+    private ImageView mSelectImage;
     private EditText mEnterOtp;
     private Button mBtnVerify;
     private Button mBtnResendOtp;
@@ -28,6 +48,9 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     private String mobileNo;
     private String shopName;
     private String password;
+    private Uri mImageCaptureUri;
+    Bitmap mShopImageBitmap;
+
 
 
     @Override
@@ -39,39 +62,77 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
         mobileNo = getIntent().getStringExtra("KEY_MOBILE_NO");
         password = getIntent().getStringExtra("KEY_PASSWORD");
         shopName = getIntent().getStringExtra("KEY_SHOP_NAME");
+        mShopImageBitmap = getIntent().getParcelableExtra("KEY_IMAGE_BITMAP");
+        mImageCaptureUri = getIntent().getParcelableExtra("KEY_IMAGE_URI");
         findViews();
+        if(mShopImageBitmap !=null){
+            mImage.setImageBitmap(mShopImageBitmap);
+        }
 
     }
     /**
      * Find the Views in the layout<br />
-     * <br />
-     * Auto-created on 2016-10-29 23:16:31 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
+     *
      */
     private void findViews() {
-        mImage = (NetworkImageViewRounded)findViewById( R.id.image );
+        mImage = (ImageView)findViewById( R.id.image_shop );
+        mSelectImage = (ImageView)findViewById( R.id.iv_camera );
         mEnterOtp = (EditText)findViewById( R.id.enter_otp );
         mBtnVerify = (Button)findViewById( R.id.btn_verify );
         mBtnResendOtp = (Button)findViewById( R.id.btn_resend_otp );
-        mImage.setDefaultImageResId(R.drawable.office_building_icon);
         mBtnVerify.setOnClickListener( this );
         mBtnResendOtp.setOnClickListener( this );
+        mSelectImage.setOnClickListener( this );
+
     }
 
     /**
      * Handle button click events<br />
-     * <br />
-     * Auto-created on 2016-10-29 23:16:31 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
     @Override
     public void onClick(View v) {
         if ( v == mBtnVerify ) {
             // Handle clicks for mBtnVerify
-            NetworkManager.getInstance().postRequest(Constants.API_SIGN_UP,preparePostParams(),this);
+            if(validate()){
+                showProgress("signing up...");
+                NetworkManager.getInstance().postRequest(Constants.API_SIGN_UP,preparePostParams(),this);
+
+            }
         } else if ( v == mBtnResendOtp ) {
             // Handle clicks for mBtnResendOtp
+        }else if ( v == mSelectImage ) {
+            // Handle clicks for mBtnResendOtp
+            selectImage();
         }
+    }
+
+    private boolean validate() {
+         boolean isValid = true;
+        boolean cancel = false;
+        View focusView = null;
+        // Store values at the time of the login attempt.
+        String otp = mEnterOtp.getText().toString();
+//        String password = mPasswordView.getText().toString();
+        // Check for a valid mobile number.
+        if (TextUtils.isEmpty(otp)) {
+            mEnterOtp.setError(getString(R.string.error_field_required));
+            focusView = mEnterOtp;
+            cancel = true;
+        } /*else if (!isValidOTP(poneNo)) {
+            mPhoneNoView.setError(getString(R.string.error_invalid_mobile));
+            focusView = mPhoneNoView;
+            cancel = true;
+        }*/
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+            isValid = false;
+        } else {
+          isValid = true;
+        }
+        return isValid;
     }
 
     private Map<String,String> preparePostParams(){
@@ -80,18 +141,154 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
         formParams.put(APIParams.PARAM_SHOP_NAME, shopName);
         formParams.put(APIParams.PARAM_PASSWORD, password);
         formParams.put(APIParams.PARAM_OTP_CODE, mEnterOtp.getText().toString());
+        if(mShopImageBitmap != null)
+        formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
         return formParams;
     }
 
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(android.os.Environment
+                            .getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent, REQUEST_CAMERA);*/
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    mImageCaptureUri = Uri.fromFile(new File(Environment
+                            .getExternalStorageDirectory(), "shop_avatar_"
+                            + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                            mImageCaptureUri);
+
+                    try {
+                        intent.putExtra("return-data", true);
+
+                        startActivityForResult(intent, PICK_FROM_CAMERA);
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                   /* Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image*//*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            SELECT_FILE);*/
+                    // pick from file
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    //intent.setType("image/*");
+                    //intent.setAction(Intent.);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK)
+            return;
+
+        switch (requestCode) {
+            case PICK_FROM_CAMERA:
+                doCrop();
+                break;
+
+            case PICK_FROM_FILE:
+                mImageCaptureUri = data.getData();
+                doCrop();
+                break;
+
+            case CROP_FROM_CAMERA:
+                Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    Bitmap photo = extras.getParcelable("data");
+                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
+                    mImage.setImageBitmap(mShopImageBitmap);
+                }
+
+                // File f = new File(mImageCaptureUri.getPath());
+                //
+                // if (f.exists())
+                // f.delete();
+
+                break;
+            /*case PICK_CONTACT:
+                if (resultCode == RESULT_OK) {
+                    uriContact = data.getData();
+                    retrieveContactNumber();
+                }*/
+        }
+    }
+
+    private void doCrop() {
+
+        Log.d(TAG, "mImageCaptureUri---- "+mImageCaptureUri);
+        // call the standard crop action intent
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        // indicate image type and Uri of image
+        cropIntent.setDataAndType(mImageCaptureUri, "image/*");
+        // set crop properties
+        cropIntent.putExtra("crop", "true");
+        // indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        // indicate output X and Y
+        cropIntent.putExtra("outputX", 256);
+        cropIntent.putExtra("outputY", 256);
+        // retrieve data on return
+        cropIntent.putExtra("return-data", true);
+        // start the activity - we handle returning in onActivityResult
+        startActivityForResult(cropIntent, CROP_FROM_CAMERA);
+
+    }
+
+
+
     @Override
     public void getResult(Object object) {
+        dismissProgress();
 
-        startActivity(new Intent(this,EnterShopDetailsActivity.class));
+        if(object!=null){
+            JSONObject jsonObject = (JSONObject) object;
+            try {
+                if(jsonObject.getInt("code") == 200){
+//                    showAlert(jsonObject.getString("message"));
+                    String authToken = jsonObject.getJSONObject("data").getJSONObject("account").getString("auth_token");
+                    getPrefManager().setAuthToken(authToken);
+                    startActivity(new Intent(this,EnterShopDetailsActivity.class));
+
+                }else{
+                    showAlert(jsonObject.getString("message"));
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 
     @Override
     public void getErrorResult(Object object) {
+        dismissProgress();
 
     }
 }

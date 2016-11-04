@@ -1,12 +1,17 @@
 package com.grabdeals.shop.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
+
+import static android.support.v4.content.ContextCompat.getColor;
 
 /**
  * Created by Suchi on 11/3/2016.
@@ -35,4 +40,44 @@ public class ImageUtils {
 
         return output;
     }
+
+    public static Bitmap getCircularBitmapWithWhiteBorder(Context c,Bitmap bitmap,
+                                                          int borderWidth) {
+        if (bitmap == null || bitmap.isRecycled()) {
+            return null;
+        }
+
+        final int width = bitmap.getWidth() + borderWidth;
+        final int height = bitmap.getHeight() + borderWidth;
+
+        Bitmap canvasBitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.ARGB_8888);
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
+                Shader.TileMode.CLAMP);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(shader);
+
+        Canvas canvas = new Canvas(canvasBitmap);
+        float radius = width > height ? ((float) height) / 2f
+                : ((float) width) / 2f;
+        canvas.drawCircle(width / 2, height / 2, radius, paint);
+        paint.setShader(null);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(getColor(c,android.R.color.darker_gray));
+        paint.setStrokeWidth(borderWidth);
+        canvas.drawCircle(width / 2, height / 2, radius - borderWidth / 2,
+                paint);
+        return canvasBitmap;
+    }
+
+
+    /*public static final int getColor(Context context, int id) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+            return ContextCompatApi23.getColor(context, id);
+        } else {
+            return context.getResources().getColor(id);
+        }
+    }*/
 }

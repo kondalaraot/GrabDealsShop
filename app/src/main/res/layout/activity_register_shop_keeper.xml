@@ -1,8 +1,8 @@
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.grabdeals.shop.ui.RegisterShopKeeperActivity">
     <include layout="@layout/tool_bar"/>
@@ -30,13 +30,14 @@
                     android:id="@+id/image_shop"
                     style="@style/ProfileImageView" />
 
+
                 <ImageView
                     android:id="@+id/iv_camera"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignBottom="@+id/image"
-                    android:layout_alignEnd="@+id/image"
-                    android:layout_alignRight="@+id/image"
+                    android:layout_alignBottom="@+id/image_shop"
+                    android:layout_alignEnd="@+id/image_shop"
+                    android:layout_alignRight="@+id/image_shop"
                     android:src="@android:drawable/ic_menu_camera" />
             </RelativeLayout>
 

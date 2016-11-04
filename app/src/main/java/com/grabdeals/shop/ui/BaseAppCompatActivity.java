@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.PreferenceManager;
 
 
 /**Common Activity class for default functionalties in all activities
@@ -21,6 +22,7 @@ import com.grabdeals.shop.R;
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
+    private PreferenceManager mPreferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,15 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected PreferenceManager getPrefManager(){
+        if(mPreferenceManager !=null){
+            return mPreferenceManager;
+        }else{
+            mPreferenceManager = new PreferenceManager(this);
+        }
+        return mPreferenceManager;
     }
 
     protected void showProgress(String msg) {

@@ -22,12 +22,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                >
-                <com.grabdeals.shop.util.NetworkImageViewRounded
-                    android:id="@+id/image"
-                    style="@style/ProfileImageView"/>
+                android:layout_marginBottom="15dp">
 
+                <ImageView
+                    android:id="@+id/image_shop"
+                    style="@style/ProfileImageView" />
+
+                <ImageView
+                    android:id="@+id/iv_camera"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBottom="@+id/image_shop"
+                    android:layout_alignEnd="@+id/image_shop"
+                    android:layout_alignRight="@+id/image_shop"
+                    android:src="@android:drawable/ic_menu_camera" />
             </RelativeLayout>
 
 
