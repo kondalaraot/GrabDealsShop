@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -74,18 +75,31 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
+                        String errorMessage = null;
                         if (null != error.networkResponse)
                         {
                             if (Constants.DEBUG) Log.d(TAG + ": ", "Error Response code: " + error.networkResponse.statusCode);
-
-                            listener.getErrorResult(null);
+                            byte[] errRespData = error.networkResponse.data;
+                            String errorResp = new String(errRespData); // for UTF-8 encoding
+                            if (Constants.DEBUG) Log.d(TAG + ": ", "Error Response data: " + errorResp);
+                            if(errorResp !=null){
+                                String resp = (String) errorResp;
+                                try {
+                                    JSONObject jsonObject = new JSONObject(resp);
+                                    errorMessage = jsonObject.getString("message");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            listener.getErrorResult(errorMessage);
                         }
                     }
                 });
 
         requestQueue.add(request);
     }
-
+    
+  
     public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
     {
 

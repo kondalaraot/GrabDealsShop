@@ -62,6 +62,17 @@ public class VolleyCustomRequest extends Request<JSONObject> {
         }
     }
 
+    /*@Override
+    protected VolleyError parseNetworkError(VolleyError volleyError){
+        if(volleyError.networkResponse != null && volleyError.networkResponse.data != null){
+            VolleyError error = new VolleyError(new String(volleyError.networkResponse.data));
+            volleyError = error;
+        }
+
+        return volleyError;
+    }*/
+
+
     @Override
     protected void deliverResponse(JSONObject response) {
         // TODO Auto-generated method stub

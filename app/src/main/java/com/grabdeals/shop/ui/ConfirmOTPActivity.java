@@ -270,7 +270,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
             try {
                 if(jsonObject.getInt("code") == 200){
 //                    showAlert(jsonObject.getString("message"));
-                    String authToken = jsonObject.getJSONObject("data").getJSONObject("account").getString("auth_token");
+                    String authToken = jsonObject.getJSONObject("data").getString("auth_token");
                     getPrefManager().setAuthToken(authToken);
                     startActivity(new Intent(this,EnterShopDetailsActivity.class));
 

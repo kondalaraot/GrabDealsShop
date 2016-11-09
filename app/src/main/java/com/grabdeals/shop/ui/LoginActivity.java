@@ -12,10 +12,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.APIParams;
+import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A login screen that offers login via email/password.
@@ -134,18 +140,13 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress("please wait...");
-           /* mAuthTask = new UserLoginTask(poneNo, password);
-            mAuthTask.execute((Void) null);*/
-//            startActivity(new Intent(this,ConfirmOTPActivity.class));
+            NetworkManager.getInstance().postRequest(Constants.API_LOGIN,getParams(),this);
 
 
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
+
     private boolean isValidMobile(String phone)
     {
         return android.util.Patterns.PHONE.matcher(phone).matches();
@@ -154,6 +155,19 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    private Map<String, String> getParams(){
+        Map<String, String> jsonParams = new HashMap<>();
+
+        try {
+            jsonParams.put(APIParams.PARAM_MOBILE_NO, mPhoneNoView.getText().toString());
+            jsonParams.put(APIParams.PARAM_PASSWORD, mPasswordView.getText().toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonParams;
     }
 
     @Override
@@ -174,9 +188,12 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
     }
 
     @Override
-    public void getErrorResult(Object object) {
+    public void getErrorResult(Object errorResp) {
         dismissProgress();
-        showAlert("API call failed..");
+        if(errorResp !=null){
+            showAlert((String) errorResp);
+        }
+
 
     }
 }
