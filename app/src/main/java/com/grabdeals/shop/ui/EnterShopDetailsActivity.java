@@ -105,14 +105,28 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         boolean cancel = false;
         View focusView = null;
         // Store values at the time of the login attempt.
-        String aboutShop = mAboutShop.getText().toString();
-        String address = mFullAddress.getText().toString();
+
 //        String password = mPasswordView.getText().toString();
         // Check for a valid mobile number.
         if(hasText(mAboutShop)){
             focusView = mAboutShop;
             cancel = true;
+        }else if(hasSpinnerSelected(mSpinnerCategory)){
+            focusView = mSpinnerCategory;
+            cancel = true;
+        }else if(hasText(mWebsite)){
+            focusView = mWebsite;
+            cancel = true;
+        }else if(hasText(mWebsite)){
+            focusView = mWebsite;
+            cancel = true;
+        }else if(hasText(mLocation)){
+            focusView = mLocation;
+            cancel = true;
         }else if(hasText(mFullAddress)){
+            focusView = mFullAddress;
+            cancel = true;
+        }else if(hasText(mPhoneNumber)){
             focusView = mFullAddress;
             cancel = true;
         }

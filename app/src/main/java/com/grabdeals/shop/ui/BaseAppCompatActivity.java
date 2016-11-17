@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.grabdeals.shop.R;
@@ -109,19 +111,39 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         if(editText.getVisibility() == View.VISIBLE){
 
             String text = editText.getText().toString().trim();
-
+            editText.setError(null);
             // length 0 means there is no text
 
             if (TextUtils.isEmpty(text)) {
                 editText.setError(getString(R.string.error_field_required));
 //                focusView = mAboutShop;
 //                cancel = true;
-                return false;
+                return true;
             }
 
         }
 
-        return true;
+        return false;
+    }
+
+    protected boolean hasSpinnerSelected(Spinner spinner) {
+
+        if(spinner.getVisibility() == View.VISIBLE){
+
+            int pos = spinner.getSelectedItemPosition();
+            ((TextView)spinner.getSelectedView()).setError(null);
+            // length 0 means there is no text
+
+            if (pos == 0) {
+                ((TextView)spinner.getSelectedView()).setError("");
+//                focusView = mAboutShop;
+//                cancel = true;
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
 

@@ -24,6 +24,7 @@ import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.ImageUtils;
 import com.grabdeals.shop.util.NetworkManager;
+import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONException;
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
 
-    private final String TAG = "RegisterShopKeeperActivity";
+    private final String TAG = "RegisterShopKeeperAct";
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
@@ -110,13 +111,55 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     public void onClick(View v) {
         if ( v == mBtnCreateAcc ) {
             // Handle clicks for mBtnCreateAcc
-            showProgress("PLease wait...");
-            NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this);
+            if (validate())
+                if(NetworkUtil.isNetworkAvailable(this)){
+                    showProgress("Please wait, fetching offers...");
+                    NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this);
+                }else{
+                    showAlert("Please check your network connection..");
+                }
         } else if ( v == mBtnLogin ) {
             // Handle clicks for mBtnLogin
         }else if (v == mImageCamera){
             selectImage();
         }
+    }
+
+    private boolean validate() {
+        boolean isValid = true;
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid mobile number.
+        if(hasText(mPhoneNo)){
+            focusView = mPhoneNo;
+            cancel = true;
+        }else if(hasText(mShopName)){
+            focusView = mShopName;
+            cancel = true;
+        }else if(hasText(mPassword)){
+            focusView = mPassword;
+            cancel = true;
+        }
+       /* if (TextUtils.isEmpty(aboutShop)) {
+            mAboutShop.setError(getString(R.string.error_field_required));
+            focusView = mAboutShop;
+            cancel = true;
+        } else  if (TextUtils.isEmpty(address)) {
+            mFullAddress.setError(getString(R.string.error_field_required));
+            focusView = mFullAddress;
+            cancel = true;
+        }*/
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+        return isValid;
     }
 
     private Map<String,String> preparePostParams(){
