@@ -13,6 +13,8 @@ public class Constants {
     public static final String API_IS_REGISTER = "shop/is_register";
     public static final String API_SIGN_UP = "shop/signup";
     public static final String API_LOGIN = "shop/login";
+    public static final String API_OFFER_ALL = "shop/offer/all";
+    public static final String API_OFFER_DETAILS_BY_ID = "shop/offer/";
 
 
 }
