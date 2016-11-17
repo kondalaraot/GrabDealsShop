@@ -44,6 +44,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setLogo(R.mipmap.ic_launcher);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.lv_offers);
         mTextViewEmpty = (TextView) findViewById(R.id.tv_empty);

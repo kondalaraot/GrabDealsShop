@@ -10,9 +10,16 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.NetworkManager;
+import com.grabdeals.shop.util.NetworkUtil;
+import com.grabdeals.shop.util.VolleyCallbackListener;
 
-public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener{
+import java.util.HashMap;
+import java.util.Map;
+
+public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
 
 
     private static final String TAG = "EnterShopDetailsActivity";
@@ -36,14 +43,9 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_shop_details);
         findViews();
+
     }
 
-    /**
-     * Find the Views in the layout<br />
-     * <br />
-     * Auto-created on 2016-11-01 12:39:48 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
-     */
     private void findViews() {
         mImage = (NetworkImageViewRounded)findViewById( R.id.image );
         mIvCamera = (ImageView)findViewById( R.id.iv_camera );
@@ -82,18 +84,76 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     }
 
 
-    /**
-     * Handle button click events<br />
-     * <br />
-     * Auto-created on 2016-11-01 12:39:48 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
-     */
     @Override
     public void onClick(View v) {
         if ( v == mBtnAddMoreLoc ) {
             // Handle clicks for mBtnLogin
         } else if ( v == mBtnSaveDetails ) {
             // Handle clicks for mBtnSaveDetails
+            if (validate())
+            if(NetworkUtil.isNetworkAvailable(this)){
+                showProgress("Please wait, fetching offers...");
+                NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this);
+            }else{
+                showAlert("Please check your network connection..");
+            }
         }
+    }
+
+    private boolean validate() {
+        boolean isValid = true;
+        boolean cancel = false;
+        View focusView = null;
+        // Store values at the time of the login attempt.
+        String aboutShop = mAboutShop.getText().toString();
+        String address = mFullAddress.getText().toString();
+//        String password = mPasswordView.getText().toString();
+        // Check for a valid mobile number.
+        if(hasText(mAboutShop)){
+            focusView = mAboutShop;
+            cancel = true;
+        }else if(hasText(mFullAddress)){
+            focusView = mFullAddress;
+            cancel = true;
+        }
+       /* if (TextUtils.isEmpty(aboutShop)) {
+            mAboutShop.setError(getString(R.string.error_field_required));
+            focusView = mAboutShop;
+            cancel = true;
+        } else  if (TextUtils.isEmpty(address)) {
+            mFullAddress.setError(getString(R.string.error_field_required));
+            focusView = mFullAddress;
+            cancel = true;
+        }*/
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+        return isValid;
+    }
+
+    private Map<String,String> preparePostParams(){
+        Map<String, String> formParams = new HashMap<>();
+     /*   formParams.put(APIParams.PARAM_SHOP_NAME, mobileNo);
+        formParams.put(APIParams.PARAM_SHOP_NAME, shopName);
+        formParams.put(APIParams.PARAM_PASSWORD, password);
+        formParams.put(APIParams.PARAM_OTP_CODE, mEnterOtp.getText().toString());
+        formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));*/
+        return formParams;
+    }
+
+    @Override
+    public void getResult(Object object) {
+
+    }
+
+    @Override
+    public void getErrorResult(Object object) {
+
     }
 }

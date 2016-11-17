@@ -67,7 +67,7 @@
         <item>Array Item Three</item>
         <item>Array Item Three</item>
     </string-array>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Offers Factory</string>
     <string name="action_share">Share</string>
     <string name="action_fav">Favorite</string>
 </resources>

@@ -7,8 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.grabdeals.shop.R;
@@ -97,6 +100,28 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
                         dialogInterface.dismiss();
                     }
                 }).create().show();
+    }
+
+    // check the input field has any text or not
+    // return true if it contains text otherwise false
+    protected boolean hasText(EditText editText) {
+
+        if(editText.getVisibility() == View.VISIBLE){
+
+            String text = editText.getText().toString().trim();
+
+            // length 0 means there is no text
+
+            if (TextUtils.isEmpty(text)) {
+                editText.setError(getString(R.string.error_field_required));
+//                focusView = mAboutShop;
+//                cancel = true;
+                return false;
+            }
+
+        }
+
+        return true;
     }
 
 

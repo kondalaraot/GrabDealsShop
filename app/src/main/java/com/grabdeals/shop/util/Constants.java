@@ -15,6 +15,7 @@ public class Constants {
     public static final String API_LOGIN = "shop/login";
     public static final String API_OFFER_ALL = "shop/offer/all";
     public static final String API_OFFER_DETAILS_BY_ID = "shop/offer/";
+    public static final String API_ADD_SHOP = "shop/add/";
 
 
 }
