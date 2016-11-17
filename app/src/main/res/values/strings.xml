@@ -50,6 +50,7 @@
     <string name="title_activity_confirm_otp">Confirm OTP</string>
     <string name="title_activity_enter_shop_details">Enter Shop Details</string>
     <string name="title_activity_post_an_offer">Post an Offer</string>
+    <string name="logout">logout</string>
 
     <string-array name="shop_categories">
         <item>Select Category</item>
@@ -66,4 +67,7 @@
         <item>Array Item Three</item>
         <item>Array Item Three</item>
     </string-array>
+    <string name="title_activity_main">Offers Factory</string>
+    <string name="action_share">Share</string>
+    <string name="action_fav">Favorite</string>
 </resources>

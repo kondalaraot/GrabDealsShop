@@ -41,7 +41,7 @@
         <item name="android:background">@color/btn_background</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:textColor">@color/body_font_color</item>
-            </style>
+    </style>
 
     <style name="ProfileImageView">
         <item name="android:layout_width">120dp</item>
