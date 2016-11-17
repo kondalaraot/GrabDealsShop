@@ -46,7 +46,8 @@
         <activity
             android:name=".ui.EnterShopDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.PostOfferActivity" />
+        <activity android:name=".ui.PostOfferActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- For GCM -->
         <receiver
