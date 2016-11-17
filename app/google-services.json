@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "634688043028",
+    "firebase_url": "https://grabdealsshop.firebaseio.com",
+    "project_id": "grabdealsshop",
+    "storage_bucket": "grabdealsshop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634688043028:android:f8c343aaf309517c",
+        "android_client_info": {
+          "package_name": "com.grabdeals.shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634688043028-54hdo613obn23qscehrsassstovuf884.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxuTy5EK-oFb1X3yg378iJ1I3JqXeIJDk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
