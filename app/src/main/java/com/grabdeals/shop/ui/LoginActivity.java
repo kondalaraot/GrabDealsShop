@@ -177,7 +177,13 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             JSONObject jsonObject = (JSONObject) object;
 
             if (jsonObject!=null && jsonObject.getInt("code") == 200) {
-                startActivity(new Intent(this,EnterShopDetailsActivity.class));
+                JSONObject data = jsonObject.getJSONObject("data");
+                JSONObject account = data.getJSONObject("account");
+                String shopID = account.getString("shop_id");
+                Intent intent = new Intent(this,EnterShopDetailsActivity.class);
+                intent.putExtra("ARG_SHOP_ID",shopID);
+                startActivity(intent);
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

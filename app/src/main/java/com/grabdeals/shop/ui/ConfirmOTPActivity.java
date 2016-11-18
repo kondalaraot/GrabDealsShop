@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
 
-    private static final String TAG = "";
+    private static final String TAG = "ConfirmOTPActivity";
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
@@ -49,9 +49,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     private String shopName;
     private String password;
     private Uri mImageCaptureUri;
-    Bitmap mShopImageBitmap;
-
-
+    private Bitmap mShopImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +271,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
                     String authToken = jsonObject.getJSONObject("data").getString("auth_token");
                     getPrefManager().setAuthToken(authToken);
                     startActivity(new Intent(this,EnterShopDetailsActivity.class));
+                    finish();
 
                 }else{
                     showAlert(jsonObject.getString("message"));

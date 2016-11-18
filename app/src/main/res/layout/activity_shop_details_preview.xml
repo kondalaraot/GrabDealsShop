@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_shop_details_preview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.grabdeals.shop.ui.ShopDetailsPreviewActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+
+            android:id="@+id/shop_name_tv"
+            android:text="BIG BAZAR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="25sp"
+
+            />
+        <View
+            android:layout_below="@+id/shop_name_tv"
+            style="@style/TitleViewLine"/>
+
+        <Button
+            android:id="@+id/edit_details_btn"
+            android:text="Edit details"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:background="@android:color/transparent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabelHeading"
+            android:text="About:"/>
+        <TextView
+            android:id="@+id/tv_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Hyderabad centreal is shopping mall in hyderabad ulti adasdhah ajkjahdak hadkjah"/>
+<TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+            android:inputType="textUri"
+            android:text="www.bigbazar.in"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            style="@style/TextViewLabelHeading"
+            android:text="Location And Address"/>
+
+        <LinearLayout
+            android:id="@+id/ll_address1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_location1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panjagutta"
+
+                />  <TextView
+                android:id="@+id/tv_address1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6-6-34,panjagutta cross roads,Hyderabad Telangana 500082"
+
+                />  <TextView
+                android:id="@+id/tv_phone1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone:040 4260 7040"
+
+                />
+
+
+        </LinearLayout>
+ <LinearLayout
+            android:id="@+id/ll_address2"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+     android:layout_marginTop="15dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_location2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panjagutta"
+
+                />  <TextView
+                android:id="@+id/tv_address2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6-6-34,panjagutta cross roads,Hyderabad Telangana 500082"
+
+                />  <TextView
+                android:id="@+id/tv_phone2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone:040 4260 7040"
+
+                />
+
+
+        </LinearLayout> <LinearLayout
+            android:id="@+id/ll_address3"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+     android:layout_marginTop="15dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_location3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panjagutta"
+
+                />  <TextView
+                android:id="@+id/tv_address3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6-6-34,panjagutta cross roads,Hyderabad Telangana 500082"
+
+                />  <TextView
+                android:id="@+id/tv_phone3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone:040 4260 7040"
+
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+</ScrollView>

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">GrabDealsShop</string>
+    <string name="gcm_defaultSenderId">""</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -54,10 +55,10 @@
 
     <string-array name="shop_categories">
         <item>Select Category</item>
-        <item>shop category 2</item>
-        <item>Array Item Three</item>
-        <item>Array Item Three</item>
-        <item>Array Item Three</item>
+        <item>Clothing &amp; Accessories</item>
+        <item>Mobiles &amp; Electronics</item>
+        <item>Drinks, Bar &amp; Pubs</item>
+        <item>Food &amp; Restaurants</item>
     </string-array>
 
     <string-array name="offer_categories">

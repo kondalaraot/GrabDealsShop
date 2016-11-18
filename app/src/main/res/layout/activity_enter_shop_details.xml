@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_website"
                     android:imeActionId="@+id/login"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="textUri"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -129,9 +129,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_full_address"
                     android:imeOptions="actionNext"
-                    android:inputType="textMultiLine"
                     android:maxLines="3"
-                    android:singleLine="true" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 

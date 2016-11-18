@@ -1,6 +1,15 @@
 package com.grabdeals.shop.ui;
 
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,19 +19,29 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.FileUtils;
+import com.grabdeals.shop.util.ImageUtils;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
 
 
-    private static final String TAG = "EnterShopDetailsActivity";
+    private static final String TAG = "EnterShopDetailsAct";
+    private static final int PICK_FROM_CAMERA = 1;
+    private static final int CROP_FROM_CAMERA = 2;
+    private static final int PICK_FROM_FILE = 3;
 
     private NetworkImageViewRounded mImage;
     private ImageView mIvCamera;
@@ -37,10 +56,15 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     private int mShopCategoryPos;
     private String mShopCategory;
+    private Uri mImageCaptureUri;
+    private Bitmap mShopImageBitmap;
+
+    private String mShopID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mShopID = getIntent().getStringExtra("ARG_SHOP_ID");
         setContentView(R.layout.activity_enter_shop_details);
         findViews();
 
@@ -60,6 +84,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
         mBtnAddMoreLoc.setOnClickListener( this );
         mBtnSaveDetails.setOnClickListener( this );
+        mIvCamera.setOnClickListener( this );
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -92,12 +117,122 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             // Handle clicks for mBtnSaveDetails
             if (validate())
             if(NetworkUtil.isNetworkAvailable(this)){
-                showProgress("Please wait, fetching offers...");
+                showProgress("Please wait, Adding Shop Details...");
                 NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this);
             }else{
                 showAlert("Please check your network connection..");
             }
+        }else if (v == mIvCamera){
+            selectImage();
         }
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(android.os.Environment
+                            .getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent, REQUEST_CAMERA);*/
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    mImageCaptureUri = Uri.fromFile(new File(Environment
+                            .getExternalStorageDirectory(), "shop_avatar_"
+                            + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                            mImageCaptureUri);
+
+                    try {
+                        intent.putExtra("return-data", true);
+
+                        startActivityForResult(intent, PICK_FROM_CAMERA);
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    //intent.setType("image/*");
+                    //intent.setAction(Intent.);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK)
+            return;
+
+        switch (requestCode) {
+            case PICK_FROM_CAMERA:
+                doCrop();
+                break;
+
+            case PICK_FROM_FILE:
+                mImageCaptureUri = data.getData();
+                doCrop();
+                break;
+
+            case CROP_FROM_CAMERA:
+                Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    Bitmap photo = extras.getParcelable("data");
+                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
+//                    mImage.setImageBitmap(mShopImageBitmap);
+//                    mImage.set(mShopImageBitmap);
+                    mImage.setLocalImageBitmap(mShopImageBitmap);
+
+                }
+
+                // File f = new File(mImageCaptureUri.getPath());
+                //
+                // if (f.exists())
+                // f.delete();
+
+                break;
+            /*case PICK_CONTACT:
+                if (resultCode == RESULT_OK) {
+                    uriContact = data.getData();
+                    retrieveContactNumber();
+                }*/
+        }
+    }
+
+    private void doCrop() {
+
+        Log.d(TAG, "mImageCaptureUri---- "+mImageCaptureUri);
+        // call the standard crop action intent
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        // indicate image type and Uri of image
+        cropIntent.setDataAndType(mImageCaptureUri, "image/*");
+        // set crop properties
+        cropIntent.putExtra("crop", "true");
+        // indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        // indicate output X and Y
+        cropIntent.putExtra("outputX", 256);
+        cropIntent.putExtra("outputY", 256);
+        // retrieve data on return
+        cropIntent.putExtra("return-data", true);
+        // start the activity - we handle returning in onActivityResult
+        startActivityForResult(cropIntent, CROP_FROM_CAMERA);
+
     }
 
     private boolean validate() {
@@ -114,20 +249,17 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         }else if(hasSpinnerSelected(mSpinnerCategory)){
             focusView = mSpinnerCategory;
             cancel = true;
-        }else if(hasText(mWebsite)){
+        }/*else if(hasText(mWebsite)){
             focusView = mWebsite;
             cancel = true;
-        }else if(hasText(mWebsite)){
-            focusView = mWebsite;
-            cancel = true;
-        }else if(hasText(mLocation)){
+        }*/else if(hasText(mLocation)){
             focusView = mLocation;
             cancel = true;
         }else if(hasText(mFullAddress)){
             focusView = mFullAddress;
             cancel = true;
         }else if(hasText(mPhoneNumber)){
-            focusView = mFullAddress;
+            focusView = mPhoneNumber;
             cancel = true;
         }
        /* if (TextUtils.isEmpty(aboutShop)) {
@@ -153,13 +285,33 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     private Map<String,String> preparePostParams(){
         Map<String, String> formParams = new HashMap<>();
-     /*   formParams.put(APIParams.PARAM_SHOP_NAME, mobileNo);
-        formParams.put(APIParams.PARAM_SHOP_NAME, shopName);
-        formParams.put(APIParams.PARAM_PASSWORD, password);
-        formParams.put(APIParams.PARAM_OTP_CODE, mEnterOtp.getText().toString());
-        formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));*/
+        formParams.put(APIParams.PARAM_SHOP_ID, mShopID);
+        formParams.put(APIParams.PARAM_ABOUT_SHOP, mAboutShop.getText().toString());
+        formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
+        formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
+        formParams.put(APIParams.PARAM_LOCATION_INFO, prepareLocationsInfo());
+        formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
         return formParams;
     }
+
+    private String prepareLocationsInfo(){
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("location_name",mLocation.getText().toString());
+            jsonObject.put("full_address",mFullAddress.getText().toString());
+            jsonObject.put("phone_no",mPhoneNumber.getText().toString());
+            jsonObject.put("latitude","124578.2547");
+            jsonObject.put("longitude","14785.245");
+            jsonArray.put(jsonObject);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonArray.toString();
+    }
+
 
     @Override
     public void getResult(Object object) {

@@ -21,6 +21,11 @@ public class UserAgent {
     private static final String APP_VERSION = "APP002";
     private static final String TAG = "UserInfo";
 
+    public static String GCM_TOKEN = "";
+
+    public UserAgent() {
+    }
+
     public static String getAppCode() {
         return APP_CODE;
     }
@@ -50,8 +55,14 @@ public class UserAgent {
     }
     public static String getNotificationID() {
 
-        return "testid";
+        return GCM_TOKEN;
     }
+
+    public void setNotificationID(String gcmID) {
+
+        GCM_TOKEN = gcmID;
+    }
+
     public static String getDeviceMacAddress() {
 
         return "";
