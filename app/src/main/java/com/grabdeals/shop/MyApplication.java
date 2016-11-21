@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 
+import com.grabdeals.shop.model.Account;
 import com.grabdeals.shop.util.NetworkManager;
 
 /**
@@ -15,6 +16,8 @@ public class MyApplication extends Application {
     private static final String GCM_PROJECT_NUMBER = "";
     private static Context context;
     public static String gcmRegID;
+
+    public static Account sAccount;
 
     //Creating a broadcast receiver for gcm registration
     private BroadcastReceiver mRegistrationBroadcastReceiver;

@@ -90,7 +90,7 @@ public class NetworkManager
 
         String url = Constants.HOST_URL + urlSuffix;
         if(Constants.DEBUG) Log.d(TAG,"URL --"+url);
-        if(Constants.DEBUG) Log.d(TAG,"post params body --"+postParams.toString());
+//        if(Constants.DEBUG) Log.d(TAG,"post params body --"+postParams.toString());
 
         VolleyCustomRequest request = new VolleyCustomRequest(Request.Method.GET, url, (Map<String, String>) postParams,
                 new Response.Listener<JSONObject>()

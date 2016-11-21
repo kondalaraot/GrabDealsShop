@@ -12,7 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.Account;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkManager;
@@ -181,13 +184,24 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             if (jsonObject!=null && jsonObject.getInt("code") == 200) {
                 JSONObject data = jsonObject.getJSONObject("data");
                 JSONObject account = data.getJSONObject("account");
+
+                Account accountObj = new Gson().fromJson(account.toString(), Account.class);
+                MyApplication.sAccount = accountObj;
                 String shopID = account.getString("shop_id");
                 String authToken = data.getString("auth_token");
                 if(Constants.DEBUG)Log.d(TAG,"authToken "+authToken);
                 getPrefManager().setAuthToken(authToken);
-                Intent intent = new Intent(this,EnterShopDetailsActivity.class);
-                intent.putExtra("ARG_SHOP_ID",shopID);
-                startActivity(intent);
+
+                if(accountObj.getShop_branches()!=null && accountObj.getShop_branches().size()>0){
+                    Intent intent = new Intent(this,MainActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(this,EnterShopDetailsActivity.class);
+                    intent.putExtra("ARG_SHOP_ID",shopID);
+                    startActivity(intent);
+
+                }
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

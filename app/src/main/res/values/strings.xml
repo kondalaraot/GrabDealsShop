@@ -63,11 +63,12 @@
 
     <string-array name="offer_categories">
         <item>Select Category</item>
-        <item>shop category 2</item>
-        <item>Array Item Three</item>
-        <item>Array Item Three</item>
-        <item>Array Item Three</item>
+        <item>Clothing &amp; Accessories</item>
+        <item>Drinks, Bar &amp; Pubs</item>
+        <item>Food &amp; Restaurants</item>
+        <item>Mobiles &amp; Electronics</item>
     </string-array>
+
     <string name="title_activity_main">Offers Factory</string>
     <string name="action_share">Share</string>
     <string name="action_fav">Favorite</string>
@@ -85,4 +86,5 @@
         Website: %5$s
     ]]>
     </string>
+    <string name="title_activity_offers_list">Offers</string>
 </resources>

@@ -153,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+               <!-- <EditText
                     android:id="@+id/locations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -162,7 +162,12 @@
                     android:inputType="textMultiLine"
                     android:maxLines="3"
                     android:focusableInTouchMode="false"
-                     />
+                     />-->
+                <com.grabdeals.shop.util.MultiSelectionSpinner
+                    android:id="@+id/spinnerLocations"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp" />
 
             </android.support.design.widget.TextInputLayout>
 

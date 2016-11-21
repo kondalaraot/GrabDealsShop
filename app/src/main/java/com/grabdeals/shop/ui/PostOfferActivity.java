@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,27 +19,31 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.model.LatLng;
+import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.ShopBranch;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.FileUtils;
+import com.grabdeals.shop.util.MultiSelectionSpinner;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -56,7 +59,8 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     private Spinner mSpinnerCategory;
     private EditText mFromDate;
     private EditText mToDate;
-    private EditText mLocations;
+//    private EditText mLocations;
+    private MultiSelectionSpinner mLocations;
     private EditText mOfferDescr;
     private EditText mUploadOfferPics;
     private Button mBtnPostOffer;
@@ -69,6 +73,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     private String mOffereCategory;
     private Uri mImageCaptureUri;
     Bitmap mAttachmentBitmap;
+    List<ShopBranch> shopBranches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,8 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         mSpinnerCategory = (Spinner)findViewById( R.id.spinner_category );
         mFromDate = (EditText)findViewById( R.id.from_date );
         mToDate = (EditText)findViewById( R.id.to_date );
-        mLocations = (EditText)findViewById( R.id.locations );
+        mLocations = (MultiSelectionSpinner) findViewById( R.id.spinnerLocations );
+
         mOfferDescr = (EditText)findViewById( R.id.offer_descr );
         mUploadOfferPics = (EditText)findViewById( R.id.upload_offer_pics );
         mBtnPostOffer = (Button)findViewById( R.id.btn_post_offer );
@@ -101,7 +107,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         mToDate.setInputType(InputType.TYPE_NULL);
         setDateTimeField();
 
-        mLocations.setInputType(InputType.TYPE_NULL);
+//        mLocations.setInputType(InputType.TYPE_NULL);
         mUploadOfferPics.setInputType(InputType.TYPE_NULL);
 
         mUploadOfferPics.setOnClickListener(new View.OnClickListener() {
@@ -112,12 +118,12 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         });
 
 
-        mLocations.setOnClickListener(new View.OnClickListener() {
+       /* mLocations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openAutocompleteActivity();
             }
-        });
+        });*/
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -139,7 +145,28 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
             }
         });
+
+        shopBranches =  MyApplication.sAccount.getShop_branches();
+        List<String> locations = new ArrayList<String>();
+//        locations.add("--Select locations--");
+        for (ShopBranch shopBranch : shopBranches) {
+            locations.add(shopBranch.getLocation_name());
+        }
+        mLocations.setItems(locations);
+
+        mLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
+
 
     private void selectImage() {
         final CharSequence[] items = { "Take Photo", "Choose from Library",
@@ -295,7 +322,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
                 break;
             case REQUEST_CODE_AUTOCOMPLETE:
-                // Get the user's selected place from the Intent.
+               /* // Get the user's selected place from the Intent.
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 Log.i(TAG, "Place Selected: " + place.getName());
 
@@ -307,9 +334,9 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                     mLocations.setText(mLocations.getText().toString()+","+place.getName());
 
                 }
-                       /* mLocation.setText(formatPlaceDetails(getResources(), place.getName(),
+                       *//* mLocation.setText(formatPlaceDetails(getResources(), place.getName(),
                                 place.getId(), place.getAddress(), place.getPhoneNumber(),
-                                place.getWebsiteUri()).toString());*/
+                                place.getWebsiteUri()).toString());*//*
                 LatLng latLng = place.getLatLng();
                 double mLatitude = latLng.latitude;
                 double mLongitude = latLng.longitude;
@@ -322,7 +349,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 } else {
 //                            mLocation.setText("");
                     Log.d(TAG,"attributions empty");
-                }
+                }*/
                 break;
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
@@ -379,16 +406,16 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         }else if(hasText(mToDate)){
             focusView = mToDate;
             cancel = true;
-        }else if(hasText(mLocations)){
+        }else if(hasLocSpinnerSelected(mLocations)){
             focusView = mLocations;
             cancel = true;
         }else if(hasText(mOfferDescr)){
             focusView = mOfferDescr;
             cancel = true;
-        }else if(hasText(mUploadOfferPics)){
+        }/*else if(hasText(mUploadOfferPics)){
             focusView = mUploadOfferPics;
             cancel = true;
-        }
+        }*/
        /* if (TextUtils.isEmpty(aboutShop)) {
             mAboutShop.setError(getString(R.string.error_field_required));
             focusView = mAboutShop;
@@ -410,6 +437,17 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         return isValid;
     }
 
+
+    protected boolean hasLocSpinnerSelected(MultiSelectionSpinner spinner) {
+        if(spinner.getSelectedStrings().size()>0)
+            return false;
+        else{
+            ((TextView)spinner.getSelectedView()).setError("locations is required");
+            return true;
+
+        }
+    }
+
     private Map<String,String> preparePostParams(){
         Map<String, String> formParams = new HashMap<>();
         formParams.put(APIParams.PARAM_OFFER_TITLE, mOfferTitle.getText().toString());
@@ -417,14 +455,21 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         formParams.put(APIParams.PARAM_OFR_START, mFromDate.getText().toString());
         formParams.put(APIParams.PARAM_OFR_END, mToDate.getText().toString());
         formParams.put(APIParams.PARAM_LOCATIONS, prepareLocationsInfo());
-        if(mAttachmentBitmap!=null)
-            formParams.put(APIParams.PARAM_ATTACHMENTS, FileUtils.convertBitmapToBase64(mAttachmentBitmap));
+//        if(mAttachmentBitmap!=null)
+//            formParams.put(APIParams.PARAM_ATTACHMENTS, FileUtils.convertBitmapToBase64(mAttachmentBitmap));
         return formParams;
     }
 
     private String prepareLocationsInfo() {
-        String offerLocations = mLocations.getText().toString();
-        return offerLocations;
+        String locations;
+        StringBuilder builder = new StringBuilder();
+        List<Integer> offerSelectedIndices = mLocations.getSelectedIndicies();
+        for (Integer offerSelectedIndice : offerSelectedIndices) {
+            ShopBranch selectedBranch = shopBranches.get(offerSelectedIndice);
+            builder.append(selectedBranch.getShop_area_id()+",");
+        }
+        locations = builder.toString();
+        return locations.substring(0, locations.lastIndexOf(","));
     }
 
 
