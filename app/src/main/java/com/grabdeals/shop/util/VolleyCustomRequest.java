@@ -72,6 +72,15 @@ public class VolleyCustomRequest extends Request<JSONObject> {
         return volleyError;
     }*/
 
+    /*@Override
+    //This will make the volley error message to contain your server's error message
+    protected VolleyError parseNetworkError(VolleyError volleyError) {
+        if(volleyError.networkResponse != null && volleyError.networkResponse.data != null){
+            volleyError = new VolleyError(new String(volleyError.networkResponse.data));
+        }
+        return volleyError;
+    }*/
+
 
     @Override
     protected void deliverResponse(JSONObject response) {

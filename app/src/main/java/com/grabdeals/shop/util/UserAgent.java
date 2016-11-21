@@ -18,7 +18,6 @@ public class UserAgent {
     private static final String CLIENT_TYPE = "shop_keeper";
     //App Code (APP001  - User app,  APP002 - Shop) 
     private static final String APP_CODE = "APP002";
-    private static final String APP_VERSION = "APP002";
     private static final String TAG = "UserInfo";
 
     public static String GCM_TOKEN = "";

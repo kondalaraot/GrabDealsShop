@@ -110,21 +110,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_weight="1"
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/from_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:drawableRight="@android:drawable/ic_menu_my_calendar"
                     android:hint="@string/prompt_start_date"
                     android:imeActionId="@+id/login"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="date"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:focusableInTouchMode="false"
+                     />
+                </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_weight="1"
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/to_date"
                     android:layout_width="match_parent"
@@ -134,8 +142,9 @@
                     android:hint="@string/prompt_end_date"
                     android:imeOptions="actionNext"
                     android:inputType="date"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:focusableInTouchMode="false"
+                     />
+                </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
 
@@ -152,7 +161,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
                     android:maxLines="3"
-                    android:singleLine="true" />
+                    android:focusableInTouchMode="false"
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -171,8 +181,10 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-            .
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/upload_offer_pics"
                 android:layout_width="match_parent"
@@ -180,9 +192,10 @@
                 android:drawableRight="@android:drawable/ic_menu_camera"
                 android:hint="@string/prompt_upload_offer_pics"
                 android:imeOptions="actionDone"
+                android:focusableInTouchMode="false"
                 android:inputType="none" />
 
-
+            </android.support.design.widget.TextInputLayout>
             <!--  <TextView
                   android:id="@+id/calc_txt_Prise"
                   android:layout_width="wrap_content"

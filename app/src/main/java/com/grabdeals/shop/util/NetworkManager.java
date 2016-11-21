@@ -133,6 +133,10 @@ public class NetworkManager
                 }
             }
 
+        }else{
+            if(error.getCause()!=null)
+            errorMessage = error.getCause().getMessage();
+
         }
         return errorMessage;
     }

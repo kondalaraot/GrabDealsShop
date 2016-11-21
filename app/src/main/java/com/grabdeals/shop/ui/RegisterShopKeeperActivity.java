@@ -113,13 +113,15 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
             // Handle clicks for mBtnCreateAcc
             if (validate())
                 if(NetworkUtil.isNetworkAvailable(this)){
-                    showProgress("Please wait, fetching offers...");
+                    showProgress("Please wait...");
                     NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this);
                 }else{
                     showAlert("Please check your network connection..");
                 }
         } else if ( v == mBtnLogin ) {
             // Handle clicks for mBtnLogin
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
         }else if (v == mImageCamera){
             selectImage();
         }
@@ -321,8 +323,10 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     }
 
     @Override
-    public void getErrorResult(Object object) {
+    public void getErrorResult(Object errorResp) {
         dismissProgress();
-
+        if(errorResp !=null){
+            showAlert((String) errorResp);
+        }
     }
 }

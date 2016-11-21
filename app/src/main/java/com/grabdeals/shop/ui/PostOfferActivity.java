@@ -1,21 +1,56 @@
 package com.grabdeals.shop.ui;
 
 import android.app.DatePickerDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.util.APIParams;
+import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.FileUtils;
+import com.grabdeals.shop.util.NetworkManager;
+import com.grabdeals.shop.util.NetworkUtil;
+import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-public class PostOfferActivity extends BaseAppCompatActivity implements View.OnClickListener{
+public class PostOfferActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
+
+    private static final String TAG = "PostOfferActivity" ;
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
+    private static final int PICK_FROM_CAMERA = 10;
+    private static final int CROP_FROM_CAMERA = 20;
+    private static final int PICK_FROM_FILE = 30;
 
     private EditText mOfferTitle;
     private Spinner mSpinnerCategory;
@@ -29,6 +64,11 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     private DatePickerDialog mFromDatePickerDialog;
     private DatePickerDialog mToDatePickerDialog;
     private SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd-MM-yyyy", Locale.US);;
+
+    private int mOfferCategoryPos;
+    private String mOffereCategory;
+    private Uri mImageCaptureUri;
+    Bitmap mAttachmentBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +100,113 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
         mToDate.setInputType(InputType.TYPE_NULL);
         setDateTimeField();
+
+        mLocations.setInputType(InputType.TYPE_NULL);
+        mUploadOfferPics.setInputType(InputType.TYPE_NULL);
+
+        mUploadOfferPics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+
+
+        mLocations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAutocompleteActivity();
+            }
+        });
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.shop_categories, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        mSpinnerCategory.setAdapter(adapter);
+        mSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                // On selecting a spinner item
+                mOffereCategory = adapterView.getItemAtPosition(pos).toString();
+                mOfferCategoryPos = pos;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(android.os.Environment
+                            .getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent, REQUEST_CAMERA);*/
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    mImageCaptureUri = Uri.fromFile(new File(Environment
+                            .getExternalStorageDirectory(), "shop_avatar_"
+                            + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                            mImageCaptureUri);
+
+                    try {
+                        intent.putExtra("return-data", true);
+
+                        startActivityForResult(intent, PICK_FROM_CAMERA);
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    //intent.setType("image/*");
+                    //intent.setAction(Intent.);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void openAutocompleteActivity() {
+        try {
+            // The autocomplete activity requires Google Play Services to be available. The intent
+            // builder checks this and throws an exception if it is not the case.
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .build(this);
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // Indicates that Google Play Services is either not installed or not up to date. Prompt
+            // the user to correct the issue.
+            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(),
+                    0 /* requestCode */).show();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // Indicates that Google Play Services is not available and the problem is not easily
+            // resolvable.
+            String message = "Google Play Services is not available: " +
+                    GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
+
+            Log.e(TAG, message);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -72,6 +219,14 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     public void onClick(View v) {
         if ( v == mBtnPostOffer ) {
             // Handle clicks for mBtnSaveDetails
+            if (validate()){
+                if(NetworkUtil.isNetworkAvailable(this)){
+                    showProgress("Posting offer...");
+                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this);
+                }else{
+                    showAlert("Please check your network connection..");
+                }
+            }
         }if(v == mFromDate) {
             mFromDatePickerDialog.show();
         } else if(v == mToDate) {
@@ -105,4 +260,185 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK)
+            return;
+
+        switch (requestCode) {
+            case PICK_FROM_CAMERA:
+                doCrop();
+                break;
+
+            case PICK_FROM_FILE:
+                mImageCaptureUri = data.getData();
+                doCrop();
+                break;
+
+            case CROP_FROM_CAMERA:
+                Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    mAttachmentBitmap = extras.getParcelable("data");
+//                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
+//                    mImage.setImageBitmap(mShopImageBitmap);
+//                    mImage.set(mShopImageBitmap);
+//                    mImage.setLocalImageBitmap(mShopImageBitmap);
+                    mUploadOfferPics.setText(FileUtils.getFileName(this,mImageCaptureUri));
+
+                }
+
+                // File f = new File(mImageCaptureUri.getPath());
+                //
+                // if (f.exists())
+                // f.delete();
+
+                break;
+            case REQUEST_CODE_AUTOCOMPLETE:
+                // Get the user's selected place from the Intent.
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.i(TAG, "Place Selected: " + place.getName());
+
+                // Format the place's details and display them in the TextView.
+                if(TextUtils.isEmpty(mLocations.getText())){
+                    mLocations.setText(place.getName());
+
+                }else{
+                    mLocations.setText(mLocations.getText().toString()+","+place.getName());
+
+                }
+                       /* mLocation.setText(formatPlaceDetails(getResources(), place.getName(),
+                                place.getId(), place.getAddress(), place.getPhoneNumber(),
+                                place.getWebsiteUri()).toString());*/
+                LatLng latLng = place.getLatLng();
+                double mLatitude = latLng.latitude;
+                double mLongitude = latLng.longitude;
+                Log.d(TAG,"lat,long are "+mLatitude+"  "+mLongitude);
+                // Display attributions if required.
+                CharSequence attributions = place.getAttributions();
+                if (!TextUtils.isEmpty(attributions)) {
+//                            mLocation.setText(Html.fromHtml(attributions.toString()));
+                    Log.d(TAG,"attributions "+attributions.toString());
+                } else {
+//                            mLocation.setText("");
+                    Log.d(TAG,"attributions empty");
+                }
+                break;
+            // Indicates that the activity closed before a selection was made. For example if
+            // the user pressed the back button.
+            case PlaceAutocomplete.RESULT_ERROR:
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                Log.e(TAG, "Error: Status = " + status.toString());
+                break;
+
+        }
+
+
+    }
+
+
+    private void doCrop() {
+
+        Log.d(TAG, "mImageCaptureUri---- "+mImageCaptureUri);
+        // call the standard crop action intent
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        // indicate image type and Uri of image
+        cropIntent.setDataAndType(mImageCaptureUri, "image/*");
+        // set crop properties
+        cropIntent.putExtra("crop", "true");
+        // indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        // indicate output X and Y
+        cropIntent.putExtra("outputX", 256);
+        cropIntent.putExtra("outputY", 256);
+        // retrieve data on return
+        cropIntent.putExtra("return-data", true);
+        // start the activity - we handle returning in onActivityResult
+        startActivityForResult(cropIntent, CROP_FROM_CAMERA);
+
+    }
+
+    private boolean validate() {
+        boolean isValid = true;
+        boolean cancel = false;
+        View focusView = null;
+        // Store values at the time of the login attempt.
+
+//        String password = mPasswordView.getText().toString();
+        // Check for a valid mobile number.
+        if(hasText(mOfferTitle)){
+            focusView = mOfferTitle;
+            cancel = true;
+        }else if(hasSpinnerSelected(mSpinnerCategory)){
+            focusView = mSpinnerCategory;
+            cancel = true;
+        }else if(hasText(mFromDate)){
+            focusView = mFromDate;
+            cancel = true;
+        }else if(hasText(mToDate)){
+            focusView = mToDate;
+            cancel = true;
+        }else if(hasText(mLocations)){
+            focusView = mLocations;
+            cancel = true;
+        }else if(hasText(mOfferDescr)){
+            focusView = mOfferDescr;
+            cancel = true;
+        }else if(hasText(mUploadOfferPics)){
+            focusView = mUploadOfferPics;
+            cancel = true;
+        }
+       /* if (TextUtils.isEmpty(aboutShop)) {
+            mAboutShop.setError(getString(R.string.error_field_required));
+            focusView = mAboutShop;
+            cancel = true;
+        } else  if (TextUtils.isEmpty(address)) {
+            mFullAddress.setError(getString(R.string.error_field_required));
+            focusView = mFullAddress;
+            cancel = true;
+        }*/
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+        return isValid;
+    }
+
+    private Map<String,String> preparePostParams(){
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put(APIParams.PARAM_OFFER_TITLE, mOfferTitle.getText().toString());
+        formParams.put(APIParams.PARAM_DESCRIPTION, mOfferDescr.getText().toString());
+        formParams.put(APIParams.PARAM_OFR_START, mFromDate.getText().toString());
+        formParams.put(APIParams.PARAM_OFR_END, mToDate.getText().toString());
+        formParams.put(APIParams.PARAM_LOCATIONS, prepareLocationsInfo());
+        if(mAttachmentBitmap!=null)
+            formParams.put(APIParams.PARAM_ATTACHMENTS, FileUtils.convertBitmapToBase64(mAttachmentBitmap));
+        return formParams;
+    }
+
+    private String prepareLocationsInfo() {
+        String offerLocations = mLocations.getText().toString();
+        return offerLocations;
+    }
+
+
+    @Override
+    public void getResult(Object object) {
+                dismissProgress();
+    }
+
+    @Override
+    public void getErrorResult(Object errorResp) {
+        dismissProgress();
+        if(errorResp !=null){
+            showAlert((String) errorResp);
+        }
+
+    }
 }

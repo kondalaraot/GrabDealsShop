@@ -3,6 +3,7 @@ package com.grabdeals.shop.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +33,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final String TAG = "LoginActivity";
 
 
     /**
@@ -180,6 +182,9 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
                 JSONObject data = jsonObject.getJSONObject("data");
                 JSONObject account = data.getJSONObject("account");
                 String shopID = account.getString("shop_id");
+                String authToken = data.getString("auth_token");
+                if(Constants.DEBUG)Log.d(TAG,"authToken "+authToken);
+                getPrefManager().setAuthToken(authToken);
                 Intent intent = new Intent(this,EnterShopDetailsActivity.class);
                 intent.putExtra("ARG_SHOP_ID",shopID);
                 startActivity(intent);

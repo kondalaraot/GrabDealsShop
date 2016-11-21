@@ -3,12 +3,17 @@ package com.grabdeals.shop.ui;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.InputType;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +22,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
@@ -39,9 +52,10 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
 
     private static final String TAG = "EnterShopDetailsAct";
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int CROP_FROM_CAMERA = 2;
-    private static final int PICK_FROM_FILE = 3;
+    private static final int PICK_FROM_CAMERA = 10;
+    private static final int CROP_FROM_CAMERA = 20;
+    private static final int PICK_FROM_FILE = 30;
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 40;
 
     private NetworkImageViewRounded mImage;
     private ImageView mIvCamera;
@@ -60,6 +74,8 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     private Bitmap mShopImageBitmap;
 
     private String mShopID;
+
+    double mLatitude,mLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +101,14 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mBtnAddMoreLoc.setOnClickListener( this );
         mBtnSaveDetails.setOnClickListener( this );
         mIvCamera.setOnClickListener( this );
+        mLocation.setInputType(InputType.TYPE_NULL);
+
+        mLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAutocompleteActivity();
+            }
+        });
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -115,16 +139,58 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             // Handle clicks for mBtnLogin
         } else if ( v == mBtnSaveDetails ) {
             // Handle clicks for mBtnSaveDetails
-            if (validate())
-            if(NetworkUtil.isNetworkAvailable(this)){
-                showProgress("Please wait, Adding Shop Details...");
-                NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this);
-            }else{
-                showAlert("Please check your network connection..");
+            if (validate()){
+                if(NetworkUtil.isNetworkAvailable(this)){
+                    showProgress("Please wait, Adding Shop Details...");
+                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this);
+                }else{
+                    showAlert("Please check your network connection..");
+                }
             }
+
         }else if (v == mIvCamera){
             selectImage();
         }
+    }
+
+    private void openAutocompleteActivity() {
+        try {
+            // The autocomplete activity requires Google Play Services to be available. The intent
+            // builder checks this and throws an exception if it is not the case.
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .build(this);
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // Indicates that Google Play Services is either not installed or not up to date. Prompt
+            // the user to correct the issue.
+            GoogleApiAvailability.getInstance().getErrorDialog(this, e.getConnectionStatusCode(),
+                    0 /* requestCode */).show();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // Indicates that Google Play Services is not available and the problem is not easily
+            // resolvable.
+            String message = "Google Play Services is not available: " +
+                    GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
+
+            Log.e(TAG, message);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Called after the autocomplete activity has finished to return its result.
+     */
+
+
+    /**
+     * Helper method to format information about a place nicely.
+     */
+    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
+        Log.d(TAG, res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+
     }
 
     private void selectImage() {
@@ -205,13 +271,42 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
                 // f.delete();
 
                 break;
-            /*case PICK_CONTACT:
-                if (resultCode == RESULT_OK) {
-                    uriContact = data.getData();
-                    retrieveContactNumber();
-                }*/
+            case REQUEST_CODE_AUTOCOMPLETE:
+                        // Get the user's selected place from the Intent.
+                        Place place = PlaceAutocomplete.getPlace(this, data);
+                        Log.i(TAG, "Place Selected: " + place.getName());
+
+                        // Format the place's details and display them in the TextView.
+                mLocation.setText(place.getName());
+                       /* mLocation.setText(formatPlaceDetails(getResources(), place.getName(),
+                                place.getId(), place.getAddress(), place.getPhoneNumber(),
+                                place.getWebsiteUri()).toString());*/
+                LatLng latLng = place.getLatLng();
+                mLatitude = latLng.latitude;
+                mLongitude = latLng.longitude;
+                Log.d(TAG,"lat,long are "+mLatitude+"  "+mLongitude);
+                        // Display attributions if required.
+                        CharSequence attributions = place.getAttributions();
+                        if (!TextUtils.isEmpty(attributions)) {
+//                            mLocation.setText(Html.fromHtml(attributions.toString()));
+                            Log.d(TAG,"attributions "+attributions.toString());
+                        } else {
+//                            mLocation.setText("");
+                            Log.d(TAG,"attributions empty");
+                        }
+                    break;
+            // Indicates that the activity closed before a selection was made. For example if
+            // the user pressed the back button.
+            case PlaceAutocomplete.RESULT_ERROR:
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                Log.e(TAG, "Error: Status = " + status.toString());
+                break;
+
         }
-    }
+
+
+        }
+
 
     private void doCrop() {
 
@@ -290,6 +385,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
         formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
         formParams.put(APIParams.PARAM_LOCATION_INFO, prepareLocationsInfo());
+        if(mShopImageBitmap!=null)
         formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
         return formParams;
     }
@@ -302,8 +398,8 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             jsonObject.put("location_name",mLocation.getText().toString());
             jsonObject.put("full_address",mFullAddress.getText().toString());
             jsonObject.put("phone_no",mPhoneNumber.getText().toString());
-            jsonObject.put("latitude","124578.2547");
-            jsonObject.put("longitude","14785.245");
+            jsonObject.put("latitude",mLatitude);
+            jsonObject.put("longitude",mLongitude);
             jsonArray.put(jsonObject);
 
         }catch (Exception e){
@@ -315,11 +411,15 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     @Override
     public void getResult(Object object) {
-
+            dismissProgress();
+        startActivity(new Intent(this,PostOfferActivity.class));
     }
 
     @Override
-    public void getErrorResult(Object object) {
-
+    public void getErrorResult(Object errorResp) {
+        dismissProgress();
+        if(errorResp !=null){
+            showAlert((String) errorResp);
+        }
     }
 }
