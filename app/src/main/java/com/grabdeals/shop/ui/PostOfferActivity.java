@@ -38,6 +38,8 @@ import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -476,6 +478,16 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     @Override
     public void getResult(Object object) {
                 dismissProgress();
+        try  {
+            JSONObject jsonObject = (JSONObject) object;
+            JSONObject data = jsonObject.getJSONObject("data");
+            int offerId = data.getInt("offer_id");
+            showToast("Offer posted successfully..");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

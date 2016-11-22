@@ -17,6 +17,6 @@ public class Constants {
     public static final String API_POST_OFFER = "shop/post_offer";
 
 
-    public static final String API_OFFER_ALL ="shop/offers/list" ;
+    public static final String API_OFFER_ALL ="shop/offers/list";
     public static final String API_OFFER_DETAILS_BY_ID = "shop/offer";
 }
