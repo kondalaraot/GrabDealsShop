@@ -53,12 +53,15 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Offer offer = mOffers.get(position);
-       /* holder.mTvOfferName.setText(patient.getOfferName());
-        holder.mTvAdmiDate.setText(patient.getAdmitDatetime());
-        holder.mTvAdmReason.setText(patient.getReasonForAdmission());
-        holder.mTvRoomNo.setText("Room #"+patient.getRoom());
-        holder.mTvFacilityName.setText(patient.getFacilityName());
-        holder.mTvAdmType.setText(patient.getAdmissionType());*/
+        holder.mTvOfferTitle.setText(offer.getTitle());
+        holder.mTvOfferDesc.setText(offer.getDescription());
+        holder.mValueOfferEnds.setText(offer.getOffer_end());
+        if(offer.getLocations()!=null && offer.getLocations().size()>0){
+            holder.mTvLocation.setText(offer.getLocations().get(0).getArea_name());
+        }else{
+            holder.mTvLocation.setText("No location");
+
+        }
 
     }
 

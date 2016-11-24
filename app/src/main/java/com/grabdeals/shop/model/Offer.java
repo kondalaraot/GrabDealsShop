@@ -1,66 +1,111 @@
 package com.grabdeals.shop.model;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by KTirumalsetty on 11/17/2016.
  */
 
-public class Offer {
+public class Offer implements Serializable{
 
-    private String offerId;
-    private String offerTitle;
-    private String desc;
-    private String location;
-    private String endDate;
-    private String avatarUrl;
+    /*"created_date": "2016-11-22 17:54:52",
+            "offer_end": "2016-11-23",
+            "title": "offer title test flat 30 % discount",
+            "offer_id": "4",
+            "locations": [
+    {
+        "city_id": "2",
+            "city_name": "Hyderabad",
+            "area_id": "3",
+            "area_name": "Ameerpet"
+    },
+    {
+        "city_id": "2",
+            "city_name": "Hyderabad",
+            "area_id": "70",
+            "area_name": "Madhapur"
+    }
+    ],
+            "description": "Offer description of the day please get 40 to 50 percent of the day please get 40 to 50 percent of the day please get 40 to 50 percent of the day please get 40 to 50 percent \nThanks for the apps worked earlier this week and",
+            "offer_start": "2016-11-22",
+            "attachments": [
+
+            ]*/
+
+    private String created_date;
+    private String offer_end;
+    private String title;
+    private String offer_id;
+    private String description;
+    private String offer_start;
+    List<Location> locations;
+    List<String> attachments;
 
     public Offer() {
     }
 
-    public String getOfferId() {
-        return offerId;
+    public String getCreated_date() {
+        return created_date;
     }
 
-    public void setOfferId(String offerId) {
-        this.offerId = offerId;
+    public void setCreated_date(String created_date) {
+        this.created_date = created_date;
     }
 
-    public String getOfferTitle() {
-        return offerTitle;
+    public String getOffer_end() {
+        return offer_end;
     }
 
-    public void setOfferTitle(String offerTitle) {
-        this.offerTitle = offerTitle;
+    public void setOffer_end(String offer_end) {
+        this.offer_end = offer_end;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getLocation() {
-        return location;
+    public String getOffer_id() {
+        return offer_id;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setOffer_id(String offer_id) {
+        this.offer_id = offer_id;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getOffer_start() {
+        return offer_start;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setOffer_start(String offer_start) {
+        this.offer_start = offer_start;
+    }
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
+
+    public List<String> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<String> attachments) {
+        this.attachments = attachments;
     }
 }

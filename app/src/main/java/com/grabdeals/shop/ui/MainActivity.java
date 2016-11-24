@@ -67,7 +67,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
 
                 Offer offer = mOffersList.get(position);
                 Intent intent = new Intent(MainActivity.this,OfferDetailsActivity.class);
-                intent.putExtra("OFFER_ID",offer.getOfferId());
+                intent.putExtra("OFFER_ID",offer.getOffer_id());
                 startActivity(intent);
             }
 
@@ -97,10 +97,10 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
             JSONObject response = (JSONObject) object;
 
             if (response!=null && response.getInt("code") == 200) {
-                JSONArray patientsArray = response.getJSONArray("Content");
+                JSONArray data = response.getJSONArray("data");
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<Offer>>(){}.getType();
-                mOffersList = gson.fromJson(patientsArray.toString(), listType);
+                mOffersList = gson.fromJson(data.toString(), listType);
                 if(mOffersList.size() >0){
                     OffersAdapter adapter = new OffersAdapter(mOffersList);
                     mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
