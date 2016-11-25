@@ -59,6 +59,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
 
     Uri mImageCaptureUri;
     Bitmap mShopImageBitmap;
+    Bitmap mShopImageCircleBitmap;
 
     final CharSequence[] items = { "Take Photo", "Choose from Library",
             "Cancel" };
@@ -244,9 +245,9 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
                 Bundle extras = data.getExtras();
 
                 if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
-                    mImage.setImageBitmap(mShopImageBitmap);
+                    mShopImageBitmap = extras.getParcelable("data");
+                    mShopImageCircleBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
+                    mImage.setImageBitmap(mShopImageCircleBitmap);
                 }
 
                 // File f = new File(mImageCaptureUri.getPath());

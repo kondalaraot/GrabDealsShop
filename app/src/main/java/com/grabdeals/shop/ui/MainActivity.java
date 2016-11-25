@@ -1,11 +1,19 @@
 package com.grabdeals.shop.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,12 +39,14 @@ import java.util.List;
 
 import static android.view.View.VISIBLE;
 
-public class MainActivity extends BaseAppCompatActivity implements VolleyCallbackListener{
+public class MainActivity extends BaseAppCompatActivity implements VolleyCallbackListener {
 
     public static final String TAG = "MainActivity";
     RecyclerView mRecyclerView;
     TextView mTextViewEmpty;
     private List<Offer> mOffersList;
+    OffersAdapter mOffersAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,22 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
 
         mRecyclerView = (RecyclerView) findViewById(R.id.lv_offers);
         mTextViewEmpty = (TextView) findViewById(R.id.tv_empty);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        getOffersVolley();
+                    }
+                }, 2000);
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +81,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MainActivity.this,PostOfferActivity.class);
+                Intent intent = new Intent(MainActivity.this, PostOfferActivity.class);
                 startActivity(intent);
 
             }
@@ -66,8 +92,9 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
             public void onClick(View view, int position) {
 
                 Offer offer = mOffersList.get(position);
-                Intent intent = new Intent(MainActivity.this,OfferDetailsActivity.class);
-                intent.putExtra("OFFER_ID",offer.getOffer_id());
+                Intent intent = new Intent(MainActivity.this, OfferDetailsActivity.class);
+                intent.putExtra("OFFER_ID", offer.getOffer_id());
+                intent.putExtra("OFFER_OBJ", offer);
                 startActivity(intent);
             }
 
@@ -77,19 +104,86 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
             }
         }));
 
-        if(NetworkUtil.isNetworkAvailable(this)){
+        if (NetworkUtil.isNetworkAvailable(this)) {
             showProgress("Please wait, fetching offers...");
             getOffersVolley();
 //            getPatientsVolleyStringReq();
-        }else{
+        } else {
             showAlert("Please check your network connection..");
         }
     }
 
     private void getOffersVolley() {
-        NetworkManager.getInstance().getRequest(Constants.API_OFFER_ALL,null,this);
+        NetworkManager.getInstance().getRequest(Constants.API_OFFER_ALL, null, this);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        inflater.inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate( R.menu.menu_home, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) item.getActionView();
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                    mOffersAdapter.getFilter().filter(newText);
+
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+// Do something when collapsed
+//                        adapter.setFilter(mCountryModel);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+// Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+            return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_fav) {
+//            showAlertDialog();
+        }else  if (item.getItemId() == R.id.action_logout) {
+//            showAlertDialog();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to logout?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void getResult(Object object) {
         dismissProgress();
@@ -102,12 +196,12 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
                 Type listType = new TypeToken<List<Offer>>(){}.getType();
                 mOffersList = gson.fromJson(data.toString(), listType);
                 if(mOffersList.size() >0){
-                    OffersAdapter adapter = new OffersAdapter(mOffersList);
+                    mOffersAdapter = new OffersAdapter(mOffersList);
                     mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
                     LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     mRecyclerView.setLayoutManager(llm);
-                    mRecyclerView.setAdapter(adapter);
+                    mRecyclerView.setAdapter(mOffersAdapter);
                 }else{
                     mTextViewEmpty.setVisibility(VISIBLE);
                 }

@@ -87,4 +87,6 @@
     ]]>
     </string>
     <string name="title_activity_offers_list">Offers</string>
+    <string name="title_activity_offer_details">Offer details</string>
+    <string name="action_search">Search</string>
 </resources>

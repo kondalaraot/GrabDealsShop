@@ -7,4 +7,12 @@
         android:title="@string/logout"
         android:icon="@android:drawable/ic_lock_power_off"
         app:showAsAction="ifRoom" />
-    </menu>
+
+
+  <item android:id="@+id/action_search"
+    android:icon="@android:drawable/ic_menu_search"
+    android:title="@string/action_search"
+    app:actionViewClass="android.support.v7.widget.SearchView"
+    app:showAsAction="always|collapseActionView" />
+
+</menu>

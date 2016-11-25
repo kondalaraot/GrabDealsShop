@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.grabdeals.shop.ui.OfferDetailsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+<LinearLayout
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:id="@+id/activity_offer_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -48,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:text="India's mostFashionable sale"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/body_font_color" />
@@ -130,3 +152,4 @@
         android:src="@android:drawable/btn_star"/>
 
 </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

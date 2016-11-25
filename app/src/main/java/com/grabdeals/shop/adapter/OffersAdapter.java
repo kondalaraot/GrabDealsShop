@@ -1,23 +1,31 @@
 package com.grabdeals.shop.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Offer;
+import com.grabdeals.shop.util.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by KTirumalsetty on 11/17/2016.
  */
 
-public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHolder> {
+public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHolder> implements Filterable{
 
     private List<Offer> mOffers;
+    private List<Offer> mOriginalOffers;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -39,8 +47,9 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
 
     }
 
-    public OffersAdapter(List<Offer> patientsList) {
-        this.mOffers = patientsList;
+    public OffersAdapter(List<Offer> offerList) {
+        this.mOffers = offerList;
+        this.mOriginalOffers = offerList;
     }
 
     @Override
@@ -69,4 +78,55 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
     public int getItemCount() {
         return mOffers.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new OffersFilter();
+    }
+
+    public class OffersFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            if(Constants.DEBUG) Log.d(TAG,"performFiltering ");
+            FilterResults filterResults = new FilterResults();
+
+            if (constraint == null || constraint.length() == 0) {
+                // No filter implemented we return all the list
+                filterResults.values = mOriginalOffers;
+                filterResults.count = mOriginalOffers.size();
+            }
+            else {
+                List<Offer> filteredList= new ArrayList<Offer>();
+                for (int i = 0; i < mOriginalOffers.size(); i++) {
+                    Offer offer = mOriginalOffers.get(i);
+                    if (offer.getTitle().toUpperCase().contains(constraint.toString().toUpperCase()))  {
+                        filteredList.add(offer);
+                    }
+                }
+                filterResults.values = filteredList;
+                filterResults.count = filteredList.size();
+            }
+            return filterResults;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            if(Constants.DEBUG) Log.d(TAG,"publishResults ");
+
+			/*if (results.count == 0) {
+	            notifyDataSetInvalidated();
+	        } else {*/
+            mOffers =  (ArrayList<Offer>) results.values;
+            notifyDataSetChanged();
+            //AddGroup.setListViewHeightBasedOnChildren(mListView);
+
+            //}
+        }
+
+
+    }
+    
 }

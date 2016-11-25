@@ -1,6 +1,8 @@
 package com.grabdeals.shop.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,11 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
-import com.grabdeals.shop.util.Constants;
-import com.grabdeals.shop.util.NetworkManager;
-import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONException;
@@ -35,6 +36,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     private ImageView mIvOffer;
 
     private String mOfferID;
+    private Offer mOffer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +46,30 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mOfferID = getIntent().getStringExtra("OFFER_ID");
+        mOffer = (Offer) getIntent().getSerializableExtra("OFFER_OBJ");
         findViews();
 
-        if(NetworkUtil.isNetworkAvailable(this)){
+       /* if(NetworkUtil.isNetworkAvailable(this)){
             showProgress("Please wait, fetching offer details...");
             NetworkManager.getInstance().getRequest(Constants.API_OFFER_DETAILS_BY_ID+mOfferID,null,this);
 //            getPatientsVolleyStringReq();
         }else{
             showAlert("Please check your network connection..");
-        }
+        }*/
+        populateOfferDetails();
+    }
 
-
+    private void populateOfferDetails() {
+        mTvShopName.setText(MyApplication.sAccount.getShop_name());
+        mTvOfferTitle.setText(mOffer.getTitle());
+        Location location = mOffer.getLocations().get(0);
+        mTvOfferAddress.setText(location.getArea_name()+","+location.getCity_name());
+        mTvOfferPhoneNo.setText(MyApplication.sAccount.getMobile_no());
+        mTvShopUrl.setText(MyApplication.sAccount.getWeb_site());
+        mTvOfferTimings.setText("No data");
+        mTvOfferEndDate.setText(mOffer.getOffer_end());
+        mTvOfferDesc.setText(mOffer.getDescription());
+        mIvOffer.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.office_building_icon, null));
     }
 
     private void findViews() {
@@ -84,6 +99,14 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 //            showAlertDialog();
         }else  if (item.getItemId() == R.id.action_share) {
 //            showAlertDialog();
+            if(mOffer !=null){
+                Intent i=new Intent(android.content.Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(android.content.Intent.EXTRA_SUBJECT,mOffer.getTitle());
+                i.putExtra(android.content.Intent.EXTRA_TEXT, mOffer.getDescription());
+                startActivity(Intent.createChooser(i,"Share via"));
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -95,10 +118,10 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
             JSONObject response = (JSONObject) object;
 
             if (response!=null && response.getInt("code") == 200) {
-                JSONObject offerDetailsObj = response.getJSONObject("Content");
+                JSONObject data = response.getJSONObject("data");
                 Gson gson = new Gson();
 //                Type listType = new TypeToken<List<Offer>>(){}.getType();
-                Offer offerDetails = gson.fromJson(offerDetailsObj.toString(), Offer.class);
+                Offer offerDetails = gson.fromJson(data.toString(), Offer.class);
 
             } else {
                 showAlert(response.getString("message"));

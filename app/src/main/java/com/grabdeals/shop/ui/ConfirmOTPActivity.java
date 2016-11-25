@@ -50,6 +50,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     private String password;
     private Uri mImageCaptureUri;
     private Bitmap mShopImageBitmap;
+    private Bitmap mShopImageCircledBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,9 +217,9 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
                 Bundle extras = data.getExtras();
 
                 if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
-                    mImage.setImageBitmap(mShopImageBitmap);
+                    mShopImageBitmap = extras.getParcelable("data");
+                    mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
+                    mImage.setImageBitmap(mShopImageCircledBitmap);
                 }
 
                 // File f = new File(mImageCaptureUri.getPath());

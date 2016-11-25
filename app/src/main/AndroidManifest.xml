@@ -66,6 +66,11 @@
             android:label="@string/title_activity_offers_list"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.OfferDetailsActivity"
+            android:label="@string/title_activity_offer_details"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
         <!-- For GCM -->
