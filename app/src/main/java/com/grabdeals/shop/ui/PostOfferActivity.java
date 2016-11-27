@@ -27,6 +27,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.ShopBranch;
@@ -38,9 +40,11 @@ import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -149,12 +153,19 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         });
 
         shopBranches =  MyApplication.sAccount.getShop_branches();
-        List<String> locations = new ArrayList<String>();
-//        locations.add("--Select locations--");
-        for (ShopBranch shopBranch : shopBranches) {
-            locations.add(shopBranch.getLocation_name());
+
+        if(shopBranches == null || shopBranches.size() == 0){
+            if(NetworkUtil.isNetworkAvailable(this)){
+                showProgress("Getting shop Locations..");
+                NetworkManager.getInstance().getRequest(Constants.API_SHOP_LOCATIONS+getPrefManager().getShopID(),null,this,Constants.API_SHOP_LOCATIONS_REQ_CODE);
+            }else{
+                showAlert("Please check your network ");
+            }
+
+        }else{
+            populateLocationsSpinner(shopBranches);
         }
-        mLocations.setItems(locations);
+
 
         mLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -167,6 +178,16 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
             }
         });
+    }
+
+    private void populateLocationsSpinner(List<ShopBranch> shopBranches){
+        List<String> locations = new ArrayList<String>();
+//        locations.add("--Select locations--");
+        for (ShopBranch shopBranch : shopBranches) {
+            locations.add(shopBranch.getLocation_name());
+        }
+        mLocations.setItems(locations);
+
     }
 
 
@@ -251,7 +272,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             if (validate()){
                 if(NetworkUtil.isNetworkAvailable(this)){
                     showProgress("Posting offer...");
-                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this);
+                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this,0);
                 }else{
                     showAlert("Please check your network connection..");
                 }
@@ -476,13 +497,32 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
                 dismissProgress();
         try  {
+
             JSONObject jsonObject = (JSONObject) object;
-            JSONObject data = jsonObject.getJSONObject("data");
-            int offerId = data.getInt("offer_id");
-            showToast("Offer posted successfully..");
+            if(reqCode == Constants.API_SHOP_LOCATIONS_REQ_CODE){
+                if(jsonObject.getInt("code") == 200){
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    Type listType = new TypeToken<List<ShopBranch>>() {}.getType();
+                    shopBranches = new Gson().fromJson(data.toString(), listType);
+                    populateLocationsSpinner(shopBranches);
+                }else{
+                    showAlert("No shop locations found..");
+                }
+
+
+            }else{
+                JSONObject data = jsonObject.getJSONObject("data");
+                int offerId = data.getInt("offer_id");
+                showToast("Offer posted successfully..");
+                Intent intent = new Intent(this,MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+
 
         }catch (Exception e){
             e.printStackTrace();

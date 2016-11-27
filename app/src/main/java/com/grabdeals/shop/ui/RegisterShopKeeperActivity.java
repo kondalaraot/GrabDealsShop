@@ -115,7 +115,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
             if (validate())
                 if(NetworkUtil.isNetworkAvailable(this)){
                     showProgress("Please wait...");
-                    NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this);
+                    NetworkManager.getInstance().postRequest(Constants.API_IS_REGISTER,preparePostParams(),this,0);
                 }else{
                     showAlert("Please check your network connection..");
                 }
@@ -296,7 +296,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     }
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
         dismissProgress();
         if (object != null) {
             JSONObject jsonObject = (JSONObject) object;

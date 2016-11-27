@@ -58,6 +58,7 @@ public class VolleyCustomRequest extends Request<JSONObject> {
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JSONException je) {
+            je.printStackTrace();
             return Response.error(new ParseError(je));
         }
     }

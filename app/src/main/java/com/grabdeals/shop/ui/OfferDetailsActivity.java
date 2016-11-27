@@ -2,19 +2,22 @@ package com.grabdeals.shop.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
+import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.NetworkImageViewRounded;
+import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONException;
@@ -24,7 +27,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
     private static final String TAG = "OfferDetailsActivity";
 
-    private ImageView mIvShop;
+    private NetworkImageViewRounded mIvShop;
     private TextView mTvShopName;
     private TextView mTvOfferTitle;
     private TextView mTvOfferAddress;
@@ -33,7 +36,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     private TextView mTvOfferTimings;
     private TextView mTvOfferEndDate;
     private TextView mTvOfferDesc;
-    private ImageView mIvOffer;
+    private NetworkImageView mIvOffer;
 
     private String mOfferID;
     private Offer mOffer;
@@ -67,13 +70,20 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         mTvOfferPhoneNo.setText(MyApplication.sAccount.getMobile_no());
         mTvShopUrl.setText(MyApplication.sAccount.getWeb_site());
         mTvOfferTimings.setText("No data");
-        mTvOfferEndDate.setText(mOffer.getOffer_end());
+        mTvOfferEndDate.append(mOffer.getOffer_end());
         mTvOfferDesc.setText(mOffer.getDescription());
-        mIvOffer.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.office_building_icon, null));
+//        mIvOffer.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.office_building_icon, null));
+        mIvOffer.setDefaultImageResId(R.drawable.office_building_icon);
+        String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
+        Log.d(TAG,shorUrl);
+        mIvOffer.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
+        mIvOffer.setErrorImageResId(android.R.drawable.ic_dialog_alert);
+
+
     }
 
     private void findViews() {
-        mIvShop = (ImageView)findViewById( R.id.iv_shop );
+        mIvShop = (NetworkImageViewRounded)findViewById( R.id.iv_shop );
         mTvShopName = (TextView)findViewById( R.id.tv_shop_name );
         mTvOfferTitle = (TextView)findViewById( R.id.tv_offer_title );
         mTvOfferAddress = (TextView)findViewById( R.id.tv_offer_address );
@@ -82,7 +92,19 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         mTvOfferTimings = (TextView)findViewById( R.id.tv_offer_timings );
         mTvOfferEndDate = (TextView)findViewById( R.id.tv_offer_end_date );
         mTvOfferDesc = (TextView)findViewById( R.id.tv_offer_desc );
-        mIvOffer = (ImageView)findViewById( R.id.iv_offer );
+        mIvOffer = (NetworkImageView)findViewById( R.id.iv_offer );
+        String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
+        Log.d(TAG,shorUrl);
+        mIvShop.setDefaultImageResId(R.drawable.default_user);
+       /* String query = null;
+        try {
+            query = URLEncoder.encode(shorUrl, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG,query);*/
+
+        mIvShop.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
     }
 
     @Override
@@ -112,7 +134,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     }
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
         dismissProgress();
         try {
             JSONObject response = (JSONObject) object;

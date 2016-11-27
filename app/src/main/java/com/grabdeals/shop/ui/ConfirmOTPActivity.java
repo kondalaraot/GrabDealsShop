@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.util.APIParams;
@@ -41,6 +42,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
 
     private ImageView mImage;
     private ImageView mSelectImage;
+    private TextView mOtpSentTo;
     private EditText mEnterOtp;
     private Button mBtnVerify;
     private Button mBtnResendOtp;
@@ -65,7 +67,10 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
         mImageCaptureUri = getIntent().getParcelableExtra("KEY_IMAGE_URI");
         findViews();
         if(mShopImageBitmap !=null){
-            mImage.setImageBitmap(mShopImageBitmap);
+            Bitmap mShopImageCircleBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
+            mImage.setImageBitmap(mShopImageCircleBitmap);
+
+
         }
 
     }
@@ -76,9 +81,11 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     private void findViews() {
         mImage = (ImageView)findViewById( R.id.image_shop );
         mSelectImage = (ImageView)findViewById( R.id.iv_camera );
+        mOtpSentTo = (TextView)findViewById( R.id.otp_sent_to );
         mEnterOtp = (EditText)findViewById( R.id.enter_otp );
         mBtnVerify = (Button)findViewById( R.id.btn_verify );
         mBtnResendOtp = (Button)findViewById( R.id.btn_resend_otp );
+        mOtpSentTo.append(mobileNo);
         mBtnVerify.setOnClickListener( this );
         mBtnResendOtp.setOnClickListener( this );
         mSelectImage.setOnClickListener( this );
@@ -94,11 +101,13 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
             // Handle clicks for mBtnVerify
             if(validate()){
                 showProgress("signing up...");
-                NetworkManager.getInstance().postRequest(Constants.API_SIGN_UP,preparePostParams(),this);
+                NetworkManager.getInstance().postRequest(Constants.API_SIGN_UP,preparePostParams(),this,Constants.API_SIGN_UP_REQ_CODE);
 
             }
         } else if ( v == mBtnResendOtp ) {
             // Handle clicks for mBtnResendOtp
+            showProgress("Sending OTP...");
+            NetworkManager.getInstance().postRequest(Constants.API_SEND_OTP_SIGN_UP,prepareSendOtpPostParams(),this,Constants.API_SEND_OTP_SIGN_UP_REQ_CODE);
         }else if ( v == mSelectImage ) {
             // Handle clicks for mBtnResendOtp
             selectImage();
@@ -142,6 +151,13 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
         formParams.put(APIParams.PARAM_OTP_CODE, mEnterOtp.getText().toString());
         if(mShopImageBitmap != null)
         formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
+        return formParams;
+    }
+
+    private Map<String,String> prepareSendOtpPostParams(){
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put(APIParams.PARAM_MOBILE_NO, mobileNo);
+
         return formParams;
     }
 
@@ -261,7 +277,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
 
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
         dismissProgress();
 
         if(object!=null){
@@ -269,11 +285,19 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
             try {
                 if(jsonObject.getInt("code") == 200){
 //                    showAlert(jsonObject.getString("message"));
-                    String authToken = jsonObject.getJSONObject("data").getString("auth_token");
-                    getPrefManager().setAuthToken(authToken);
-                    startActivity(new Intent(this,EnterShopDetailsActivity.class));
-                    finish();
+                    if(reqCode == Constants.API_SEND_OTP_SIGN_UP_REQ_CODE){
+                        showAlert(jsonObject.getString("message"));
 
+                    }else{
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        String authToken = data.getString("auth_token");
+                        JSONObject account = data.getJSONObject("account");
+                        getPrefManager().setAuthToken(authToken);
+                        getPrefManager().setAccountID(account.getString("acc_id"));
+                        getPrefManager().setShopID(account.getString("shop_id"));
+                        startActivity(new Intent(this,EnterShopDetailsActivity.class));
+                        finish();
+                    }
                 }else{
                     showAlert(jsonObject.getString("message"));
 
@@ -287,8 +311,11 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     }
 
     @Override
-    public void getErrorResult(Object object) {
+    public void getErrorResult(Object errorResp) {
         dismissProgress();
+        if(errorResp !=null){
+            showAlert((String) errorResp);
+        }
 
     }
 }

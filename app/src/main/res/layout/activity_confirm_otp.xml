@@ -54,6 +54,7 @@
                 android:background="@color/btn_background"></View>
 
             <TextView
+                android:id="@+id/otp_sent_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OTP SMS sent to "/>
@@ -95,7 +96,9 @@
                 android:layout_height="wrap_content"
                 style="@style/TransButton"
                 android:textStyle="bold"
-                android:text="@string/action_resend_otp"/>
+
+                android:text="@string/action_resend_otp"
+                />
 
         </LinearLayout>
     </ScrollView>

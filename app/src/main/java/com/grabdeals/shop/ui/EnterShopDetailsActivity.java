@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -42,6 +43,7 @@ import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -101,6 +103,19 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mBtnAddMoreLoc.setOnClickListener( this );
         mBtnSaveDetails.setOnClickListener( this );
         mIvCamera.setOnClickListener( this );
+        mImage.setDefaultImageResId(R.drawable.default_user);
+        String imageUrl = Constants.SHOP_AVATAR_URL+ getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
+//        String imageUrl = "https://www.google.ca/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
+        Log.d(TAG,"Shop image url"+imageUrl);
+        // Instantiate the RequestQueue.
+        ImageLoader mImageLoader = NetworkManager.getInstance(this)
+                .getImageLoader();
+        NetworkManager.getInstance().getImageLoader().get(imageUrl, ImageLoader.getImageListener(mImage,
+                R.mipmap.ic_launcher, android.R.drawable
+                        .ic_dialog_alert));
+        mImage.setImageUrl(imageUrl,mImageLoader);
+
+
         mLocation.setInputType(InputType.TYPE_NULL);
 
         mLocation.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +157,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             if (validate()){
                 if(NetworkUtil.isNetworkAvailable(this)){
                     showProgress("Please wait, Adding Shop Details...");
-                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this);
+                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this,0);
                 }else{
                     showAlert("Please check your network connection..");
                 }
@@ -410,9 +425,20 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
 
     @Override
-    public void getResult(Object object) {
-            dismissProgress();
-        startActivity(new Intent(this,PostOfferActivity.class));
+    public void getResult(int reqCode,Object object) {
+        dismissProgress();
+        JSONObject jsonObject = (JSONObject) object;
+        try {
+            if(jsonObject.getInt("code") == 200){
+                showToast(jsonObject.getString("message"));
+                startActivity(new Intent(this,PostOfferActivity.class));
+
+            }else{
+                showAlert(jsonObject.getString("message"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

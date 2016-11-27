@@ -82,7 +82,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
         mForgotPassButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this,PostOfferActivity.class));
+//                startActivity(new Intent(LoginActivity.this,PostOfferActivity.class));
             }
         });
 
@@ -131,7 +131,11 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             mPhoneNoView.setError(getString(R.string.error_field_required));
             focusView = mPhoneNoView;
             cancel = true;
-        } else if (!isValidMobile(poneNo)) {
+        } else if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }else if (!isValidMobile(poneNo)) {
             mPhoneNoView.setError(getString(R.string.error_invalid_mobile));
             focusView = mPhoneNoView;
             cancel = true;
@@ -145,7 +149,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress("please wait...");
-            NetworkManager.getInstance().postRequest(Constants.API_LOGIN,getParams(),this);
+            NetworkManager.getInstance().postRequest(Constants.API_LOGIN,getParams(),this,0);
 
 
         }
@@ -176,7 +180,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
     }
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
         dismissProgress();
         try {
             JSONObject jsonObject = (JSONObject) object;
@@ -191,7 +195,10 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
                 String authToken = data.getString("auth_token");
                 if(Constants.DEBUG)Log.d(TAG,"authToken "+authToken);
                 getPrefManager().setAuthToken(authToken);
-
+//                JSONObject account = data.getJSONObject("account");
+                getPrefManager().setAuthToken(authToken);
+                getPrefManager().setAccountID(account.getString("acc_id"));
+                getPrefManager().setShopID(account.getString("shop_id"));
                 if(accountObj.getShop_branches()!=null && accountObj.getShop_branches().size()>0){
                     Intent intent = new Intent(this,MainActivity.class);
                     startActivity(intent);

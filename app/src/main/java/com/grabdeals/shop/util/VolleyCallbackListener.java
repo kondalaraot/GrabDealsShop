@@ -6,6 +6,6 @@ package com.grabdeals.shop.util;
 
 public interface VolleyCallbackListener<T> {
 
-    public void getResult(T object);
+    public void getResult(int reqCode,T object);
     public void getErrorResult(T object);
 }

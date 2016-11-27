@@ -11,6 +11,8 @@ import com.grabdeals.shop.ui.LoginActivity;
  */
 
 public class PreferenceManager {
+    private static final String KEY_ACC_ID = "acc_id" ;
+    private static final String KEY_SHOP_ID = "shop_id";
     // Shared Preferences
     SharedPreferences mPreferences;
 
@@ -46,9 +48,22 @@ public class PreferenceManager {
         mEditor.putString(KEY_AUTH_TOKEN, authToken).commit();
 
     }
+    public void setAccountID(String accId) {
+        mEditor.putString(KEY_ACC_ID, accId).commit();
+
+    }public void setShopID(String shopID) {
+        mEditor.putString(KEY_SHOP_ID, shopID).commit();
+
+    }
     public String getAuthToken() {
         String bearerToken = mPreferences.getString(KEY_AUTH_TOKEN,"");
         return bearerToken;
+    }
+    public String getShopID() {
+        return mPreferences.getString(KEY_SHOP_ID,"");
+    }
+    public String getAccID() {
+        return mPreferences.getString(KEY_ACC_ID,"");
     }
 
     /**

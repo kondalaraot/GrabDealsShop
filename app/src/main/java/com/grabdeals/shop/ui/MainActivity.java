@@ -114,7 +114,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
     }
 
     private void getOffersVolley() {
-        NetworkManager.getInstance().getRequest(Constants.API_OFFER_ALL, null, this);
+        NetworkManager.getInstance().getRequest(Constants.API_OFFER_ALL, null, this,0);
 
     }
 
@@ -185,7 +185,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
     }
 
     @Override
-    public void getResult(Object object) {
+    public void getResult(int reqCode,Object object) {
         dismissProgress();
         try {
             JSONObject response = (JSONObject) object;
@@ -207,6 +207,8 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
                 }
             } else {
                 showAlert(response.getString("message"));
+                mTextViewEmpty.setVisibility(VISIBLE);
+
 
             }
         } catch (JSONException e) {

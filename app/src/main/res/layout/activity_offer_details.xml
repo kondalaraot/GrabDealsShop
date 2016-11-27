@@ -45,7 +45,7 @@
             android:layout_gravity="center_vertical"
             android:orientation="vertical">
 
-            <ImageView
+            <com.grabdeals.shop.util.NetworkImageViewRounded
                 android:id="@+id/iv_shop"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
@@ -56,7 +56,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Big Bazar" />
+                android:maxLines="2"
+                android:typeface="serif"
+                android:text="Big Bazar"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +77,7 @@
                 android:ellipsize="end"
                 android:text="India's mostFashionable sale"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/body_font_color" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/tv_offer_address"
@@ -83,7 +88,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:text="g-35 carat building ameerpet road  Hyderabad,telanaga 500073"
-                android:textColor="@color/body_font_color" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/tv_offer_phone_no"
@@ -94,7 +99,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="040 4260 7040"
-                android:textColor="@color/body_font_color" />
+                 />
 
             <TextView
                 android:id="@+id/tv_shop_url"
@@ -106,7 +111,7 @@
                 android:inputType="textUri"
                 android:maxLines="1"
                 android:text="http://www.bigbazar.com"
-                android:textColor="@color/body_font_color" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/tv_offer_timings"
@@ -126,7 +131,8 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="Ends :  Sep 17 2017" />
+                android:textColor="@color/colorPrimary"
+                android:text="Ends : " />
         </LinearLayout>
 
     </LinearLayout>
@@ -143,8 +149,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="10"
+        android:lineSpacingExtra="4dp"
         android:text="Flat 50 to 60 % text data testr sampke data" />
-    <ImageView
+
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/iv_offer"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

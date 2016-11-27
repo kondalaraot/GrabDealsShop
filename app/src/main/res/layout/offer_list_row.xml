@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:lines="1"
+        android:typeface="serif"
         android:text="India's most fashionalble sale "
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:drawableLeft="@android:drawable/ic_input_add"
+            android:drawablePadding="5dp"
             android:text="Ends: " />
 
         <TextView
@@ -45,6 +47,7 @@
             android:id="@+id/value_offer_ends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
             android:text="Sep 17,2016 " />
 
         <TextView
@@ -52,7 +55,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:textColor="@color/colorPrimary"
             android:drawableLeft="@android:drawable/ic_menu_mapmode"
+            android:drawablePadding="5dp"
+
             android:text="Ameerpet:" />
 
 

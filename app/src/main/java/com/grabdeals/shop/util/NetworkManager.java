@@ -1,13 +1,20 @@
 package com.grabdeals.shop.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.android.volley.Cache;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,38 +28,109 @@ import java.util.Map;
 public class NetworkManager
 {
     private static final String TAG = "NetworkManager";
-    private static NetworkManager instance = null;
 
-//    private static final String prefixURL = "http://some/url/prefix/";
+    private static final int MY_SOCKET_TIMEOUT_MS = 5000;
+    private static NetworkManager mInstance = null;
 
     //for Volley API
-    public RequestQueue requestQueue;
+    // Default maximum disk usage in bytes
+    private static final int DEFAULT_DISK_USAGE_BYTES = 25 * 1024 * 1024;
+    // Default cache folder name
+    private static final String DEFAULT_CACHE_DIR = "photos";
+    public RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
+    LruBitmapCache mLruBitmapCache;
+
+    private Context mContext;
+
 
     private NetworkManager(Context context)
     {
-        requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        mContext=context;
+//        mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        mRequestQueue = getRequestQueue();
         //other stuf if you need
+        /*mImageLoader = new ImageLoader(mRequestQueue,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap>
+                            cache = new LruCache<String, Bitmap>(20);
+
+                    @Override
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+
+                    @Override
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        cache.put(url, bitmap);
+                    }
+                });*/
+        mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
+            @Override
+            public void putBitmap(String key, Bitmap value) { }
+
+            @Override
+            public Bitmap getBitmap(String key) {
+                return null;
+            }
+        });
+    }
+
+    public static void clearCache(RequestQueue requestQueue) {
+        requestQueue.getCache().clear();
     }
 
     public static synchronized NetworkManager getInstance(Context context)
     {
-        if (null == instance)
-            instance = new NetworkManager(context);
-        return instance;
+        if (null == mInstance)
+            mInstance = new NetworkManager(context);
+        return mInstance;
     }
 
     //this is so you don't need to pass context each time
     public static synchronized NetworkManager getInstance()
     {
-        if (null == instance)
+        if (null == mInstance)
         {
             throw new IllegalStateException(NetworkManager.class.getSimpleName() +
                     " is not initialized, call getInstance(...) first");
         }
-        return instance;
+        return mInstance;
     }
 
-    public void postRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
+    /*public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }*/
+    public ImageLoader getImageLoader() {
+        getRequestQueue();
+        if (mImageLoader == null) {
+            getLruBitmapCache();
+            mImageLoader = new ImageLoader(this.mRequestQueue, mLruBitmapCache);
+        }
+
+        return this.mImageLoader;
+        //return imageLoader;
+    }
+
+    public RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            Cache cache = new DiskBasedCache(mContext.getCacheDir(), 10 * 1024 * 1024);
+            Network network = new BasicNetwork(new HurlStack());
+            mRequestQueue = new RequestQueue(cache, network);
+            // Don't forget to start the volley request queue
+            mRequestQueue.start();
+        }
+        return mRequestQueue;
+    }
+
+    public LruBitmapCache getLruBitmapCache() {
+        if (mLruBitmapCache == null)
+            mLruBitmapCache = new LruBitmapCache();
+        return this.mLruBitmapCache;
+    }
+
+
+    public void postRequest(String urlSuffix, Object postParams, final VolleyCallbackListener<Object> listener, final int reqCode)
     {
 
         String url = Constants.HOST_URL + urlSuffix;
@@ -67,7 +145,7 @@ public class NetworkManager
                     {
                         if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
                         if(null != response.toString())
-                            listener.getResult(response);
+                            listener.getResult(reqCode,response);
                     }
                 },
                 new Response.ErrorListener()
@@ -81,11 +159,15 @@ public class NetworkManager
                     }
                 });
 
-        requestQueue.add(request);
+        mRequestQueue.add(request);
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
     
   
-    public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener)
+    public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener,int reqCode)
     {
 
         String url = Constants.HOST_URL + urlSuffix;
@@ -100,7 +182,7 @@ public class NetworkManager
                     {
                         if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
                         if(null != response.toString())
-                            listener.getResult(response);
+                            listener.getResult(0,response);
                     }
                 },
                 new Response.ErrorListener()
@@ -112,7 +194,7 @@ public class NetworkManager
                     }
                 });
 
-        requestQueue.add(request);
+        mRequestQueue.add(request);
     }
 
     private String parseErrorResp(VolleyError error){
