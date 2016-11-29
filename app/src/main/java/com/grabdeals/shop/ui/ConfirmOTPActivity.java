@@ -295,6 +295,8 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
                         getPrefManager().setAuthToken(authToken);
                         getPrefManager().setAccountID(account.getString("acc_id"));
                         getPrefManager().setShopID(account.getString("shop_id"));
+                        getPrefManager().setShopName(account.getString("shop_name"));
+                        getPrefManager().setShopMobileNO(account.getString("mobile_no"));
                         startActivity(new Intent(this,EnterShopDetailsActivity.class));
                         finish();
                     }

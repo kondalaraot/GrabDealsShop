@@ -395,7 +395,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     private Map<String,String> preparePostParams(){
         Map<String, String> formParams = new HashMap<>();
-        formParams.put(APIParams.PARAM_SHOP_ID, mShopID);
+        formParams.put(APIParams.PARAM_SHOP_ID, getPrefManager().getShopID());
         formParams.put(APIParams.PARAM_ABOUT_SHOP, mAboutShop.getText().toString());
         formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
         formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
@@ -431,6 +431,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         try {
             if(jsonObject.getInt("code") == 200){
                 showToast(jsonObject.getString("message"));
+                getPrefManager().setShopWebsite(mWebsite.getText().toString());
                 startActivity(new Intent(this,PostOfferActivity.class));
 
             }else{

@@ -13,6 +13,9 @@ import com.grabdeals.shop.ui.LoginActivity;
 public class PreferenceManager {
     private static final String KEY_ACC_ID = "acc_id" ;
     private static final String KEY_SHOP_ID = "shop_id";
+    private static final String KEY_SHOP_NAME ="shop_name" ;
+    private static final String KEY_SHOP_WEBSITE ="web_site" ;
+    private static final String KEY_SHOP_MOBILE_NO = "mobile_no";
     // Shared Preferences
     SharedPreferences mPreferences;
 
@@ -51,8 +54,19 @@ public class PreferenceManager {
     public void setAccountID(String accId) {
         mEditor.putString(KEY_ACC_ID, accId).commit();
 
-    }public void setShopID(String shopID) {
+    }
+    public void setShopID(String shopID) {
         mEditor.putString(KEY_SHOP_ID, shopID).commit();
+
+    }
+    public void setShopName(String shopName) {
+        mEditor.putString(KEY_SHOP_NAME, shopName).commit();
+
+    } public void setShopMobileNO(String shopMobileNO) {
+        mEditor.putString(KEY_SHOP_MOBILE_NO, shopMobileNO).commit();
+
+    }public void setShopWebsite(String shopUrl) {
+        mEditor.putString(KEY_SHOP_WEBSITE, shopUrl).commit();
 
     }
     public String getAuthToken() {
@@ -61,6 +75,15 @@ public class PreferenceManager {
     }
     public String getShopID() {
         return mPreferences.getString(KEY_SHOP_ID,"");
+    }
+    public String getShopMoBileNo() {
+        return mPreferences.getString(KEY_SHOP_MOBILE_NO,"");
+    }
+    public String getShopWebsite() {
+        return mPreferences.getString(KEY_SHOP_WEBSITE,"");
+    }
+    public String getShopName() {
+        return mPreferences.getString(KEY_SHOP_NAME,"");
     }
     public String getAccID() {
         return mPreferences.getString(KEY_ACC_ID,"");

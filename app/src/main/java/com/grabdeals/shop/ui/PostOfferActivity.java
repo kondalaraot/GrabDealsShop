@@ -152,9 +152,8 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             }
         });
 
-        shopBranches =  MyApplication.sAccount.getShop_branches();
 
-        if(shopBranches == null || shopBranches.size() == 0){
+        if(MyApplication.sAccount == null ){
             if(NetworkUtil.isNetworkAvailable(this)){
                 showProgress("Getting shop Locations..");
                 NetworkManager.getInstance().getRequest(Constants.API_SHOP_LOCATIONS+getPrefManager().getShopID(),null,this,Constants.API_SHOP_LOCATIONS_REQ_CODE);
@@ -163,6 +162,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             }
 
         }else{
+            shopBranches =  MyApplication.sAccount.getShop_branches();
             populateLocationsSpinner(shopBranches);
         }
 
@@ -517,9 +517,11 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 JSONObject data = jsonObject.getJSONObject("data");
                 int offerId = data.getInt("offer_id");
                 showToast("Offer posted successfully..");
-                Intent intent = new Intent(this,MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+
+                    Intent intent = new Intent(this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
                 finish();
             }
 
