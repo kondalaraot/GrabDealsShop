@@ -29,7 +29,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.ShopBranch;
 import com.grabdeals.shop.util.APIParams;
@@ -153,7 +152,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         });
 
 
-        if(MyApplication.sAccount == null ){
+       /* if(MyApplication.sAccount == null ){*/
             if(NetworkUtil.isNetworkAvailable(this)){
                 showProgress("Getting shop Locations..");
                 NetworkManager.getInstance().getRequest(Constants.API_SHOP_LOCATIONS+getPrefManager().getShopID(),null,this,Constants.API_SHOP_LOCATIONS_REQ_CODE);
@@ -161,10 +160,10 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 showAlert("Please check your network ");
             }
 
-        }else{
+        /*}else{
             shopBranches =  MyApplication.sAccount.getShop_branches();
             populateLocationsSpinner(shopBranches);
-        }
+        }*/
 
 
         mLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

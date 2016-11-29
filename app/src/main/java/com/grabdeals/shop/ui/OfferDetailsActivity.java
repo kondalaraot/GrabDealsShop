@@ -7,9 +7,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Location;
@@ -19,6 +19,7 @@ import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     private TextView mTvOfferTimings;
     private TextView mTvOfferEndDate;
     private TextView mTvOfferDesc;
-    private NetworkImageView mIvOffer;
+    private ImageView mIvOffer;
 
     private String mOfferID;
     private Offer mOffer;
@@ -78,11 +79,14 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
             mTvOfferEndDate.append(mOffer.getOffer_end());
             mTvOfferDesc.setText(mOffer.getDescription());
 //        mIvOffer.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.office_building_icon, null));
-            mIvOffer.setDefaultImageResId(R.drawable.office_building_icon);
+//            mIvOffer.setDefaultImageResId(R.drawable.office_building_icon);
             String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
             Log.d(TAG,shorUrl);
-            mIvOffer.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
-            mIvOffer.setErrorImageResId(android.R.drawable.ic_dialog_alert);
+            /*mIvOffer.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
+            mIvOffer.setErrorImageResId(android.R.drawable.ic_dialog_alert);*/
+
+            ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
+            imageLoader.displayImage(shorUrl, mIvOffer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,17 +106,11 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         mTvOfferTimings = (TextView)findViewById( R.id.tv_offer_timings );
         mTvOfferEndDate = (TextView)findViewById( R.id.tv_offer_end_date );
         mTvOfferDesc = (TextView)findViewById( R.id.tv_offer_desc );
-        mIvOffer = (NetworkImageView)findViewById( R.id.iv_offer );
+        mIvOffer = (ImageView) findViewById( R.id.iv_offer );
         String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
         Log.d(TAG,shorUrl);
         mIvShop.setDefaultImageResId(R.drawable.default_user);
-       /* String query = null;
-        try {
-            query = URLEncoder.encode(shorUrl, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG,query);*/
+
 
         mIvShop.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
     }

@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Account;
 import com.grabdeals.shop.util.APIParams;
@@ -190,7 +189,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
                 JSONObject account = data.getJSONObject("account");
                 Gson gson = new Gson();
                 Account accountObj = gson.fromJson(account.toString(), Account.class);
-                MyApplication.sAccount = accountObj;
+//                MyApplication.sAccount = accountObj;
                 String shopID = account.getString("shop_id");
                 String authToken = data.getString("auth_token");
                 if(Constants.DEBUG)Log.d(TAG,"authToken "+authToken);
