@@ -8,6 +8,23 @@ import java.io.Serializable;
 
 public class ShopBranch implements Serializable {
 
+  /*  "city_name": "Hyderabad",
+            "location_name": "Nizampet",
+            "shop_state_id": "32",
+            "shop_address": "Full address ",
+            "state_name": "Telangana",
+            "country_name": "India",
+            "id": "1",
+            "shop_country_id": "101",
+            "shop_area_id": "0",
+            "shop_city_id": "2",
+            "area_name": [
+
+            ],
+            "longitude": "78.3766275",
+            "latitude": "17.5164805",
+            "shop_phone": "9948816712"*/
+
     private String city_name;
     private String location_name;
     private String shop_state_id;
