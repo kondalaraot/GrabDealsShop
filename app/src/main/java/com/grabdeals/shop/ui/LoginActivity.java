@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.grabdeals.shop.MyApplication;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Account;
 import com.grabdeals.shop.util.APIParams;
@@ -188,9 +187,9 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
             if (jsonObject!=null && jsonObject.getInt("code") == 200) {
                 JSONObject data = jsonObject.getJSONObject("data");
                 JSONObject account = data.getJSONObject("account");
-
-                Account accountObj = new Gson().fromJson(account.toString(), Account.class);
-                MyApplication.sAccount = accountObj;
+                Gson gson = new Gson();
+                Account accountObj = gson.fromJson(account.toString(), Account.class);
+//                MyApplication.sAccount = accountObj;
                 String shopID = account.getString("shop_id");
                 String authToken = data.getString("auth_token");
                 if(Constants.DEBUG)Log.d(TAG,"authToken "+authToken);
@@ -199,6 +198,9 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
                 getPrefManager().setAuthToken(authToken);
                 getPrefManager().setAccountID(account.getString("acc_id"));
                 getPrefManager().setShopID(account.getString("shop_id"));
+                getPrefManager().setShopName(account.getString("shop_name"));
+                getPrefManager().setShopMobileNO(accountObj.getMobile_no());
+                getPrefManager().setShopWebsite(accountObj.getWeb_site());
                 if(accountObj.getShop_branches()!=null && accountObj.getShop_branches().size()>0){
                     Intent intent = new Intent(this,MainActivity.class);
                     startActivity(intent);

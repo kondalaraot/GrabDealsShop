@@ -167,7 +167,7 @@ public class NetworkManager
     }
     
   
-    public void getRequest(String urlSuffix,Object postParams, final VolleyCallbackListener<Object> listener,int reqCode)
+    public void getRequest(String urlSuffix, Object postParams, final VolleyCallbackListener<Object> listener, final int reqCode)
     {
 
         String url = Constants.HOST_URL + urlSuffix;
@@ -182,7 +182,7 @@ public class NetworkManager
                     {
                         if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
                         if(null != response.toString())
-                            listener.getResult(0,response);
+                            listener.getResult(reqCode,response);
                     }
                 },
                 new Response.ErrorListener()

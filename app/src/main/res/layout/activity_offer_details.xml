@@ -152,7 +152,7 @@
         android:lineSpacingExtra="4dp"
         android:text="Flat 50 to 60 % text data testr sampke data" />
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/iv_offer"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

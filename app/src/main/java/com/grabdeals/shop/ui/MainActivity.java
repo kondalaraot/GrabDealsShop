@@ -163,25 +163,30 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
         if (item.getItemId() == R.id.action_fav) {
 //            showAlertDialog();
         }else  if (item.getItemId() == R.id.action_logout) {
-//            showAlertDialog();
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Are you sure you want to logout?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
+            showLogoutAlert();
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showLogoutAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to logout?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getPrefManager().logoutUser();
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -224,5 +229,11 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
         }
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        showLogoutAlert();
     }
 }
