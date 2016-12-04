@@ -19,7 +19,6 @@ import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,8 +84,8 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
             /*mIvOffer.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
             mIvOffer.setErrorImageResId(android.R.drawable.ic_dialog_alert);*/
 
-            ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
-            imageLoader.displayImage(shorUrl, mIvOffer);
+           /* ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
+            imageLoader.displayImage(shorUrl, mIvOffer);*/
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -22,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
+import com.darsh.multipleimageselect.models.Image;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -79,6 +81,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     private Uri mImageCaptureUri;
     Bitmap mAttachmentBitmap;
     List<ShopBranch> shopBranches;
+    ArrayList<Image> mImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,11 +225,16 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                         e.printStackTrace();
                     }
                 } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    //intent.setType("image/*");
+                   /* Intent intent = new Intent(Intent.ACTION_PICK);
+                    //intent.setType("image*//*");
                     //intent.setAction(Intent.);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);
+                    intent.setType("image*//*");
+                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);*/
+
+                    Intent intent = new Intent(PostOfferActivity.this, AlbumSelectActivity.class);
+//set limit on number of images that can be selected, default is 10
+                    intent.putExtra(com.darsh.multipleimageselect.helpers.Constants.INTENT_EXTRA_LIMIT, 10);
+                    startActivityForResult(intent, PICK_FROM_FILE);
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -271,7 +279,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             if (validate()){
                 if(NetworkUtil.isNetworkAvailable(this)){
                     showProgress("Posting offer...");
-                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this,0);
+                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this,Constants.API_POST_OFFER_REQ_CODE);
                 }else{
                     showAlert("Please check your network connection..");
                 }
@@ -320,8 +328,22 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 break;
 
             case PICK_FROM_FILE:
-                mImageCaptureUri = data.getData();
-                doCrop();
+               /* mImageCaptureUri = data.getData();
+                doCrop();*/
+                //The array list has the image paths of the selected images
+                 mImages = data.getParcelableArrayListExtra(com.darsh.multipleimageselect.helpers.Constants.INTENT_EXTRA_IMAGES);
+                StringBuilder builder = new StringBuilder();
+                for (Image image : mImages) {
+                    String path = image.path;
+                    Log.d(TAG, "path " + path);
+                    String filename = path.substring(path.lastIndexOf("/") + 1);
+                    Log.d(TAG, "filename " + filename);
+                    builder.append(filename + "\n");
+                }
+
+                mUploadOfferPics.setInputType(InputType.TYPE_TEXT_VARIATION_NORMAL);
+                mUploadOfferPics.setText(builder.toString());
+
                 break;
 
             case CROP_FROM_CAMERA:
@@ -512,16 +534,20 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 }
 
 
-            }else{
+            }else if(reqCode == Constants.API_POST_OFFER_REQ_CODE){
                 JSONObject data = jsonObject.getJSONObject("data");
                 int offerId = data.getInt("offer_id");
                 showToast("Offer posted successfully..");
-
-                    Intent intent = new Intent(this,MainActivity.class);
+                uploadOfferImages(offerId);
+                    /*Intent intent = new Intent(this,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-
-                finish();
+                    startActivity(intent);*/
+            }else if(reqCode == Constants.API_SHOP_UPLOAD_OFFER_ATTACHMENTS_REQ_CODE){
+                if(jsonObject.getInt("code") == 200){
+                    showToast("Picture uploaded successfully..");
+                }else{
+                    showAlert(jsonObject.getString("message"));
+                }
             }
 
 
@@ -529,6 +555,21 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             e.printStackTrace();
         }
 
+    }
+
+    private void uploadOfferImages(int offerID) {
+
+        if(NetworkUtil.isNetworkAvailable(this)){
+
+            for (Image mImage : mImages) {
+                showProgress("Uploading attachments...");
+                HashMap<String,String> map = new HashMap<String,String>();
+                map.put(APIParams.PARAM_OFFER_ID,String.valueOf(offerID));
+                map.put(APIParams.PARAM_FILE_DATA, FileUtils.convertToBase64(mImage.path));
+                NetworkManager.getInstance().postRequest(Constants.API_SHOP_UPLOAD_OFFER_ATTACHMENTS,map,this,Constants.API_SHOP_UPLOAD_OFFER_ATTACHMENTS_REQ_CODE);
+            }
+
+        }
     }
 
     @Override

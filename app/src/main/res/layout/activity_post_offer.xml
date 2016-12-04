@@ -197,8 +197,10 @@
                 android:drawableRight="@android:drawable/ic_menu_camera"
                 android:hint="@string/prompt_upload_offer_pics"
                 android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
                 android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:maxLines="3"
+                 />
 
             </android.support.design.widget.TextInputLayout>
             <!--  <TextView

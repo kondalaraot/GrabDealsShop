@@ -10,11 +10,9 @@ public class Constants {
     public static final String HOST_URL = "http://tag.tollymovies.com/v1/";
 //    public static final String SHOP_AVATAR_URL = "http://tag.tollymovies.com/v1/shop/avatar/shop_avatar_"; //Old
     public static final String SHOP_AVATAR_URL = "http://tag.tollymovies.com/assets/avatars/shops/shop_avatar_";
-//    public static final String SHOP_AVATAR_URL = "http://tag.tollymovies.com/v1/shop/avatar/shop_avatar_accid_shopid";
 
     public static final String API_IS_REGISTER = "shop/is_register";
     public static final String API_SIGN_UP = "shop/signup";
-    public static final int API_SIGN_UP_REQ_CODE = 2;
     public static final String API_LOGIN = "shop/login";
     public static final String API_ADD_SHOP = "shop/update/locations";
     public static final String API_POST_OFFER = "shop/post_offer";
@@ -25,7 +23,12 @@ public class Constants {
     public static final String API_SEND_OTP = "shop/send_otp";
 //    public static final String API_SHOP_LOCATIONS = "shop/locations/{shop_id}";
     public static final String API_SHOP_LOCATIONS = "shop/locations/";
+    public static final String API_SHOP_UPLOAD_OFFER_ATTACHMENTS = "shop/upload/offer/attachments";
+
     public static final int API_SHOP_LOCATIONS_REQ_CODE = 4;
     public static final int API_SEND_OTP_SIGN_UP_REQ_CODE = 3;
     public static final int API_SEND_OTP_REQ_CODE = 1;
+    public static final int API_SIGN_UP_REQ_CODE = 2;
+    public static final int API_POST_OFFER_REQ_CODE = 5;
+    public static final int API_SHOP_UPLOAD_OFFER_ATTACHMENTS_REQ_CODE = 6;
 }

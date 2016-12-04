@@ -103,16 +103,11 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mBtnAddMoreLoc.setOnClickListener( this );
         mBtnSaveDetails.setOnClickListener( this );
         mIvCamera.setOnClickListener( this );
-        mImage.setDefaultImageResId(R.drawable.default_user);
         String imageUrl = Constants.SHOP_AVATAR_URL+ getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
-//        String imageUrl = "https://www.google.ca/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
-        Log.d(TAG,"Shop image url"+imageUrl);
-        // Instantiate the RequestQueue.
+        if(Constants.DEBUG)Log.d(TAG,"Shop image url"+imageUrl);
         ImageLoader mImageLoader = NetworkManager.getInstance(this)
                 .getImageLoader();
-        NetworkManager.getInstance().getImageLoader().get(imageUrl, ImageLoader.getImageListener(mImage,
-                R.mipmap.ic_launcher, android.R.drawable
-                        .ic_dialog_alert));
+       mImage.setDefaultImageResId(R.drawable.default_user);
         mImage.setImageUrl(imageUrl,mImageLoader);
 
 
@@ -272,11 +267,11 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
                 Bundle extras = data.getExtras();
 
                 if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    mShopImageBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,photo, 8);
+                    mShopImageBitmap = extras.getParcelable("data");
+                    Bitmap mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
 //                    mImage.setImageBitmap(mShopImageBitmap);
 //                    mImage.set(mShopImageBitmap);
-                    mImage.setLocalImageBitmap(mShopImageBitmap);
+                    mImage.setLocalImageBitmap(mShopImageCircledBitmap);
 
                 }
 

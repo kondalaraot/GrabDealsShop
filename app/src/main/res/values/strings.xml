@@ -20,7 +20,7 @@
     <string name="prompt_end_date">End Date</string>
     <string name="prompt_locations">Location (s)</string>
     <string name="prompt_offer_description">Offer Description</string>
-    <string name="prompt_upload_offer_pics">Upload Offer Pictures (s)</string>
+    <string name="prompt_upload_offer_pics">Upload Offer \n Pictures (s)</string>
 
 
     <string name="action_sign_in">Sign in</string>
