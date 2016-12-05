@@ -40,7 +40,7 @@ public class Offer implements Serializable{
     private String description;
     private String offer_start;
     List<Location> locations;
-    List<String> attachments;
+    List<Attachment> attachments;
 
     public Offer() {
     }
@@ -101,11 +101,11 @@ public class Offer implements Serializable{
         this.locations = locations;
     }
 
-    public List<String> getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<String> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 }

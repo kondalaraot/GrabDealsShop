@@ -2,6 +2,7 @@ package com.grabdeals.shop.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.adapter.ScreenSlidePagerAdapter;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.util.Constants;
@@ -22,6 +24,8 @@ import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Arrays;
 
 public class OfferDetailsActivity extends BaseAppCompatActivity implements VolleyCallbackListener{
 
@@ -40,6 +44,14 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
     private String mOfferID;
     private Offer mOffer;
+    private static final String[] IMAGES = new String[] {
+            "http://tugbaustundag.com/slider/Android_Developer_Days_Logo.png",
+            "http://tugbaustundag.com/slider/cocuklar-icin-bilisim-zirvesi.jpg",
+            "http://tugbaustundag.com/slider/indirmobil700.jpg",
+            "http://tugbaustundag.com/slider/ux700.png"
+
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +98,8 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
            /* ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
             imageLoader.displayImage(shorUrl, mIvOffer);*/
+            initImageSlider();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,13 +119,23 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         mTvOfferTimings = (TextView)findViewById( R.id.tv_offer_timings );
         mTvOfferEndDate = (TextView)findViewById( R.id.tv_offer_end_date );
         mTvOfferDesc = (TextView)findViewById( R.id.tv_offer_desc );
-        mIvOffer = (ImageView) findViewById( R.id.iv_offer );
+//        mIvOffer = (ImageView) findViewById( R.id.iv_offer );
         String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
         Log.d(TAG,shorUrl);
         mIvShop.setDefaultImageResId(R.drawable.default_user);
-
-
         mIvShop.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
+    }
+
+    private void initImageSlider() {
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        //Resimlermizi arayüzde göstermek için kullancagmız ScreenSlidePagerAdapter sınıfına resim, yollarnı set ettim.
+        ScreenSlidePagerAdapter pagerAdapter =new ScreenSlidePagerAdapter(getSupportFragmentManager());
+
+        pagerAdapter.addAll(Arrays.asList(IMAGES));
+        pager.setAdapter(pagerAdapter);
+        //Resmin altındaki kucuk yuvarlak iconları resim saysına göre üreten CirclePageIndicator sınıfını cagırdık
+        CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
     }
 
     @Override
