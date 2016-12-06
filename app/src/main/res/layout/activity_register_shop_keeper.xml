@@ -22,9 +22,10 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:layout_marginTop="18dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="18dp">
 
                 <ImageView
                     android:id="@+id/image_shop"
@@ -32,13 +33,22 @@
 
 
                 <ImageView
+                    android:background="@drawable/circle_background_shape"
                     android:id="@+id/iv_camera"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:padding="6dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_alignBottom="@+id/image_shop"
                     android:layout_alignEnd="@+id/image_shop"
                     android:layout_alignRight="@+id/image_shop"
-                    android:src="@android:drawable/ic_menu_camera" />
+                    android:src="@drawable/photo_camera" />
+                <TextView
+                    android:layout_alignBottom="@+id/iv_camera"
+                    android:layout_toEndOf="@+id/iv_camera"
+                    android:layout_toRightOf="@+id/iv_camera"
+                    android:text=" Upload shop photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
 
 
@@ -51,8 +61,14 @@
 
             <View
                style="@style/TitleViewLine"></View>
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -69,6 +85,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -85,6 +102,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -101,23 +119,24 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
+            </LinearLayout>
             <Button
                 android:id="@+id/btn_create_acc"
                 style="@style/SubmitButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/action_create_new_shop" />
 
 
             <Button
+                android:layout_marginTop="@dimen/fields_margin"
                 android:id="@+id/btn_login"
                 style="@style/TransButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_already_acc_login"
-                android:textStyle="bold" />
+                 />
+                </LinearLayout>
 
-        </LinearLayout>
+
     </ScrollView>
 </LinearLayout>
