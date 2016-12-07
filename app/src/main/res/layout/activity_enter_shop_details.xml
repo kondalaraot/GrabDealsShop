@@ -1,170 +1,187 @@
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.grabdeals.shop.ui.EnterShopDetailsActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.grabdeals.shop.ui.MainActivity">
 
-    <include layout="@layout/tool_bar"/>
-
-    <ScrollView
-        android:id="@+id/create_new_ac_form"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <LinearLayout
+        <include layout="@layout/tool_bar"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.grabdeals.shop.ui.EnterShopDetailsActivity">
+
+
+
+        <ScrollView
+            android:id="@+id/create_new_ac_form"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
 
-                <com.grabdeals.shop.util.NetworkImageViewRounded
-                    android:id="@+id/image"
-                    style="@style/ProfileImageView" />
-
-                <ImageView
-                    android:id="@+id/iv_camera"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignBottom="@+id/image"
-                    android:layout_alignEnd="@+id/image"
-                    android:layout_alignRight="@+id/image"
-                    android:src="@android:drawable/ic_menu_camera" />
-            </RelativeLayout>
-
-
-            <TextView
-                style="@style/TitleTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="@string/title_activity_enter_shop_details"
-                android:fontFamily="sans-serif" />
-
-            <View
-                style="@style/TitleViewLine"></View>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/about_shop"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_about_your_shop"
-                    android:imeOptions="actionNext"
-                    android:inputType="textImeMultiLine"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:layout_marginBottom="15dp">
 
-            </android.support.design.widget.TextInputLayout>
+                    <com.grabdeals.shop.util.NetworkImageViewRounded
+                        android:id="@+id/image"
+                        style="@style/ProfileImageView" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/iv_camera"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignBottom="@+id/image"
+                        android:layout_alignEnd="@+id/image"
+                        android:layout_alignRight="@+id/image"
+                        android:src="@android:drawable/ic_menu_camera" />
+                </RelativeLayout>
 
-                <Spinner
-                    android:id="@+id/spinner_category"
+
+                <TextView
+                    style="@style/TitleTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_select_category"
-                    android:entryValues="@array/shop_categories"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:imeOptions="actionNext"
+                    android:gravity="left"
+                    android:text="@string/title_activity_enter_shop_details"
+                    android:fontFamily="sans-serif" />
+
+                <View
+                    style="@style/TitleViewLine"></View>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/about_shop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_about_your_shop"
+                        android:imeOptions="actionNext"
+                        android:inputType="textImeMultiLine"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/spinner_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_select_category"
+                        android:entryValues="@array/shop_categories"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:imeOptions="actionNext"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/website"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_website"
+                        android:imeActionId="@+id/login"
+                        android:imeOptions="actionNext"
+                        android:inputType="textUri"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_location"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:focusableInTouchMode="false"
+
+                         />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/full_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_full_address"
+                        android:imeOptions="actionNext"
+                        android:maxLines="3"
+                         />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_phone_no"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_add_more_loc"
+                    style="@style/TransButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="@string/action_add_more_locations"
                     />
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/website"
+                <Button
+                    android:id="@+id/btn_save_details"
+                    style="@style/SubmitButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_website"
-                    android:imeActionId="@+id/login"
-                    android:imeOptions="actionNext"
-                    android:inputType="textUri"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_location"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:focusableInTouchMode="false"
-
-                     />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/full_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_full_address"
-                    android:imeOptions="actionNext"
-                    android:maxLines="3"
-                     />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/phone_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_phone_no"
-                    android:imeOptions="actionDone"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/btn_add_more_loc"
-                style="@style/TransButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="@string/action_add_more_locations"
-                />
-
-            <Button
-                android:id="@+id/btn_save_details"
-                style="@style/SubmitButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_save_details" />
+                    android:text="@string/action_save_details" />
 
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

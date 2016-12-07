@@ -6,24 +6,39 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
 
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/LStyled.ActionMode</item>
+
+    </style>
+    <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/color_action_mode_bg</item>
     </style>
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+<!--
         <item name="android:typeface">serif</item>
+-->
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:typeface">serif</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="App_EditTextStyle" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/body_font_color</item>
         <item name="android:textColorHint">@color/hint_font_color</item>
+<!--
         <item name="android:typeface">serif</item>
-        <item name="android:hint">serif</item>
+-->
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:hint">sans-serif</item>
 
     </style>
 
