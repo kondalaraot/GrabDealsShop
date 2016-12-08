@@ -38,25 +38,36 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:orientation="vertical">
 
+
                 <RelativeLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp">
+                    android:layout_marginBottom="@dimen/fields_margin">
 
                     <com.grabdeals.shop.util.NetworkImageViewRounded
                         android:id="@+id/image"
                         style="@style/ProfileImageView" />
 
+
                     <ImageView
+                        android:background="@drawable/circle_background_shape"
                         android:id="@+id/iv_camera"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:padding="6dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_alignBottom="@+id/image"
                         android:layout_alignEnd="@+id/image"
                         android:layout_alignRight="@+id/image"
-                        android:src="@android:drawable/ic_menu_camera" />
+                        android:src="@drawable/photo_camera" />
+                    <TextView
+                        android:layout_alignBottom="@+id/iv_camera"
+                        android:layout_toEndOf="@+id/iv_camera"
+                        android:layout_toRightOf="@+id/iv_camera"
+                        android:text=" Upload shop photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </RelativeLayout>
-
 
                 <TextView
                     style="@style/TitleTextViewStyle"
@@ -64,12 +75,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:text="@string/title_activity_enter_shop_details"
-                    android:fontFamily="sans-serif" />
+                     />
 
                 <View
                     style="@style/TitleViewLine"></View>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -86,10 +98,12 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <Spinner
+                        style="@style/Widget.AppCompat.Spinner.Underlined"
                         android:id="@+id/spinner_category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -103,6 +117,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -119,6 +134,7 @@
 
                 </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
@@ -134,6 +150,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -149,6 +166,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -177,7 +195,6 @@
                     android:id="@+id/btn_save_details"
                     style="@style/SubmitButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/action_save_details" />
 
 

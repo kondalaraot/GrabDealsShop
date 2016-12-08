@@ -51,9 +51,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
     private String shopName;
     private String password;
     private Uri mImageCaptureUri;
-    private Bitmap mShopImageBitmap;
-    private Bitmap mShopImageCircledBitmap;
-
+    Bitmap mShopImageBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,7 +232,7 @@ public class ConfirmOTPActivity extends BaseAppCompatActivity implements View.On
 
                 if (extras != null) {
                     mShopImageBitmap = extras.getParcelable("data");
-                    mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
+                    Bitmap mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
                     mImage.setImageBitmap(mShopImageCircledBitmap);
                 }
 

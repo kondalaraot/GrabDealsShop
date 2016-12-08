@@ -37,10 +37,10 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp">
+                android:layout_marginBottom="@dimen/fields_margin">
 
                 <ImageView
                     android:id="@+id/image_shop"

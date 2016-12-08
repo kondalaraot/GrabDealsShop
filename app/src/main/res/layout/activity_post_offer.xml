@@ -1,12 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    tools:context="com.grabdeals.shop.ui.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/tool_bar"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.grabdeals.shop.ui.EnterShopDetailsActivity">
-
-    <include layout="@layout/tool_bar" />
 
     <ScrollView
         android:id="@+id/create_new_ac_form"
@@ -75,6 +88,7 @@
             <View style="@style/TitleViewLine"></View>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -91,10 +105,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <Spinner
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:id="@+id/spinner_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -107,12 +123,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <android.support.design.widget.TextInputLayout
                     android:layout_weight="1"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 <EditText
@@ -150,6 +166,7 @@
 
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -164,6 +181,7 @@
                     android:focusableInTouchMode="false"
                      />-->
                 <com.grabdeals.shop.util.MultiSelectionSpinner
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:id="@+id/spinnerLocations"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -172,6 +190,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -188,6 +207,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <EditText
@@ -218,10 +238,10 @@
                 android:id="@+id/btn_post_offer"
                 style="@style/SubmitButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/action_post_an_offer" />
 
 
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

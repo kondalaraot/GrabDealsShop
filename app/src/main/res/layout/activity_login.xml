@@ -38,6 +38,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_marginTop="75dp"
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,6 +58,8 @@
                 style="@style/TitleViewLine"></View>
 
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
+                android:layout_marginLeft="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -73,7 +76,10 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
             <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/fields_margin"
+                android:layout_marginLeft="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -92,10 +98,10 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
+                android:layout_margin="@dimen/fields_margin"
                 android:id="@+id/btn_sign_in"
                 style="@style/SubmitButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/action_sign_in"
                  />
 
@@ -104,15 +110,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TransButton"
-
+                android:textSize="14sp"
                 android:text="@string/action_forgot_your_details"/>
 
             <Button
+                android:layout_marginTop="@dimen/fields_margin"
                 android:id="@+id/btn_create_acc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TransButton"
-                android:textStyle="bold"
                 android:text="@string/action_create_new_acc"/>
 
         </LinearLayout>
