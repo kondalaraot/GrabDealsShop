@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
@@ -17,11 +17,13 @@
         <item name="actionModeStyle">@style/LStyled.ActionMode</item>
 
     </style>
+
     <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/color_action_mode_bg</item>
     </style>
+
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
-<!--
+        <!--
         <item name="android:typeface">serif</item>
 -->
         <item name="android:fontFamily">sans-serif</item>
@@ -34,7 +36,7 @@
     <style name="App_EditTextStyle" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/body_font_color</item>
         <item name="android:textColorHint">@color/hint_font_color</item>
-<!--
+        <!--
         <item name="android:typeface">serif</item>
 -->
         <item name="android:fontFamily">sans-serif</item>
@@ -54,7 +56,8 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
-    <style name="ProgressBarStyle" parent="@android:style/Widget.ProgressBar.Inverse"/>
+
+    <style name="ProgressBarStyle" parent="@android:style/Widget.ProgressBar.Inverse" />
 
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -62,9 +65,11 @@
         <item name="android:textColorPrimary">#000000</item>
         <item name="android:background">#FFFFFF</item>
     </style>
+
     <declare-styleable name="CirclePageIndicator">
         <attr name="indicator_spacing" format="dimension" />
     </declare-styleable>
+
     <style name="TitleTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
         <item name="android:textColor">@color/title_text_color</item>

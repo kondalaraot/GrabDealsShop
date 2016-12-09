@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.adapter.ScreenSlidePagerAdapter;
+import com.grabdeals.shop.model.Attachment;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.util.Constants;
@@ -25,7 +26,8 @@ import com.grabdeals.shop.util.VolleyCallbackListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OfferDetailsActivity extends BaseAppCompatActivity implements VolleyCallbackListener{
 
@@ -104,9 +106,6 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
             e.printStackTrace();
         }
 
-
-
-
     }
 
     private void findViews() {
@@ -127,11 +126,14 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     }
 
     private void initImageSlider() {
+        List<String> attachmentUrls= new ArrayList<String>();
+        List<Attachment> attachments = mOffer.getAttachments();
+        for (Attachment attachment : attachments) {
+            attachmentUrls.add(Constants.SHOP_OFFER_AVATAR_URL+attachment.getImage_path()+".png");
+        }
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        //Resimlermizi arayüzde göstermek için kullancagmız ScreenSlidePagerAdapter sınıfına resim, yollarnı set ettim.
         ScreenSlidePagerAdapter pagerAdapter =new ScreenSlidePagerAdapter(getSupportFragmentManager());
-
-        pagerAdapter.addAll(Arrays.asList(IMAGES));
+        pagerAdapter.addAll(attachmentUrls);
         pager.setAdapter(pagerAdapter);
         //Resmin altındaki kucuk yuvarlak iconları resim saysına göre üreten CirclePageIndicator sınıfını cagırdık
         CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
