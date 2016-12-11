@@ -1,15 +1,20 @@
 package com.grabdeals.shop.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 public class ResetPasswordActivity extends BaseAppCompatActivity  implements View.OnClickListener,VolleyCallbackListener{
+
+    private EditText mEtMobileNo;
+    private Button mBtnRequestOtp;
+    private Button mBtnCreateAcc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,20 +23,32 @@ public class ResetPasswordActivity extends BaseAppCompatActivity  implements Vie
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+
     }
+
+
+    private void findViews() {
+        mEtMobileNo = (EditText)findViewById( R.id.et_mobile_no );
+        mBtnRequestOtp = (Button)findViewById( R.id.btn_request_otp );
+        mBtnCreateAcc = (Button)findViewById( R.id.btn_create_acc );
+
+        mBtnRequestOtp.setOnClickListener( this );
+        mBtnCreateAcc.setOnClickListener( this );
+    }
+
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View v) {
+        if ( v == mBtnRequestOtp ) {
+            // Handle clicks for
 
+        } else if ( v == mBtnCreateAcc ) {
+            // Handle clicks for mBtnResendOtp
+            startActivity(new Intent(this,RegisterShopKeeperActivity.class));
+        }
     }
+
 
     @Override
     public void getResult(int reqCode, Object object) {

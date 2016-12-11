@@ -81,7 +81,7 @@ public class LoginActivity extends BaseAppCompatActivity  implements VolleyCallb
         mForgotPassButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(LoginActivity.this,PostOfferActivity.class));
+                startActivity(new Intent(LoginActivity.this,ResetPasswordActivity.class));
             }
         });
 
