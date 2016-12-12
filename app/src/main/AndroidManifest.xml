@@ -90,7 +90,13 @@
         <service android:name=".service.GcmMessageHandler" />
 
         <activity
+            android:name=".ui.RequestOtpActivity"
+            android:label="@string/title_activity_reset_password"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ui.ResetPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

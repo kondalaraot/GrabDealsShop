@@ -33,7 +33,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:orientation="vertical">
-                <!--<RelativeLayout
+                <RelativeLayout
                     android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,44 +41,25 @@
 
                     <ImageView
                         android:id="@+id/image_shop"
-                        style="@style/ProfileImageView" />
+                        style="@style/ProfileImageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        />
 
 
-                    <ImageView
-                        android:background="@drawable/circle_background_shape"
-                        android:id="@+id/iv_camera"
-                        android:padding="6dp"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_alignBottom="@+id/image_shop"
-                        android:layout_alignEnd="@+id/image_shop"
-                        android:layout_alignRight="@+id/image_shop"
-                        android:src="@drawable/photo_camera" />
-                    <TextView
-                        android:layout_alignBottom="@+id/iv_camera"
-                        android:layout_toEndOf="@+id/iv_camera"
-                        android:layout_toRightOf="@+id/iv_camera"
-                        android:text=" Upload shop photo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </RelativeLayout>-->
+
+                </RelativeLayout>
 
                 <TextView
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="@dimen/fields_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     style="@style/TitleTextViewStyle"
-                    android:text="Reset Password"/>
+                    android:text="Forgot Password?"/>
                 <View
                     style="@style/TitleViewLine"></View>
 
-                <TextView
-                    android:layout_marginTop="@dimen/fields_margin"
-                    android:id="@+id/otp_sent_to"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="OTP SMS sent to "/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_marginTop="@dimen/fields_margin"
@@ -86,55 +67,34 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/enter_otp"
+                        android:id="@+id/et_mobile_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_enter_otp"
-                        android:imeOptions="actionNext"
+                        android:hint="@string/prompt_mobile_no"
+                        android:imeOptions="actionDone"
                         android:inputType="phone"
                         android:maxLines="1"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_marginTop="@dimen/fields_margin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/et_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_password"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
 
 
                 <Button
-                    android:id="@+id/btn_reset"
+                    android:id="@+id/btn_request_otp"
                     style="@style/SubmitButton"
                     android:layout_width="match_parent"
-                    android:text="@string/action_verify"
+                    android:text="@string/request_otp"
                     />
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/msg_otp_resend"/>
+
 
                 <Button
                     android:layout_marginTop="@dimen/fields_margin"
-                    android:id="@+id/btn_resend_otp"
+                    android:id="@+id/btn_create_acc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/TransButton"
-                    android:text="@string/action_resend_otp"
+                    android:text="@string/action_create_new_acc"
                     />
 
             </LinearLayout>
