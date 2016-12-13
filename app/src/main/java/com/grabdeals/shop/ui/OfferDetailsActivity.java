@@ -1,8 +1,10 @@
 package com.grabdeals.shop.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import com.grabdeals.shop.adapter.ScreenSlidePagerAdapter;
 import com.grabdeals.shop.model.Attachment;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
+import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
@@ -27,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OfferDetailsActivity extends BaseAppCompatActivity implements VolleyCallbackListener{
 
@@ -150,7 +155,10 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_fav) {
+
+        if (item.getItemId() == R.id.action_delete) {
+            showDeleteAlertDialog();
+        }else if (item.getItemId() == R.id.action_fav) {
 //            showAlertDialog();
         }else  if (item.getItemId() == R.id.action_share) {
 //            showAlertDialog();
@@ -166,22 +174,60 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         return super.onOptionsItemSelected(item);
     }
 
+    private void showDeleteAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete offer?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(NetworkUtil.isNetworkAvailable(OfferDetailsActivity.this)){
+                            showProgress("Deleting offer..");
+                            Map<String,String> map = new HashMap<String, String>();
+                            map.put(APIParams.PARAM_OFFER_ID,mOffer.getOffer_id());
+                            NetworkManager.getInstance().postRequest(Constants.API_SHOP_DELETE_OFFER,map,OfferDetailsActivity.this,Constants.API_SHOP_DELETE_OFFER_REQ_CODE);
+                        }else {
+                            showAlert("Please check network connection..");
+                        }
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
     @Override
     public void getResult(int reqCode,Object object) {
         dismissProgress();
         try {
             JSONObject response = (JSONObject) object;
+            if(reqCode == Constants.API_SHOP_DELETE_OFFER_REQ_CODE){
+                if (response!=null && response.getInt("code") == 200) {
+                    Intent intent = new Intent(this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
 
-            if (response!=null && response.getInt("code") == 200) {
-                JSONObject data = response.getJSONObject("data");
-                Gson gson = new Gson();
+                } else {
+                    showAlert(response.getString("message"));
+
+                }
+            }else{
+                if (response!=null && response.getInt("code") == 200) {
+                    JSONObject data = response.getJSONObject("data");
+                    Gson gson = new Gson();
 //                Type listType = new TypeToken<List<Offer>>(){}.getType();
-                Offer offerDetails = gson.fromJson(data.toString(), Offer.class);
+                    Offer offerDetails = gson.fromJson(data.toString(), Offer.class);
 
-            } else {
-                showAlert(response.getString("message"));
+                } else {
+                    showAlert(response.getString("message"));
 
+                }
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
