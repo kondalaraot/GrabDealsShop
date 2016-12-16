@@ -83,6 +83,10 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
     public Filter getFilter() {
         return new OffersFilter();
     }
+    public Offer getItem(int pos) {
+        return mOffers.get(pos);
+    }
+
 
     public class OffersFilter extends Filter {
 
