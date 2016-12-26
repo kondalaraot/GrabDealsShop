@@ -8,9 +8,9 @@
     </item>
 
 
-    <item >
+    <item>
         <shape>
-            <solid android:color="@android:color/white"></solid>
+            <solid android:color="@android:color/transparent"></solid>
         </shape>
     </item>
 

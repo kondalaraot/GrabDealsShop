@@ -16,6 +16,7 @@ public class PreferenceManager {
     private static final String KEY_SHOP_NAME ="shop_name" ;
     private static final String KEY_SHOP_WEBSITE ="web_site" ;
     private static final String KEY_SHOP_MOBILE_NO = "mobile_no";
+    private static final String KEY_SHOP_PROFILE_URL = "shop_url";
     // Shared Preferences
     SharedPreferences mPreferences;
 
@@ -51,6 +52,10 @@ public class PreferenceManager {
         mEditor.putString(KEY_AUTH_TOKEN, authToken).commit();
 
     }
+    public void setIsLogin(boolean isLoggedin) {
+        mEditor.putBoolean(IS_LOGIN, isLoggedin).commit();
+
+    }
     public void setAccountID(String accId) {
         mEditor.putString(KEY_ACC_ID, accId).commit();
 
@@ -65,13 +70,21 @@ public class PreferenceManager {
     } public void setShopMobileNO(String shopMobileNO) {
         mEditor.putString(KEY_SHOP_MOBILE_NO, shopMobileNO).commit();
 
-    }public void setShopWebsite(String shopUrl) {
+    }
+    public void setShopWebsite(String shopUrl) {
         mEditor.putString(KEY_SHOP_WEBSITE, shopUrl).commit();
+
+    }
+    public void setShopUrl(String shopImageUrl) {
+        mEditor.putString(KEY_SHOP_PROFILE_URL, shopImageUrl).commit();
 
     }
     public String getAuthToken() {
         String bearerToken = mPreferences.getString(KEY_AUTH_TOKEN,"");
         return bearerToken;
+    }
+    public boolean getIsLoggedIn() {
+        return mPreferences.getBoolean(IS_LOGIN,false);
     }
     public String getShopID() {
         return mPreferences.getString(KEY_SHOP_ID,"");
@@ -87,6 +100,9 @@ public class PreferenceManager {
     }
     public String getAccID() {
         return mPreferences.getString(KEY_ACC_ID,"");
+    }
+    public String getShopUrl() {
+        return mPreferences.getString(KEY_SHOP_PROFILE_URL,"");
     }
 
     /**

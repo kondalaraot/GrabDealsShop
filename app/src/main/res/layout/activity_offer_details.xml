@@ -31,39 +31,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.grabdeals.shop.ui.OfferDetailsActivity">
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <com.grabdeals.shop.util.NetworkImageViewRounded
-                android:id="@+id/iv_shop"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/office_building_icon" />
-
-            <TextView
-                android:id="@+id/tv_shop_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:maxLines="2"
-                android:typeface="serif"
-                android:text="Big Bazar"
-                android:paddingTop="5dp"
-                android:textColor="@color/colorPrimary"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,12 +45,25 @@
                 android:text="India's mostFashionable sale"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/colorPrimary" />
+            <TextView
+                android:drawableLeft="@android:drawable/ic_menu_share"
+                android:id="@+id/tv_shop_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:typeface="serif"
+                android:text="Big Bazar"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorPrimary"
+                 />
 
             <TextView
                 android:id="@+id/tv_offer_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@android:drawable/ic_menu_mapmode"
+                android:drawableLeft="@drawable/placeholder"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:maxLines="2"
@@ -94,6 +74,7 @@
                 android:id="@+id/tv_offer_phone_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
                 android:drawableLeft="@android:drawable/ic_menu_call"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
@@ -114,6 +95,7 @@
                 android:textColor="@color/colorPrimary" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_offer_timings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +109,7 @@
                 android:id="@+id/tv_offer_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@android:drawable/ic_menu_today"
+                android:drawableLeft="@drawable/clock"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
@@ -135,14 +117,13 @@
                 android:text="Ends : " />
         </LinearLayout>
 
-    </LinearLayout>
 
     <View
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/line_color" />
 
     <TextView
         android:id="@+id/tv_offer_desc"
@@ -163,7 +144,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v4.view.ViewPager
+    <com.grabdeals.shop.util.ClickableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

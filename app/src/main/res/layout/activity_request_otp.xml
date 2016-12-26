@@ -62,7 +62,8 @@
 
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_marginTop="@dimen/fields_margin"
+                    android:layout_marginLeft="@dimen/fields_margin"
+                    android:layout_marginTop="@dimen/fields_margin_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -79,14 +80,17 @@
                 </android.support.design.widget.TextInputLayout>
 
 
-
+            <LinearLayout
+                android:layout_marginLeft="@dimen/btn_margin_left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <Button
                     android:id="@+id/btn_request_otp"
                     style="@style/SubmitButton"
                     android:layout_width="match_parent"
                     android:text="@string/request_otp"
                     />
-
+</LinearLayout>
 
                 <Button
                     android:layout_marginTop="@dimen/fields_margin"

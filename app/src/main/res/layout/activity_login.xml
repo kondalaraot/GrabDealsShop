@@ -38,7 +38,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="50dp"
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 style="@style/TitleViewLine"></View>
 
             <android.support.design.widget.TextInputLayout
-                android:layout_marginTop="@dimen/fields_margin"
+                android:layout_marginTop="@dimen/fields_margin_top"
                 android:layout_marginLeft="@dimen/fields_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -97,13 +97,19 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:layout_margin="@dimen/fields_margin"
-                android:id="@+id/btn_sign_in"
-                style="@style/SubmitButton"
-                android:layout_width="match_parent"
-                android:text="@string/action_sign_in"
-                 />
+              <LinearLayout
+                  android:layout_marginLeft="@dimen/btn_margin_left"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+                  <Button
+                      android:id="@+id/btn_sign_in"
+                      style="@style/SubmitButton"
+                      android:layout_width="match_parent"
+                      android:text="@string/action_sign_in"
+                      />
+              </LinearLayout>
+
 
             <Button
                 android:id="@+id/btn_forgot_pass"

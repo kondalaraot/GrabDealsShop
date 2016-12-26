@@ -20,7 +20,7 @@
     <string name="prompt_end_date">End Date</string>
     <string name="prompt_locations">Location (s)</string>
     <string name="prompt_offer_description">Offer Description</string>
-    <string name="prompt_upload_offer_pics">Upload Offer \n Pictures (s)</string>
+    <string name="prompt_upload_offer_pics">Upload Offer Picture(s)</string>
 
 
     <string name="action_sign_in">Sign in</string>
@@ -34,6 +34,7 @@
     <string name="action_verify">Verify</string>
     <string name="action_resend_otp">Resend OTP</string>
     <string name="action_save_details">Save Details</string>
+    <string name="action_add_details">Add Details</string>
     <string name="action_add_more_locations">+ Add more locations</string>
     <string name="action_post_an_offer">Post an Offer</string>
 
@@ -92,4 +93,12 @@
     <string name="title_activity_reset_password">Reset Password</string>
     <string name="request_otp">Request OTP</string>
     <string name="action_delete">Delete</string>
+    <string name="title_activity_main_drawer">Offers</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_fullscreen_image">Offer Details</string>
+    <string name="title_activity_add_edit_more_locations">Add More Locations</string>
 </resources>

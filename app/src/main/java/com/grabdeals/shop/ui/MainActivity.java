@@ -160,9 +160,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_fav) {
-//            showAlertDialog();
-        }else  if (item.getItemId() == R.id.action_logout) {
+        if (item.getItemId() == R.id.action_logout) {
             showLogoutAlert();
 
         }

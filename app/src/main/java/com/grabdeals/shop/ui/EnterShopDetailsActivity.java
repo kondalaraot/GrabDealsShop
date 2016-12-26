@@ -21,7 +21,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -33,6 +36,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.ShopLocation;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.FileUtils;
@@ -47,17 +51,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
-
 
     private static final String TAG = "EnterShopDetailsAct";
     private static final int PICK_FROM_CAMERA = 10;
     private static final int CROP_FROM_CAMERA = 20;
     private static final int PICK_FROM_FILE = 30;
     private static final int REQUEST_CODE_AUTOCOMPLETE = 40;
+    private static final int REQUEST_ADD_MORE_LOCATIONS = 50;
 
     private NetworkImageViewRounded mImage;
     private ImageView mIvCamera;
@@ -69,6 +74,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     private EditText mPhoneNumber;
     private Button mBtnAddMoreLoc;
     private Button mBtnSaveDetails;
+    private LinearLayout mLLDynamicViews;
 
     private int mShopCategoryPos;
     private String mShopCategory;
@@ -78,6 +84,8 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     private String mShopID;
 
     double mLatitude,mLongitude;
+
+    private ArrayList<ShopLocation> mShopLocations = new ArrayList<ShopLocation>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +107,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mPhoneNumber = (EditText)findViewById( R.id.phone_number );
         mBtnAddMoreLoc = (Button)findViewById( R.id.btn_add_more_loc );
         mBtnSaveDetails = (Button)findViewById( R.id.btn_save_details );
+        mLLDynamicViews = (LinearLayout) findViewById( R.id.ll_dynamic_locs );
 
         mBtnAddMoreLoc.setOnClickListener( this );
         mBtnSaveDetails.setOnClickListener( this );
@@ -147,6 +156,8 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     public void onClick(View v) {
         if ( v == mBtnAddMoreLoc ) {
             // Handle clicks for mBtnLogin
+            startActivityForResult(new Intent(this,AddEditMoreLocationsActivity.class),REQUEST_ADD_MORE_LOCATIONS);
+
         } else if ( v == mBtnSaveDetails ) {
             // Handle clicks for mBtnSaveDetails
             if (validate()){
@@ -311,6 +322,12 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(TAG, "Error: Status = " + status.toString());
                 break;
+            case REQUEST_ADD_MORE_LOCATIONS:
+                ShopLocation shopLocation = (ShopLocation) data.getSerializableExtra("LocationObj");
+                mShopLocations.add(shopLocation);
+                addLocationView(shopLocation);
+//                Log.e(TAG, "Error: Status = " + status.toString());
+                break;
 
         }
 
@@ -412,11 +429,69 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             jsonObject.put("longitude",mLongitude);
             jsonArray.put(jsonObject);
 
+            for (ShopLocation mShopLocation : mShopLocations) {
+                JSONObject object = new JSONObject();
+                object.put("location_name",mShopLocation.getShopLocationName());
+                object.put("full_address",mShopLocation.getShopLocationFullAddress());
+                object.put("phone_no",mShopLocation.getShopLocationPhone());
+                object.put("latitude",mShopLocation.getLatitude());
+                object.put("longitude",mShopLocation.getLongitude());
+                jsonArray.put(object);
+
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
         return jsonArray.toString();
     }
+
+    private void addLocationView(ShopLocation shopLocation){
+        // EditText
+        // Instantiate EditText view which will be held inside of
+        // TextInputLayout
+
+        TextView location = new TextView(this);
+        location.setText(shopLocation.getShopLocationName());
+        location.setTextSize(18);
+        location.setTextColor(getResources().getColor(android.R.color.black));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        location.setLayoutParams(layoutParams);
+        mLLDynamicViews.addView(location);
+
+        TextView fullAddress = new TextView(this);
+        fullAddress.setText(shopLocation.getShopLocationFullAddress());
+        fullAddress.setTextSize(16);
+        fullAddress.setTextColor(getResources().getColor(android.R.color.black));
+        fullAddress.setLayoutParams(layoutParams);
+        mLLDynamicViews.addView(fullAddress);
+
+        TextView phoneNo = new TextView(this);
+        phoneNo.setText(shopLocation.getShopLocationPhone());
+        phoneNo.setTextSize(16);
+        phoneNo.setTextColor(getResources().getColor(android.R.color.black));
+        phoneNo.setLayoutParams(layoutParams);
+        mLLDynamicViews.addView(phoneNo);
+
+        View lineView = new View(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, 2 );
+        params.setMargins(0, 5, 0, 5);
+        lineView.setLayoutParams(params);
+        lineView.setBackgroundColor(getResources().getColor(R.color.line_color));
+        mLLDynamicViews.addView(lineView);
+
+       /* // TextInputLayout
+        TextInputLayo.adut textInputLayout = new TextInputLayout(this);
+//        textInputLayout.setId(View.generateViewId());
+        RelativeLayout.LayoutParams textInputLayoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        textInputLayout.setLayoutParams(textInputLayoutParams);*/
+
+
+
+    }
+
 
 
     @Override

@@ -11,10 +11,13 @@
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
 
+        <item name="android:colorControlNormal">@color/myControlColor</item>
+
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/LStyled.ActionMode</item>
+
 
     </style>
 
@@ -73,8 +76,8 @@
     <style name="TitleTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
         <item name="android:textColor">@color/title_text_color</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">normal</item>
 
 
     </style>
@@ -110,7 +113,7 @@
         <item name="android:layout_marginTop">@dimen/fields_margin</item>
         <item name="android:layout_marginBottom">@dimen/fields_margin</item>
         <item name="android:layout_gravity">center_horizontal|center_vertical</item>
-        <item name="android:background">@color/btn_background</item>
+        <item name="android:background">@drawable/custom_submit_btn</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
     </style>

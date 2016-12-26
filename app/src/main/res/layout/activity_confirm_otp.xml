@@ -77,7 +77,7 @@
                 android:id="@+id/otp_sent_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OTP SMS sent to "/>
+                android:text="OTP SMS sent to " />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_marginTop="@dimen/fields_margin"

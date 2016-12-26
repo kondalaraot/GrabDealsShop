@@ -165,6 +165,42 @@ public class NetworkManager
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
+
+    public void postListRequest(String urlSuffix, Object postParams, final VolleyCallbackListener<Object> listener, final int reqCode)
+    {
+
+        String url = Constants.HOST_URL + urlSuffix;
+        if(Constants.DEBUG) Log.d(TAG,"URL --"+url);
+        if(Constants.DEBUG) Log.d(TAG,"post params body --"+postParams.toString());
+
+        VolleyCustomRequest request = new VolleyCustomRequest(Request.Method.POST, url, (Map<String, String>) postParams,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        if (Constants.DEBUG) Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
+                        if(null != response.toString())
+                            listener.getResult(reqCode,response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+
+                            listener.getErrorResult(parseErrorResp(error));
+
+                    }
+                });
+
+        mRequestQueue.add(request);
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
     
   
     public void getRequest(String urlSuffix, Object postParams, final VolleyCallbackListener<Object> listener, final int reqCode)

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_fullscreen_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.grabdeals.shop.ui.FullscreenImageActivity"
+    tools:showIn="@layout/activity_fullscreen_image">
+
+    <!--<com.navercorp.volleyextensions.view.TwoLevelDoubleTapZoomNetworkImageView
+        android:id="@+id/zoom_networkimageview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.grabdeals.shop.ui.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:gravity="bottom|center_horizontal"
+            app:indicator_spacing="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</RelativeLayout>

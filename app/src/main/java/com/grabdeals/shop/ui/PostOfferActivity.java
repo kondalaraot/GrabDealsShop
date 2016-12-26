@@ -32,6 +32,8 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.Location;
+import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.model.ShopBranch;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
@@ -82,12 +84,41 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     Bitmap mAttachmentBitmap;
     List<ShopBranch> shopBranches;
     ArrayList<Image> mImages;
+    String offerType;
+    Offer mOffer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_offer);
+        offerType = getIntent().getStringExtra("Type");
+        mOffer = (Offer) getIntent().getSerializableExtra("OfferObj");
         findViews();
+
+    }
+
+    private void populateEditOfferData(){
+        List<String> selectedLocations = null;
+        if (offerType.equalsIgnoreCase(Constants.EDIT_OFFER)) {
+            mOfferTitle.setText(mOffer.getTitle());
+            mOfferDescr.setText(mOffer.getDescription());
+            mFromDate.setText(mOffer.getOffer_start());
+            mToDate.setText(mOffer.getOffer_end());
+            List<Location> locations = mOffer.getLocations();
+            selectedLocations = new ArrayList<String>();
+            for (Location location : locations) {
+                /*for (ShopBranch shopBranch : shopBranches) {
+                    shopBranch.getShop_area_id().equalsIgnoreCase(location.getArea_id()){
+
+                    }*/
+                selectedLocations.add(location.getArea_name());
+            }
+            mLocations.setSelection(selectedLocations);
+//            mOfferCategoryPos.setText(mOffer.get());
+            mBtnPostOffer.setText("Update Offer");
+            mUploadOfferPics.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -278,8 +309,14 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             // Handle clicks for mBtnSaveDetails
             if (validate()){
                 if(NetworkUtil.isNetworkAvailable(this)){
-                    showProgress("Posting offer...");
-                    NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this,Constants.API_POST_OFFER_REQ_CODE);
+                    if(offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
+                        showProgress("Updating offer...");
+                        NetworkManager.getInstance().postRequest(Constants.API_EDIT_OFFER,preparePostParams(),this,Constants.API_EDIT_OFFER_REQ_CODE);
+                    }else{
+                        showProgress("Posting offer...");
+                        NetworkManager.getInstance().postRequest(Constants.API_POST_OFFER,preparePostParams(),this,Constants.API_POST_OFFER_REQ_CODE);
+                    }
+
                 }else{
                     showAlert("Please check your network connection..");
                 }
@@ -494,6 +531,9 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
     private Map<String,String> preparePostParams(){
         Map<String, String> formParams = new HashMap<>();
+        if(offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
+            formParams.put(APIParams.PARAM_OFFER_ID, mOffer.getOffer_id());
+        }
         formParams.put(APIParams.PARAM_OFFER_TITLE, mOfferTitle.getText().toString());
         formParams.put(APIParams.PARAM_DESCRIPTION, mOfferDescr.getText().toString());
         formParams.put(APIParams.PARAM_OFR_START, mFromDate.getText().toString());
@@ -529,6 +569,9 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                     Type listType = new TypeToken<List<ShopBranch>>() {}.getType();
                     shopBranches = new Gson().fromJson(data.toString(), listType);
                     populateLocationsSpinner(shopBranches);
+                    if(offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
+                        populateEditOfferData();
+                    }
                 }else{
                     showAlert("No shop locations found..");
                 }
@@ -538,13 +581,32 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
                 JSONObject data = jsonObject.getJSONObject("data");
                 int offerId = data.getInt("offer_id");
                 showToast("Offer posted successfully..");
-                uploadOfferImages(offerId);
-                    /*Intent intent = new Intent(this,MainActivity.class);
+                if(mImages!=null && mImages.size()>0){
+                    uploadOfferImages(offerId);
+                }else{
+                     Intent intent = new Intent(this,MainDrawerActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);*/
+                    startActivity(intent);
+                }
+
+            }else if(reqCode == Constants.API_EDIT_OFFER_REQ_CODE){
+                JSONObject data = jsonObject.getJSONObject("data");
+                int offerId = data.getInt("offer_id");
+                showToast("Offer updated successfully..");
+                if(mImages!=null && mImages.size()>0){
+                    uploadOfferImages(offerId);
+                }else{
+                    Intent intent = new Intent(this,MainDrawerActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+
             }else if(reqCode == Constants.API_SHOP_UPLOAD_OFFER_ATTACHMENTS_REQ_CODE){
                 if(jsonObject.getInt("code") == 200){
                     showToast("Picture uploaded successfully..");
+                    Intent intent = new Intent(this,MainDrawerActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }else{
                     showAlert(jsonObject.getString("message"));
                 }

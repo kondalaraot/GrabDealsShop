@@ -37,10 +37,10 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_marginTop="@dimen/fields_margin"
+                android:layout_marginTop="@dimen/fields_margin_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/fields_margin">
+                android:layout_marginBottom="@dimen/fields_margin_top">
 
                 <ImageView
                     android:id="@+id/image_shop"
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_marginTop="@dimen/fields_margin"
+                android:layout_marginTop="@dimen/fields_margin_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -135,11 +135,16 @@
 
             </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+        <LinearLayout
+            android:layout_marginLeft="@dimen/btn_margin_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <Button
                 android:id="@+id/btn_create_acc"
                 style="@style/SubmitButton"
                 android:layout_width="match_parent"
                 android:text="@string/action_create_new_shop" />
+            </LinearLayout>
 
 
             <Button

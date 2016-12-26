@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.util.Constants;
 
@@ -66,7 +67,12 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
         holder.mTvOfferDesc.setText(offer.getDescription());
         holder.mValueOfferEnds.setText(offer.getOffer_end());
         if(offer.getLocations()!=null && offer.getLocations().size()>0){
-            holder.mTvLocation.setText(offer.getLocations().get(0).getArea_name());
+           StringBuilder builder = new StringBuilder();
+            for (Location location : offer.getLocations()) {
+                builder.append(location.getArea_name()+",");
+            }
+            String locations = builder.toString();
+            holder.mTvLocation.setText(locations.substring(0,locations.length()-1));
         }else{
             holder.mTvLocation.setText("No location");
 

@@ -10,6 +10,7 @@
     <color name="color_action_mode_bg">#0a0a10</color>
 
     <color name="btn_background">#e25d58</color>
+    <color name="btn_background_selected">#6b201d</color>
     <color name="body_font_color">#4d606f</color>
     <color name="hint_font_color">#bec0c2</color>
     <color name="img_background_color">#323c46</color>

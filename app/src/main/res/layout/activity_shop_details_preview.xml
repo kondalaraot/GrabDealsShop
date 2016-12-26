@@ -22,7 +22,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-
+            android:layout_centerVertical="true"
             android:id="@+id/shop_name_tv"
             android:text="BIG BAZAR"
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/edit_details_btn"
-            android:text="Edit details"
+            android:text="Edit"
             android:drawableLeft="@android:drawable/ic_menu_edit"
             android:background="@android:color/transparent"
             android:layout_alignParentEnd="true"

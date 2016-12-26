@@ -91,13 +91,26 @@
 
         <activity
             android:name=".ui.RequestOtpActivity"
-            android:label="@string/title_activity_reset_password"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.ResetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_reset_password"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.MainDrawerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main_drawer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.FullscreenImageActivity"
+            android:label="@string/title_activity_fullscreen_image"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.AddEditMoreLocationsActivity"
+            android:label="@string/title_activity_add_edit_more_locations"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

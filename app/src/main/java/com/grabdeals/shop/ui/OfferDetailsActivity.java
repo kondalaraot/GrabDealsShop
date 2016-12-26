@@ -20,8 +20,8 @@ import com.grabdeals.shop.model.Attachment;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.util.APIParams;
+import com.grabdeals.shop.util.ClickableViewPager;
 import com.grabdeals.shop.util.Constants;
-import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
@@ -38,7 +38,7 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
     private static final String TAG = "OfferDetailsActivity";
 
-    private NetworkImageViewRounded mIvShop;
+//    private NetworkImageViewRounded mIvShop;
     private TextView mTvShopName;
     private TextView mTvOfferTitle;
     private TextView mTvOfferAddress;
@@ -114,7 +114,6 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
     }
 
     private void findViews() {
-        mIvShop = (NetworkImageViewRounded)findViewById( R.id.iv_shop );
         mTvShopName = (TextView)findViewById( R.id.tv_shop_name );
         mTvOfferTitle = (TextView)findViewById( R.id.tv_offer_title );
         mTvOfferAddress = (TextView)findViewById( R.id.tv_offer_address );
@@ -126,20 +125,49 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 //        mIvOffer = (ImageView) findViewById( R.id.iv_offer );
         String shorUrl = Constants.SHOP_AVATAR_URL+getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
         Log.d(TAG,shorUrl);
-        mIvShop.setDefaultImageResId(R.drawable.default_user);
-        mIvShop.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
+//        mIvShop.setDefaultImageResId(R.drawable.default_user);
+//        mIvShop.setImageUrl(shorUrl,NetworkManager.getInstance().getImageLoader());
     }
 
     private void initImageSlider() {
-        List<String> attachmentUrls= new ArrayList<String>();
-        List<Attachment> attachments = mOffer.getAttachments();
+        final ArrayList<String> attachmentUrls= new ArrayList<String>();
+        final List<Attachment> attachments = mOffer.getAttachments();
         for (Attachment attachment : attachments) {
             attachmentUrls.add(Constants.SHOP_OFFER_AVATAR_URL+attachment.getImage_path()+".png");
         }
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        ClickableViewPager pager = (ClickableViewPager) findViewById(R.id.pager);
         ScreenSlidePagerAdapter pagerAdapter =new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pagerAdapter.addAll(attachmentUrls);
         pager.setAdapter(pagerAdapter);
+        pager.setOnItemClickListener(new ClickableViewPager.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                // your code
+                Intent intent = new Intent(OfferDetailsActivity.this,FullscreenImageActivity.class);
+                intent.putExtra("POS",position);
+                intent.putStringArrayListExtra("ImagesList",attachmentUrls);
+                startActivity(intent);
+            }
+        });
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+               /* Intent intent = new Intent(OfferDetailsActivity.this,FullscreenImageActivity.class);
+                intent.putExtra("POS",position);
+                intent.putStringArrayListExtra("ImagesList",attachmentUrls);
+                startActivity(intent);*/
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         //Resmin altındaki kucuk yuvarlak iconları resim saysına göre üreten CirclePageIndicator sınıfını cagırdık
         CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
@@ -158,16 +186,13 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
 
         if (item.getItemId() == R.id.action_delete) {
             showDeleteAlertDialog();
-        }else if (item.getItemId() == R.id.action_fav) {
-//            showAlertDialog();
-        }else  if (item.getItemId() == R.id.action_share) {
+        }else  if (item.getItemId() == R.id.action_edit) {
 //            showAlertDialog();
             if(mOffer !=null){
-                Intent i=new Intent(android.content.Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(android.content.Intent.EXTRA_SUBJECT,mOffer.getTitle());
-                i.putExtra(android.content.Intent.EXTRA_TEXT, mOffer.getDescription());
-                startActivity(Intent.createChooser(i,"Share via"));
+                Intent i=new Intent(this,PostOfferActivity.class);
+                i.putExtra("Type", Constants.EDIT_OFFER);
+                i.putExtra("OfferObj", mOffer);
+                startActivity(i);
             }
 
         }
