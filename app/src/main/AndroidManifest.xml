@@ -111,7 +111,8 @@
         <activity
             android:name=".ui.AddEditMoreLocationsActivity"
             android:label="@string/title_activity_add_edit_more_locations"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.EditShopDetailsActivity"></activity>
     </application>
 
 </manifest>

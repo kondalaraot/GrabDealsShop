@@ -28,6 +28,7 @@ public class Constants {
     public static final String API_SHOP_UPLOAD_OFFER_ATTACHMENTS = "shop/upload/offer/attachments";
     public static final String API_SHOP_SET_PASSWORD = "shop/set_password";
     public static final String API_SHOP_DELETE_OFFER = "shop/delete/offer";
+    public static final String API_SHOP_GET_PROFILE = "shop/profile"; //{acc_id}
 
     public static final int API_SHOP_LOCATIONS_REQ_CODE = 4;
     public static final int API_SEND_OTP_SIGN_UP_REQ_CODE = 3;
@@ -38,6 +39,7 @@ public class Constants {
     public static final int API_SHOP_SET_PASSWORD_REQ_CODE = 7;
     public static final int API_SHOP_DELETE_OFFER_REQ_CODE = 8;
     public static final int API_EDIT_OFFER_REQ_CODE = 9;
+    public static final int API_SHOP_GET_PROFILE_REQ_CODE = 10;
 
     public static final String EDIT_OFFER = "Edit Offer";
 

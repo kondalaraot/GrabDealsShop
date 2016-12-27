@@ -89,8 +89,21 @@ public class OfferDetailsActivity extends BaseAppCompatActivity implements Volle
         try {
             mTvShopName.setText(getPrefManager().getShopName());
             mTvOfferTitle.setText(mOffer.getTitle());
-            Location location = mOffer.getLocations().get(0);
-            mTvOfferAddress.setText(location.getArea_name()+","+location.getCity_name());
+//            Location location = mOffer.getLocations().get(0);
+            String offerLocations ="";
+            if(mOffer.getLocations()!=null && mOffer.getLocations().size()>0){
+                StringBuilder builder = new StringBuilder();
+                for (Location location : mOffer.getLocations()) {
+                    builder.append(location.getArea_name()+",");
+                }
+                String locations = builder.toString();
+                offerLocations = locations.substring(0,locations.length()-1);
+                mTvOfferAddress.setText(offerLocations);
+
+            }else{
+                mTvOfferAddress.setText("");
+
+            }
             mTvOfferPhoneNo.setText(getPrefManager().getShopMoBileNo());
             mTvShopUrl.setText(getPrefManager().getShopWebsite());
             mTvOfferTimings.setText("No data");

@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
+public class EnterShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener, VolleyCallbackListener {
 
     private static final String TAG = "EnterShopDetailsAct";
     private static final int PICK_FROM_CAMERA = 10;
@@ -83,7 +83,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     private String mShopID;
 
-    double mLatitude,mLongitude;
+    double mLatitude, mLongitude;
 
     private ArrayList<ShopLocation> mShopLocations = new ArrayList<ShopLocation>();
 
@@ -97,27 +97,27 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     }
 
     private void findViews() {
-        mImage = (NetworkImageViewRounded)findViewById( R.id.image );
-        mIvCamera = (ImageView)findViewById( R.id.iv_camera );
-        mAboutShop = (EditText)findViewById( R.id.about_shop );
-        mSpinnerCategory = (Spinner)findViewById( R.id.spinner_category );
-        mWebsite = (EditText)findViewById( R.id.website );
-        mLocation = (EditText)findViewById( R.id.location );
-        mFullAddress = (EditText)findViewById( R.id.full_address );
-        mPhoneNumber = (EditText)findViewById( R.id.phone_number );
-        mBtnAddMoreLoc = (Button)findViewById( R.id.btn_add_more_loc );
-        mBtnSaveDetails = (Button)findViewById( R.id.btn_save_details );
-        mLLDynamicViews = (LinearLayout) findViewById( R.id.ll_dynamic_locs );
+        mImage = (NetworkImageViewRounded) findViewById(R.id.image);
+        mIvCamera = (ImageView) findViewById(R.id.iv_camera);
+        mAboutShop = (EditText) findViewById(R.id.about_shop);
+        mSpinnerCategory = (Spinner) findViewById(R.id.spinner_category);
+        mWebsite = (EditText) findViewById(R.id.website);
+        mLocation = (EditText) findViewById(R.id.location);
+        mFullAddress = (EditText) findViewById(R.id.full_address);
+        mPhoneNumber = (EditText) findViewById(R.id.phone_number);
+        mBtnAddMoreLoc = (Button) findViewById(R.id.btn_add_more_loc);
+        mBtnSaveDetails = (Button) findViewById(R.id.btn_save_details);
+        mLLDynamicViews = (LinearLayout) findViewById(R.id.ll_dynamic_locs);
 
-        mBtnAddMoreLoc.setOnClickListener( this );
-        mBtnSaveDetails.setOnClickListener( this );
-        mIvCamera.setOnClickListener( this );
-        String imageUrl = Constants.SHOP_AVATAR_URL+ getPrefManager().getAccID()+"_"+getPrefManager().getShopID()+".png";
-        if(Constants.DEBUG)Log.d(TAG,"Shop image url"+imageUrl);
+        mBtnAddMoreLoc.setOnClickListener(this);
+        mBtnSaveDetails.setOnClickListener(this);
+        mIvCamera.setOnClickListener(this);
+        String imageUrl = Constants.SHOP_AVATAR_URL + getPrefManager().getAccID() + "_" + getPrefManager().getShopID() + ".png";
+        if (Constants.DEBUG) Log.d(TAG, "Shop image url" + imageUrl);
         ImageLoader mImageLoader = NetworkManager.getInstance(this)
                 .getImageLoader();
-       mImage.setDefaultImageResId(R.drawable.default_user);
-        mImage.setImageUrl(imageUrl,mImageLoader);
+        mImage.setDefaultImageResId(R.drawable.default_user);
+        mImage.setImageUrl(imageUrl, mImageLoader);
 
 
         mLocation.setInputType(InputType.TYPE_NULL);
@@ -139,7 +139,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-               // On selecting a spinner item
+                // On selecting a spinner item
                 mShopCategory = adapterView.getItemAtPosition(pos).toString();
                 mShopCategoryPos = pos;
             }
@@ -154,22 +154,22 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
     @Override
     public void onClick(View v) {
-        if ( v == mBtnAddMoreLoc ) {
+        if (v == mBtnAddMoreLoc) {
             // Handle clicks for mBtnLogin
-            startActivityForResult(new Intent(this,AddEditMoreLocationsActivity.class),REQUEST_ADD_MORE_LOCATIONS);
+            startActivityForResult(new Intent(this, AddEditMoreLocationsActivity.class), REQUEST_ADD_MORE_LOCATIONS);
 
-        } else if ( v == mBtnSaveDetails ) {
+        } else if (v == mBtnSaveDetails) {
             // Handle clicks for mBtnSaveDetails
-            if (validate()){
-                if(NetworkUtil.isNetworkAvailable(this)){
+            if (validate()) {
+                if (NetworkUtil.isNetworkAvailable(this)) {
                     showProgress("Please wait, Adding Shop Details...");
-                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP,preparePostParams(),this,0);
-                }else{
+                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP, preparePostParams(), this, 0);
+                } else {
                     showAlert("Please check your network connection..");
                 }
             }
 
-        }else if (v == mIvCamera){
+        } else if (v == mIvCamera) {
             selectImage();
         }
     }
@@ -215,10 +215,10 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     }
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -250,7 +250,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
                     //intent.setType("image/*");
                     //intent.setAction(Intent.);
                     intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"),PICK_FROM_FILE);
+                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -279,7 +279,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
                 if (extras != null) {
                     mShopImageBitmap = extras.getParcelable("data");
-                    Bitmap mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this,mShopImageBitmap, 8);
+                    Bitmap mShopImageCircledBitmap = ImageUtils.getCircularBitmapWithWhiteBorder(this, mShopImageBitmap, 8);
 //                    mImage.setImageBitmap(mShopImageBitmap);
 //                    mImage.set(mShopImageBitmap);
                     mImage.setLocalImageBitmap(mShopImageCircledBitmap);
@@ -293,11 +293,11 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
                 break;
             case REQUEST_CODE_AUTOCOMPLETE:
-                        // Get the user's selected place from the Intent.
-                        Place place = PlaceAutocomplete.getPlace(this, data);
-                        Log.i(TAG, "Place Selected: " + place.getName());
+                // Get the user's selected place from the Intent.
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.i(TAG, "Place Selected: " + place.getName());
 
-                        // Format the place's details and display them in the TextView.
+                // Format the place's details and display them in the TextView.
                 mLocation.setText(place.getName());
                        /* mLocation.setText(formatPlaceDetails(getResources(), place.getName(),
                                 place.getId(), place.getAddress(), place.getPhoneNumber(),
@@ -305,17 +305,17 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
                 LatLng latLng = place.getLatLng();
                 mLatitude = latLng.latitude;
                 mLongitude = latLng.longitude;
-                Log.d(TAG,"lat,long are "+mLatitude+"  "+mLongitude);
-                        // Display attributions if required.
-                        CharSequence attributions = place.getAttributions();
-                        if (!TextUtils.isEmpty(attributions)) {
+                Log.d(TAG, "lat,long are " + mLatitude + "  " + mLongitude);
+                // Display attributions if required.
+                CharSequence attributions = place.getAttributions();
+                if (!TextUtils.isEmpty(attributions)) {
 //                            mLocation.setText(Html.fromHtml(attributions.toString()));
-                            Log.d(TAG,"attributions "+attributions.toString());
-                        } else {
+                    Log.d(TAG, "attributions " + attributions.toString());
+                } else {
 //                            mLocation.setText("");
-                            Log.d(TAG,"attributions empty");
-                        }
-                    break;
+                    Log.d(TAG, "attributions empty");
+                }
+                break;
             // Indicates that the activity closed before a selection was made. For example if
             // the user pressed the back button.
             case PlaceAutocomplete.RESULT_ERROR:
@@ -332,12 +332,12 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         }
 
 
-        }
+    }
 
 
     private void doCrop() {
 
-        Log.d(TAG, "mImageCaptureUri---- "+mImageCaptureUri);
+        Log.d(TAG, "mImageCaptureUri---- " + mImageCaptureUri);
         // call the standard crop action intent
         Intent cropIntent = new Intent("com.android.camera.action.CROP");
         // indicate image type and Uri of image
@@ -365,22 +365,22 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
 
 //        String password = mPasswordView.getText().toString();
         // Check for a valid mobile number.
-        if(hasText(mAboutShop)){
+        if (hasText(mAboutShop)) {
             focusView = mAboutShop;
             cancel = true;
-        }else if(hasSpinnerSelected(mSpinnerCategory)){
+        } else if (hasSpinnerSelected(mSpinnerCategory)) {
             focusView = mSpinnerCategory;
             cancel = true;
         }/*else if(hasText(mWebsite)){
             focusView = mWebsite;
             cancel = true;
-        }*/else if(hasText(mLocation)){
+        }*/ else if (hasText(mLocation)) {
             focusView = mLocation;
             cancel = true;
-        }else if(hasText(mFullAddress)){
+        } else if (hasText(mFullAddress)) {
             focusView = mFullAddress;
             cancel = true;
-        }else if(hasText(mPhoneNumber)){
+        } else if (hasText(mPhoneNumber)) {
             focusView = mPhoneNumber;
             cancel = true;
         }
@@ -405,48 +405,48 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         return isValid;
     }
 
-    private Map<String,String> preparePostParams(){
+    private Map<String, String> preparePostParams() {
         Map<String, String> formParams = new HashMap<>();
         formParams.put(APIParams.PARAM_SHOP_ID, getPrefManager().getShopID());
         formParams.put(APIParams.PARAM_ABOUT_SHOP, mAboutShop.getText().toString());
         formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
         formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
         formParams.put(APIParams.PARAM_LOCATION_INFO, prepareLocationsInfo());
-        if(mShopImageBitmap!=null)
-        formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
+        if (mShopImageBitmap != null)
+            formParams.put(APIParams.PARAM_FILE_DATA, FileUtils.convertBitmapToBase64(mShopImageBitmap));
         return formParams;
     }
 
-    private String prepareLocationsInfo(){
+    private String prepareLocationsInfo() {
         JSONArray jsonArray = new JSONArray();
 
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("location_name",mLocation.getText().toString());
-            jsonObject.put("full_address",mFullAddress.getText().toString());
-            jsonObject.put("phone_no",mPhoneNumber.getText().toString());
-            jsonObject.put("latitude",mLatitude);
-            jsonObject.put("longitude",mLongitude);
+            jsonObject.put("location_name", mLocation.getText().toString());
+            jsonObject.put("full_address", mFullAddress.getText().toString());
+            jsonObject.put("phone_no", mPhoneNumber.getText().toString());
+            jsonObject.put("latitude", mLatitude);
+            jsonObject.put("longitude", mLongitude);
             jsonArray.put(jsonObject);
 
             for (ShopLocation mShopLocation : mShopLocations) {
                 JSONObject object = new JSONObject();
-                object.put("location_name",mShopLocation.getShopLocationName());
-                object.put("full_address",mShopLocation.getShopLocationFullAddress());
-                object.put("phone_no",mShopLocation.getShopLocationPhone());
-                object.put("latitude",mShopLocation.getLatitude());
-                object.put("longitude",mShopLocation.getLongitude());
+                object.put("location_name", mShopLocation.getShopLocationName());
+                object.put("full_address", mShopLocation.getShopLocationFullAddress());
+                object.put("phone_no", mShopLocation.getShopLocationPhone());
+                object.put("latitude", mShopLocation.getLatitude());
+                object.put("longitude", mShopLocation.getLongitude());
                 jsonArray.put(object);
 
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonArray.toString();
     }
 
-    private void addLocationView(ShopLocation shopLocation){
+    private void addLocationView(ShopLocation shopLocation) {
         // EditText
         // Instantiate EditText view which will be held inside of
         // TextInputLayout
@@ -475,7 +475,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mLLDynamicViews.addView(phoneNo);
 
         View lineView = new View(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, 2 );
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
         params.setMargins(0, 5, 0, 5);
         lineView.setLayoutParams(params);
         lineView.setBackgroundColor(getResources().getColor(R.color.line_color));
@@ -489,22 +489,20 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         textInputLayout.setLayoutParams(textInputLayoutParams);*/
 
 
-
     }
 
 
-
     @Override
-    public void getResult(int reqCode,Object object) {
+    public void getResult(int reqCode, Object object) {
         dismissProgress();
         JSONObject jsonObject = (JSONObject) object;
         try {
-            if(jsonObject.getInt("code") == 200){
+            if (jsonObject.getInt("code") == 200) {
                 showToast(jsonObject.getString("message"));
                 getPrefManager().setShopWebsite(mWebsite.getText().toString());
-                startActivity(new Intent(this,PostOfferActivity.class));
+                startActivity(new Intent(this, PostOfferActivity.class));
 
-            }else{
+            } else {
                 showAlert(jsonObject.getString("message"));
             }
         } catch (JSONException e) {
@@ -515,7 +513,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
     @Override
     public void getErrorResult(Object errorResp) {
         dismissProgress();
-        if(errorResp !=null){
+        if (errorResp != null) {
             showAlert((String) errorResp);
         }
     }

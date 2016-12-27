@@ -34,14 +34,29 @@ public class AddEditMoreLocationsActivity extends BaseAppCompatActivity implemen
     private double mLatitude;
     private double mLongitude;
 
+    private  ShopLocation mShopLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_more_locations);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mShopLocation = (ShopLocation) getIntent().getSerializableExtra("ShopLocationObj");
         findViews();
+        if(mShopLocation !=null){
+            setTitle("Edit Shop Location");
+//            mBtnSaveDetails.setText();
+            populateData();
+        }
 
+    }
+
+    private void populateData() {
+        mLocation.setText(mShopLocation.getShopLocationName());
+        mFullAddress.setText(mShopLocation.getShopLocationFullAddress());
+        mPhoneNumber.setText(mShopLocation.getShopLocationPhone());
+        mLatitude = mShopLocation.getLatitude();
+        mLongitude = mShopLocation.getLongitude();
     }
 
     private void findViews() {
