@@ -310,6 +310,7 @@ public class MainDrawerActivity extends BaseAppCompatActivity
 
         if (id == R.id.nav_account) {
             // Handle the camera action
+            startActivity(new Intent(this,EditShopDetailsActivity.class));
         } else if (id == R.id.nav_post_offer) {
             startActivity(new Intent(this,PostOfferActivity.class));
         } else if (id == R.id.nav_share) {
