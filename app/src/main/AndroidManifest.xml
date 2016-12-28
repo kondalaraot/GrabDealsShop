@@ -112,7 +112,10 @@
             android:name=".ui.AddEditMoreLocationsActivity"
             android:label="@string/title_activity_add_edit_more_locations"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.EditShopDetailsActivity"></activity>
+        <activity
+            android:name=".ui.EditShopDetailsActivity"
+            android:label="@string/title_activity_edit_shop_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -25,6 +25,7 @@ import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
 import com.grabdeals.shop.util.FileUtils;
 import com.grabdeals.shop.util.ImageUtils;
+import com.grabdeals.shop.util.ListUtils;
 import com.grabdeals.shop.util.NetworkImageViewRounded;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
@@ -73,10 +74,9 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_shop_details);
         findViews();
-        populateData();
         if(NetworkUtil.isNetworkAvailable(this)){
             showAlert("Please wait..");
-            NetworkManager.getInstance().getRequest(Constants.API_SHOP_GET_PROFILE,null,this,Constants.API_SHOP_GET_PROFILE_REQ_CODE);
+            NetworkManager.getInstance().getRequest(Constants.API_SHOP_GET_PROFILE+getPrefManager().getAccID(),null,this,Constants.API_SHOP_GET_PROFILE_REQ_CODE);
         }else {
             showAlert("Please check your network connection..");
         }
@@ -120,7 +120,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
             // Handle clicks for mBtnSaveDetails
             if (validate()) {
                 if (NetworkUtil.isNetworkAvailable(this)) {
-                    showProgress("Please wait, Adding Shop Details...");
+                    showProgress("Please wait, Updating Shop Details...");
                     NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP, preparePostParams(), this, 0);
                 } else {
                     showAlert("Please check your network connection..");
@@ -215,12 +215,14 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
             case REQUEST_ADD_MORE_LOCATIONS:
                 ShopLocation shopLocation = (ShopLocation) data.getSerializableExtra("LocationObj");
                 mShopLocations.add(shopLocation);
-                mAdapter.notifyDataSetChanged();
+                ShopAddressesAdapter adapter = new ShopAddressesAdapter(this,mShopLocations);
+                mListViewLocations.setAdapter(adapter);
+                ListUtils.setListViewHeightBasedOnItems(mListViewLocations);
+//                mAdapter.notifyDataSetChanged();
 //                Log.e(TAG, "Error: Status = " + status.toString());
                 break;
 
         }
-
 
     }
 
