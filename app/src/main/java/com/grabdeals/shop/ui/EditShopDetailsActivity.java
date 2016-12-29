@@ -11,6 +11,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,8 +20,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.Gson;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.adapter.ShopAddressesAdapter;
+import com.grabdeals.shop.model.Account;
+import com.grabdeals.shop.model.ShopBranch;
 import com.grabdeals.shop.model.ShopLocation;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
@@ -32,14 +37,16 @@ import com.grabdeals.shop.util.NetworkUtil;
 import com.grabdeals.shop.util.VolleyCallbackListener;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class EditShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener {
+public class EditShopDetailsActivity extends BaseAppCompatActivity implements View.OnClickListener, VolleyCallbackListener {
 
     private static final String TAG = "EditShopDetailsActivity";
     private static final int PICK_FROM_CAMERA = 10;
@@ -53,7 +60,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
     private EditText mAboutShop;
     private Spinner mSpinnerCategory;
     private EditText mWebsite;
-   private ListView mListViewLocations;
+    private ListView mListViewLocations;
     private Button mBtnAddMoreLoc;
     private Button mBtnSaveDetails;
 
@@ -66,6 +73,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
 
     double mLatitude, mLongitude;
     private ShopAddressesAdapter mAdapter;
+    ArrayAdapter<CharSequence> mSpinnerAdapter;
 
     private ArrayList<ShopLocation> mShopLocations = new ArrayList<ShopLocation>();
 
@@ -74,15 +82,31 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_shop_details);
         findViews();
-        if(NetworkUtil.isNetworkAvailable(this)){
+        if (NetworkUtil.isNetworkAvailable(this)) {
             showAlert("Please wait..");
-            NetworkManager.getInstance().getRequest(Constants.API_SHOP_GET_PROFILE+getPrefManager().getAccID(),null,this,Constants.API_SHOP_GET_PROFILE_REQ_CODE);
-        }else {
+            NetworkManager.getInstance().getRequest(Constants.API_SHOP_GET_PROFILE + getPrefManager().getAccID(), null, this, Constants.API_SHOP_GET_PROFILE_REQ_CODE);
+        } else {
             showAlert("Please check your network connection..");
         }
     }
 
-    private void populateData() {
+    private void populateData(Account account) {
+        mAboutShop.setText(account.getShop_description());
+        mSpinnerCategory.setSelection(mSpinnerAdapter.getPosition(account.getCategory_name())-1);
+        mWebsite.setText(account.getWeb_site());
+        List<ShopBranch> shopBranches = account.getShop_branches();
+        for (ShopBranch shopBranch : shopBranches) {
+            ShopLocation shopLocation = new ShopLocation();
+            shopLocation.setShopLocationName(shopBranch.getLocation_name());
+            shopLocation.setShopLocationFullAddress(shopBranch.getShop_address());
+            shopLocation.setShopLocationPhone(shopBranch.getShop_phone());
+            shopLocation.setLatitude(Double.parseDouble(shopBranch.getLatitude()));
+            shopLocation.setLongitude(Double.parseDouble(shopBranch.getLongitude()));
+            mShopLocations.add(shopLocation);
+
+        }
+        mAdapter = new ShopAddressesAdapter(this,mShopLocations);
+        mListViewLocations.setAdapter(mAdapter);
 
     }
 
@@ -93,9 +117,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         mSpinnerCategory = (Spinner) findViewById(R.id.spinner_category);
         mWebsite = (EditText) findViewById(R.id.website);
         mListViewLocations = (ListView) findViewById(R.id.lv_addresses);
-      /*  mLocation = (EditText) findViewById(R.id.location);
-        mFullAddress = (EditText) findViewById(R.id.full_address);
-        mPhoneNumber = (EditText) findViewById(R.id.phone_number);*/
+
         mBtnAddMoreLoc = (Button) findViewById(R.id.btn_add_more_loc);
         mBtnSaveDetails = (Button) findViewById(R.id.btn_save_details);
 
@@ -108,6 +130,27 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
                 .getImageLoader();
         mImage.setDefaultImageResId(R.drawable.default_user);
         mImage.setImageUrl(imageUrl, mImageLoader);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.shop_categories, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        mSpinnerCategory.setAdapter(mSpinnerAdapter);
+        mSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                // On selecting a spinner item
+                mShopCategory = adapterView.getItemAtPosition(pos).toString();
+                mShopCategoryPos = pos;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -131,6 +174,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
             selectImage();
         }
     }
+
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
@@ -215,7 +259,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
             case REQUEST_ADD_MORE_LOCATIONS:
                 ShopLocation shopLocation = (ShopLocation) data.getSerializableExtra("LocationObj");
                 mShopLocations.add(shopLocation);
-                ShopAddressesAdapter adapter = new ShopAddressesAdapter(this,mShopLocations);
+                ShopAddressesAdapter adapter = new ShopAddressesAdapter(this, mShopLocations);
                 mListViewLocations.setAdapter(adapter);
                 ListUtils.setListViewHeightBasedOnItems(mListViewLocations);
 //                mAdapter.notifyDataSetChanged();
@@ -248,6 +292,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         startActivityForResult(cropIntent, CROP_FROM_CAMERA);
 
     }
+
     private Map<String, String> preparePostParams() {
         Map<String, String> formParams = new HashMap<>();
         formParams.put(APIParams.PARAM_SHOP_ID, getPrefManager().getShopID());
@@ -288,6 +333,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         }
         return jsonArray.toString();
     }
+
     private boolean validate() {
         boolean isValid = true;
         boolean cancel = false;
@@ -302,7 +348,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         } else if (hasSpinnerSelected(mSpinnerCategory)) {
             focusView = mSpinnerCategory;
             cancel = true;
-        }else if(hasText(mWebsite)){
+        } else if (hasText(mWebsite)) {
             focusView = mWebsite;
             cancel = true;
         } /*else if (hasText(mLocation)) {
@@ -341,6 +387,18 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         dismissProgress();
         JSONObject jsonObject = (JSONObject) object;
 
+        try {
+            if (jsonObject != null && jsonObject.getInt("code") == 200) {
+                JSONObject data = jsonObject.getJSONObject("data");
+                JSONObject account = data.getJSONObject("account");
+                Gson gson = new Gson();
+                Account accountObj = gson.fromJson(account.toString(), Account.class);
+                populateData(accountObj);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
