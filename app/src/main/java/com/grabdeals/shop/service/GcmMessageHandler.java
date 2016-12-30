@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.receiver.GcmBroadcastReceiver;
 import com.grabdeals.shop.ui.SplashScreenActivity;
