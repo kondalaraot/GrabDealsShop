@@ -54,6 +54,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
     private static final int PICK_FROM_FILE = 30;
     private static final int REQUEST_CODE_AUTOCOMPLETE = 40;
     private static final int REQUEST_ADD_MORE_LOCATIONS = 50;
+    public static final int REQUEST_EDIT_LOCATIONS = 60;
 
     private NetworkImageViewRounded mImage;
     private ImageView mIvCamera;
@@ -74,6 +75,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
     double mLatitude, mLongitude;
     private ShopAddressesAdapter mAdapter;
     ArrayAdapter<CharSequence> mSpinnerAdapter;
+    Account mAccount;
 
     private ArrayList<ShopLocation> mShopLocations = new ArrayList<ShopLocation>();
 
@@ -83,7 +85,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         setContentView(R.layout.activity_edit_shop_details);
         findViews();
         if (NetworkUtil.isNetworkAvailable(this)) {
-            showAlert("Please wait..");
+            showProgress("Please wait..");
             NetworkManager.getInstance().getRequest(Constants.API_SHOP_GET_PROFILE + getPrefManager().getAccID(), null, this, Constants.API_SHOP_GET_PROFILE_REQ_CODE);
         } else {
             showAlert("Please check your network connection..");
@@ -92,7 +94,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
 
     private void populateData(Account account) {
         mAboutShop.setText(account.getShop_description());
-        mSpinnerCategory.setSelection(mSpinnerAdapter.getPosition(account.getCategory_name())-1);
+        mSpinnerCategory.setSelection(mSpinnerAdapter.getPosition(account.getCategory_name()));
         mWebsite.setText(account.getWeb_site());
         List<ShopBranch> shopBranches = account.getShop_branches();
         for (ShopBranch shopBranch : shopBranches) {
@@ -107,6 +109,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         }
         mAdapter = new ShopAddressesAdapter(this,mShopLocations);
         mListViewLocations.setAdapter(mAdapter);
+        ListUtils.setListViewHeightBasedOnItems(mListViewLocations);
 
     }
 
@@ -164,7 +167,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
             if (validate()) {
                 if (NetworkUtil.isNetworkAvailable(this)) {
                     showProgress("Please wait, Updating Shop Details...");
-                    NetworkManager.getInstance().postRequest(Constants.API_ADD_SHOP, preparePostParams(), this, 0);
+                    NetworkManager.getInstance().postRequest(Constants.API_UPDATE_SHOP, preparePostParams(), this, Constants.API_UPDATE_SHOP_REQ_CODE);
                 } else {
                     showAlert("Please check your network connection..");
                 }
@@ -265,6 +268,16 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
 //                mAdapter.notifyDataSetChanged();
 //                Log.e(TAG, "Error: Status = " + status.toString());
                 break;
+            case REQUEST_EDIT_LOCATIONS:
+                ShopLocation shopLocationEdit = (ShopLocation) data.getSerializableExtra("LocationObj");
+                int editItemPosition =  data.getIntExtra("EditItemPosition",0);
+                mShopLocations.set(editItemPosition,shopLocationEdit);
+                ShopAddressesAdapter adapterEdited = new ShopAddressesAdapter(this, mShopLocations);
+                mListViewLocations.setAdapter(adapterEdited);
+                ListUtils.setListViewHeightBasedOnItems(mListViewLocations);
+//                mAdapter.notifyDataSetChanged();
+//                Log.e(TAG, "Error: Status = " + status.toString());
+                break;
 
         }
 
@@ -295,9 +308,10 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
 
     private Map<String, String> preparePostParams() {
         Map<String, String> formParams = new HashMap<>();
-        formParams.put(APIParams.PARAM_SHOP_ID, getPrefManager().getShopID());
+        formParams.put(APIParams.PARAM_SHOP_ID, mAccount.getShop_id());
         formParams.put(APIParams.PARAM_ABOUT_SHOP, mAboutShop.getText().toString());
-        formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
+//        formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
+        formParams.put(APIParams.PARAM_CATEGORY_ID, String.valueOf(mShopCategoryPos));
         formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
         formParams.put(APIParams.PARAM_LOCATION_INFO, prepareLocationsInfo());
         if (mShopImageBitmap != null)
@@ -351,25 +365,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         } else if (hasText(mWebsite)) {
             focusView = mWebsite;
             cancel = true;
-        } /*else if (hasText(mLocation)) {
-            focusView = mLocation;
-            cancel = true;
-        } else if (hasText(mFullAddress)) {
-            focusView = mFullAddress;
-            cancel = true;
-        } else if (hasText(mPhoneNumber)) {
-            focusView = mPhoneNumber;
-            cancel = true;
-        }*/
-       /* if (TextUtils.isEmpty(aboutShop)) {
-            mAboutShop.setError(getString(R.string.error_field_required));
-            focusView = mAboutShop;
-            cancel = true;
-        } else  if (TextUtils.isEmpty(address)) {
-            mFullAddress.setError(getString(R.string.error_field_required));
-            focusView = mFullAddress;
-            cancel = true;
-        }*/
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -386,19 +382,30 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
     public void getResult(int reqCode, Object object) {
         dismissProgress();
         JSONObject jsonObject = (JSONObject) object;
-
-        try {
-            if (jsonObject != null && jsonObject.getInt("code") == 200) {
-                JSONObject data = jsonObject.getJSONObject("data");
-                JSONObject account = data.getJSONObject("account");
-                Gson gson = new Gson();
-                Account accountObj = gson.fromJson(account.toString(), Account.class);
-                populateData(accountObj);
-
+        if(reqCode == Constants.API_UPDATE_SHOP_REQ_CODE){
+            try {
+                if (jsonObject != null && jsonObject.getInt("code") == 200) {
+                    showToast(jsonObject.getString("message"));
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        }else{
+            try {
+                if (jsonObject != null && jsonObject.getInt("code") == 200) {
+                    JSONObject data = jsonObject.getJSONObject("data");
+//                JSONObject account = data.getJSONObject("account");
+                    Gson gson = new Gson();
+                    mAccount = gson.fromJson(data.toString(), Account.class);
+                    populateData(mAccount);
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     @Override

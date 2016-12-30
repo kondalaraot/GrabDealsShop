@@ -30,7 +30,7 @@
 
     <string name="action_create_new_shop">Create new shop</string>
     <string name="action_create_acc">Create account</string>
-    <string name="action_already_acc_login">Already have shop account? Sign in </string>
+    <string name="action_already_acc_login">Already have account? Sign in </string>
     <string name="action_verify">Verify</string>
     <string name="action_resend_otp">Resend OTP</string>
     <string name="action_save_details">Save Details</string>
@@ -61,6 +61,13 @@
         <item>Mobiles &amp; Electronics</item>
         <item>Drinks, Bar &amp; Pubs</item>
         <item>Food &amp; Restaurants</item>
+    </string-array>
+
+    <string-array name="shop_categories_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="offer_categories">

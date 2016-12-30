@@ -35,6 +35,7 @@ public class AddEditMoreLocationsActivity extends BaseAppCompatActivity implemen
     private double mLongitude;
 
     private  ShopLocation mShopLocation;
+    private int mPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +43,11 @@ public class AddEditMoreLocationsActivity extends BaseAppCompatActivity implemen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mShopLocation = (ShopLocation) getIntent().getSerializableExtra("ShopLocationObj");
+        mPosition = getIntent().getIntExtra("position",0);
         findViews();
         if(mShopLocation !=null){
             setTitle("Edit Shop Location");
+            mBtnSaveDetails.setText("Update Details");
 //            mBtnSaveDetails.setText();
             populateData();
         }
@@ -94,6 +97,9 @@ public class AddEditMoreLocationsActivity extends BaseAppCompatActivity implemen
                 shopLocation.setLongitude(mLongitude);
                 Intent intent = new Intent();
                 intent.putExtra("LocationObj",shopLocation);
+                if(mShopLocation!=null){
+                    intent.putExtra("EditItemPosition",mPosition);
+                }
                 setResult(RESULT_OK,intent);
                 finish();
 

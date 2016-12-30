@@ -3,6 +3,7 @@ package com.grabdeals.shop.ui;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -100,6 +101,25 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
+                    }
+                }).create().show();
+    }
+
+    protected void showSessionExpireAlert(String msg) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.app_name))
+                .setMessage(msg)
+                .setCancelable(false)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+
                     }
                 }).create().show();
     }

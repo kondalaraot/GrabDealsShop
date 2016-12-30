@@ -199,7 +199,7 @@ public class MainActivity extends BaseAppCompatActivity implements VolleyCallbac
                 Type listType = new TypeToken<List<Offer>>(){}.getType();
                 mOffersList = gson.fromJson(data.toString(), listType);
                 if(mOffersList.size() >0){
-                    mOffersAdapter = new OffersAdapter(mOffersList);
+                    mOffersAdapter = new OffersAdapter(mOffersList,this);
                     mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
                     LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);

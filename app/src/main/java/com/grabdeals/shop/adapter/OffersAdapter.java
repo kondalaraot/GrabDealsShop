@@ -1,6 +1,12 @@
 package com.grabdeals.shop.adapter;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +22,7 @@ import com.grabdeals.shop.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -27,6 +34,8 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
 
     private List<Offer> mOffers;
     private List<Offer> mOriginalOffers;
+    private String mSearchText;
+    private Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -48,7 +57,8 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
 
     }
 
-    public OffersAdapter(List<Offer> offerList) {
+    public OffersAdapter(List<Offer> offerList, Context context) {
+        this.mContext = context;
         this.mOffers = offerList;
         this.mOriginalOffers = offerList;
     }
@@ -63,9 +73,11 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Offer offer = mOffers.get(position);
-        holder.mTvOfferTitle.setText(offer.getTitle());
+        String offerTitleFullText = offer.getTitle();
+//        holder.mTvOfferTitle.setText(offer.getTitle());
         holder.mTvOfferDesc.setText(offer.getDescription());
         holder.mValueOfferEnds.setText(offer.getOffer_end());
+
         if(offer.getLocations()!=null && offer.getLocations().size()>0){
            StringBuilder builder = new StringBuilder();
             for (Location location : offer.getLocations()) {
@@ -76,6 +88,25 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
         }else{
             holder.mTvLocation.setText("No location");
 
+        }
+
+        // highlight search text
+        if (mSearchText != null && !mSearchText.isEmpty()) {
+            int startPos = offerTitleFullText.toLowerCase(Locale.US).indexOf(mSearchText.toLowerCase(Locale.US));
+            int endPos = startPos + mSearchText.length();
+
+            if (startPos != -1) {
+                Spannable spannable = new SpannableString(offerTitleFullText);
+
+                ColorStateList blueColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{mContext.getResources().getColor(R.color.colorAccent),});
+                TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+                spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.mTvOfferTitle.setText(spannable);
+            } else {
+                holder.mTvOfferTitle.setText(offerTitleFullText);
+            }
+        } else {
+            holder.mTvOfferTitle.setText(offerTitleFullText);
         }
 
     }
@@ -98,6 +129,7 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            mSearchText = constraint.toString();
             if(Constants.DEBUG) Log.d(TAG,"performFiltering ");
             FilterResults filterResults = new FilterResults();
 

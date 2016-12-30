@@ -16,6 +16,7 @@ public class Constants {
     public static final String API_SIGN_UP = "shop/signup";
     public static final String API_LOGIN = "shop/login";
     public static final String API_ADD_SHOP = "shop/update/locations";
+    public static final String API_UPDATE_SHOP = "shop/update/locations";
     public static final String API_POST_OFFER = "shop/post_offer";
     public static final String API_EDIT_OFFER = "shop/edit/offer";
 
@@ -40,6 +41,7 @@ public class Constants {
     public static final int API_SHOP_DELETE_OFFER_REQ_CODE = 8;
     public static final int API_EDIT_OFFER_REQ_CODE = 9;
     public static final int API_SHOP_GET_PROFILE_REQ_CODE = 10;
+    public static final int API_UPDATE_SHOP_REQ_CODE = 11;
 
     public static final String EDIT_OFFER = "Edit Offer";
 

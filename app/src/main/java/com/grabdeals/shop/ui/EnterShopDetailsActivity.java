@@ -119,7 +119,6 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         mImage.setDefaultImageResId(R.drawable.default_user);
         mImage.setImageUrl(imageUrl, mImageLoader);
 
-
         mLocation.setInputType(InputType.TYPE_NULL);
 
         mLocation.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +140,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 // On selecting a spinner item
                 mShopCategory = adapterView.getItemAtPosition(pos).toString();
-                mShopCategoryPos = pos;
+//                String value = getResources().getStringArray(R.array.shop_categories_values)[pos];
             }
 
             @Override
@@ -409,7 +408,7 @@ public class EnterShopDetailsActivity extends BaseAppCompatActivity implements V
         Map<String, String> formParams = new HashMap<>();
         formParams.put(APIParams.PARAM_SHOP_ID, getPrefManager().getShopID());
         formParams.put(APIParams.PARAM_ABOUT_SHOP, mAboutShop.getText().toString());
-        formParams.put(APIParams.PARAM_CATEGORY_ID, mSpinnerCategory.getSelectedItem().toString());
+        formParams.put(APIParams.PARAM_CATEGORY_ID, String.valueOf(mShopCategoryPos));
         formParams.put(APIParams.PARAM_WEB_SITE, mWebsite.getText().toString());
         formParams.put(APIParams.PARAM_LOCATION_INFO, prepareLocationsInfo());
         if (mShopImageBitmap != null)

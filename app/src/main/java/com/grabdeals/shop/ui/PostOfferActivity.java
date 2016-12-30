@@ -539,6 +539,8 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         formParams.put(APIParams.PARAM_OFR_START, mFromDate.getText().toString());
         formParams.put(APIParams.PARAM_OFR_END, mToDate.getText().toString());
         formParams.put(APIParams.PARAM_LOCATIONS, prepareLocationsInfo());
+        formParams.put(APIParams.PARAM_CATEGORY_ID, String.valueOf(mOfferCategoryPos));
+
 //        if(mAttachmentBitmap!=null)
 //            formParams.put(APIParams.PARAM_ATTACHMENTS, FileUtils.convertBitmapToBase64(mAttachmentBitmap));
         return formParams;

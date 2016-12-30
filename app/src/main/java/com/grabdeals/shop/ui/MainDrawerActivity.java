@@ -229,7 +229,7 @@ public class MainDrawerActivity extends BaseAppCompatActivity
                 Type listType = new TypeToken<List<Offer>>(){}.getType();
                 mOffersList = gson.fromJson(data.toString(), listType);
                 if(mOffersList.size() >0){
-                    mOffersAdapter = new OffersAdapter(mOffersList);
+                    mOffersAdapter = new OffersAdapter(mOffersList,this);
                     mRecyclerView.addItemDecoration(new DividerItemDecoration(MainDrawerActivity.this, LinearLayoutManager.VERTICAL));
                     LinearLayoutManager llm = new LinearLayoutManager(MainDrawerActivity.this);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -239,8 +239,10 @@ public class MainDrawerActivity extends BaseAppCompatActivity
                     mTextViewEmpty.setVisibility(VISIBLE);
                 }
             } else {
-                showAlert(response.getString("message"));
-                mTextViewEmpty.setVisibility(VISIBLE);
+
+                    showAlert(response.getString("message"));
+                    mTextViewEmpty.setVisibility(VISIBLE);
+
 
 
             }
@@ -253,7 +255,19 @@ public class MainDrawerActivity extends BaseAppCompatActivity
     public void getErrorResult(Object errorResp) {
         dismissProgress();
         if(errorResp !=null){
-            showAlert((String) errorResp);
+            try {
+                if(errorResp instanceof String){
+                    showAlert((String) errorResp);
+                }else {
+                    JSONObject jsonObject = new JSONObject((String)errorResp);
+                    if(jsonObject.getInt("code") == 401){
+                        showSessionExpireAlert(jsonObject.getString("message"));
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
 

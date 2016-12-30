@@ -101,6 +101,7 @@
                     android:layout_marginTop="@dimen/fields_margin">
 
                     <Spinner
+                        android:paddingLeft="-10dp"
                         android:id="@+id/spinner_category"
                         style="@style/Widget.AppCompat.Spinner.Underlined"
                         android:layout_width="match_parent"

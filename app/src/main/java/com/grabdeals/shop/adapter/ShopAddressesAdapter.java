@@ -1,5 +1,6 @@
 package com.grabdeals.shop.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.ShopLocation;
 import com.grabdeals.shop.ui.AddEditMoreLocationsActivity;
+import com.grabdeals.shop.ui.EditShopDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class ShopAddressesAdapter extends ArrayAdapter<ShopLocation> {
             // View is being recycled, retrieve the viewHolder object from tag
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.ivEdit.setTag(location);
+        viewHolder.ivEdit.setTag(position);
         // Populate the data from the data object via the viewHolder object
         // into the template view.
         viewHolder.locName.setText(location.getShopLocationName());
@@ -70,10 +72,13 @@ public class ShopAddressesAdapter extends ArrayAdapter<ShopLocation> {
         viewHolder.ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShopLocation locTag = (ShopLocation) v.getTag();
+                int  position = (Integer) v.getTag();
+                ShopLocation location =getItem(position);
                 Intent intent = new Intent(mContext, AddEditMoreLocationsActivity.class);
-                intent.putExtra("ShopLocationObj",locTag);
-                mContext.startActivity(intent);
+                intent.putExtra("position" ,position);
+                intent.putExtra("ShopLocationObj",location);
+                Activity origin = (Activity)mContext;
+                origin.startActivityForResult(intent, EditShopDetailsActivity.REQUEST_EDIT_LOCATIONS);
 
             }
         });

@@ -245,7 +245,14 @@ public class NetworkManager
                 String resp = (String) errorResp;
                 try {
                     JSONObject jsonObject = new JSONObject(resp);
-                    errorMessage = jsonObject.getString("message");
+                    if(jsonObject.optInt("code") == 401){
+                        errorMessage = jsonObject.toString();
+                    }else{
+                        errorMessage = jsonObject.optString("message");
+                        if(jsonObject.has("error")){
+                            errorMessage= jsonObject.getString("error");
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
