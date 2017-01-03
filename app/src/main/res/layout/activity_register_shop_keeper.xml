@@ -88,11 +88,13 @@
              android:layout_height="match_parent">
 
              <Spinner
-                 android:layout_gravity="center_vertical"
-                 style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                 style="@style/Base.Widget.AppCompat.EditText"
+                 android:gravity="bottom"
+                 android:layout_gravity="bottom"
+                 android:spinnerMode="dialog"
                  android:id="@+id/spinner_countries"
                  android:layout_width="wrap_content"
-                 android:layout_height="match_parent">
+                 android:layout_height="wrap_content">
 
              </Spinner>
              <android.support.design.widget.TextInputLayout

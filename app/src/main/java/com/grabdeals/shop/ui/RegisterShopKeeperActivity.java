@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -114,10 +115,35 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         mCountries = FileUtils.loadJSONFromAsset(this);
 //        ArrayAdapter<Country> myAdapter = new ArrayAdapter<Country>(this, android.R.layout.simple_spinner_item, mCountries);
         String locale = this.getResources().getConfiguration().locale.getCountry();
-        Log.d(TAG,"locale");
+        String countryString = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry();
+        int defaultCountryPos = 0;
+        String defaultCountryCode;
+        Log.d(TAG,"country & locale "+countryString +"---"+locale);
+        for (int i = 0; i < mCountries.size() ; i++) {
 
-        CountriesAdapter adapter = new CountriesAdapter(this,android.R.layout.simple_spinner_item,mCountries);
+            if(mCountries.get(i).getName().equalsIgnoreCase(countryString)){
+                defaultCountryCode = mCountries.get(i).getCode();
+                defaultCountryPos = i;
+                break;
+            }
+        }
+       
+        CountriesAdapter adapter = new CountriesAdapter(this,android.R.layout.activity_list_item,mCountries);
         mSpinnerCountries.setAdapter(adapter);
+        mSpinnerCountries.setSelection(defaultCountryPos);
+//        mSpinnerCountries.setSelection();
+        mSpinnerCountries.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Country countrySelected = mCountries.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mSpinnerCountries.setPadding(0, mSpinnerCountries.getPaddingTop(), mSpinnerCountries.getPaddingRight(), 0);
 
 
 //        mImage.setDefaultImageResIdsetDefaultImageResId(R.drawable.office_building_icon);

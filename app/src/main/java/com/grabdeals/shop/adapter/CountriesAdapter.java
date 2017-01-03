@@ -70,8 +70,42 @@ public class CountriesAdapter extends ArrayAdapter<Country> {
        /* TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
         label.setText(values.get(position).getName());*/
-        return getCustomView(position, convertView, parent);
+        return getCustomDropDownView(position, convertView, parent);
 //        return label;
+    }
+
+    private View getCustomDropDownView(int position, View convertView, ViewGroup parent) {
+
+        /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
+        View row = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+
+        /***** Get each Model object from Arraylist ********/
+//        tempValues = null;
+        Country country = (Country) values.get(position);
+
+        TextView label        = (TextView)row.findViewById(android.R.id.text1);
+      /*  TextView sub          = (TextView)row.findViewById(R.id.sub);
+        ImageView companyLogo = (ImageView)row.findViewById(R.id.image);*/
+        label.setText(country.getName());
+
+       /* if(position==0){
+
+            // Default selected Spinner item
+            label.setText("-Select Country-");
+//            sub.setText("");
+        }
+        else
+        {
+            // Set values for spinner each row
+            label.setText(country.getName());
+           *//* sub.setText(tempValues.getUrl());
+            companyLogo.setImageResource(res.getIdentifier
+                    ("com.androidexample.customspinner:drawable/"
+                            + tempValues.getImage(),null,null));*//*
+
+        }*/
+
+        return row;
     }
 
     // This funtion called for each row ( Called data.size() times )
@@ -87,8 +121,9 @@ public class CountriesAdapter extends ArrayAdapter<Country> {
         TextView label        = (TextView)row.findViewById(android.R.id.text1);
       /*  TextView sub          = (TextView)row.findViewById(R.id.sub);
         ImageView companyLogo = (ImageView)row.findViewById(R.id.image);*/
+        label.setText(country.getCode());
 
-        if(position==0){
+       /* if(position==0){
 
             // Default selected Spinner item
             label.setText("-Select Country-");
@@ -98,12 +133,12 @@ public class CountriesAdapter extends ArrayAdapter<Country> {
         {
             // Set values for spinner each row
             label.setText(country.getName());
-           /* sub.setText(tempValues.getUrl());
+           *//* sub.setText(tempValues.getUrl());
             companyLogo.setImageResource(res.getIdentifier
                     ("com.androidexample.customspinner:drawable/"
-                            + tempValues.getImage(),null,null));*/
+                            + tempValues.getImage(),null,null));*//*
 
-        }
+        }*/
 
         return row;
     }
