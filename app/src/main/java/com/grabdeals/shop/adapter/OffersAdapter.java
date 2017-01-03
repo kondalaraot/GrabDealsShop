@@ -19,6 +19,7 @@ import com.grabdeals.shop.R;
 import com.grabdeals.shop.model.Location;
 import com.grabdeals.shop.model.Offer;
 import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,7 @@ public class OffersAdapter  extends RecyclerView.Adapter<OffersAdapter.MyViewHol
         String offerTitleFullText = offer.getTitle();
 //        holder.mTvOfferTitle.setText(offer.getTitle());
         holder.mTvOfferDesc.setText(offer.getDescription());
-        holder.mValueOfferEnds.setText(offer.getOffer_end());
+        holder.mValueOfferEnds.setText(DateUtil.parseDateToddMMyyyy(offer.getOffer_end()));
 
         if(offer.getLocations()!=null && offer.getLocations().size()>0){
            StringBuilder builder = new StringBuilder();
