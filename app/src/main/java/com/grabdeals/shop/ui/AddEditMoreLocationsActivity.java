@@ -102,6 +102,7 @@ public class AddEditMoreLocationsActivity extends BaseAppCompatActivity implemen
                 }
                 setResult(RESULT_OK,intent);
                 finish();
+                hideKeyoard();
 
             }
 

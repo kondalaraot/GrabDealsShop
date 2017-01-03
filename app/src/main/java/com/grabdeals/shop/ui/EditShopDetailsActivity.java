@@ -52,7 +52,6 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
     private static final int PICK_FROM_CAMERA = 10;
     private static final int CROP_FROM_CAMERA = 20;
     private static final int PICK_FROM_FILE = 30;
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 40;
     private static final int REQUEST_ADD_MORE_LOCATIONS = 50;
     public static final int REQUEST_EDIT_LOCATIONS = 60;
 
@@ -128,7 +127,7 @@ public class EditShopDetailsActivity extends BaseAppCompatActivity implements Vi
         mBtnSaveDetails.setOnClickListener(this);
         mIvCamera.setOnClickListener(this);
         String imageUrl = Constants.SHOP_AVATAR_URL + getPrefManager().getAccID() + "_" + getPrefManager().getShopID() + ".png";
-        if (Constants.DEBUG) Log.d(TAG, "Shop image url" + imageUrl);
+        if (Constants.DEBUG) Log.d(TAG, "Shop image url " + imageUrl);
         ImageLoader mImageLoader = NetworkManager.getInstance(this)
                 .getImageLoader();
         mImage.setDefaultImageResId(R.drawable.default_user);

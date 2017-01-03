@@ -39,6 +39,8 @@ public class Offer implements Serializable{
     private String offer_id;
     private String description;
     private String offer_start;
+    private String category_id;
+    private String category_name;
     List<Location> locations;
     List<Attachment> attachments;
 
@@ -107,5 +109,22 @@ public class Offer implements Serializable{
 
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 }

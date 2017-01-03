@@ -109,7 +109,7 @@ public class MainDrawerActivity extends BaseAppCompatActivity
             @Override
             public void onClick(View view, int position) {
 
-                Offer offer = mOffersList.get(position);
+                Offer offer = mOffersAdapter.getItem(position);
                 Intent intent = new Intent(MainDrawerActivity.this, OfferDetailsActivity.class);
                 intent.putExtra("OFFER_ID", offer.getOffer_id());
                 intent.putExtra("OFFER_OBJ", offer);

@@ -86,7 +86,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
     ArrayList<Image> mImages;
     String offerType;
     Offer mOffer;
-
+    ArrayAdapter<CharSequence> mSpinnerCatAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +104,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             mOfferDescr.setText(mOffer.getDescription());
             mFromDate.setText(mOffer.getOffer_start());
             mToDate.setText(mOffer.getOffer_end());
+            mSpinnerCategory.setSelection(mSpinnerCatAdapter.getPosition(mOffer.getCategory_name()));
             List<Location> locations = mOffer.getLocations();
             selectedLocations = new ArrayList<String>();
             for (Location location : locations) {
@@ -165,12 +166,12 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
         });*/
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        mSpinnerCatAdapter = ArrayAdapter.createFromResource(this,
                 R.array.shop_categories, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerCatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
-        mSpinnerCategory.setAdapter(adapter);
+        mSpinnerCategory.setAdapter(mSpinnerCatAdapter);
         mSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -309,7 +310,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
             // Handle clicks for mBtnSaveDetails
             if (validate()){
                 if(NetworkUtil.isNetworkAvailable(this)){
-                    if(offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
+                    if(offerType !=null && offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
                         showProgress("Updating offer...");
                         NetworkManager.getInstance().postRequest(Constants.API_EDIT_OFFER,preparePostParams(),this,Constants.API_EDIT_OFFER_REQ_CODE);
                     }else{
@@ -531,7 +532,7 @@ public class PostOfferActivity extends BaseAppCompatActivity implements View.OnC
 
     private Map<String,String> preparePostParams(){
         Map<String, String> formParams = new HashMap<>();
-        if(offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
+        if(offerType!=null && offerType.equalsIgnoreCase(Constants.EDIT_OFFER)){
             formParams.put(APIParams.PARAM_OFFER_ID, mOffer.getOffer_id());
         }
         formParams.put(APIParams.PARAM_OFFER_TITLE, mOfferTitle.getText().toString());
