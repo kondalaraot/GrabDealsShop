@@ -10,11 +10,23 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.grabdeals.shop.model.Country;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kondal on 11/3/2016.
@@ -124,5 +136,41 @@ public class FileUtils {
             }
         }
         return result;
+    }
+
+    public static List<Country> loadJSONFromAsset(Context context) {
+        List<Country> countriesList = null;
+        try {
+
+            InputStream is = context.getAssets().open("countries.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            String json = new String(buffer, "UTF-8");
+
+            try {
+                JSONObject jsonObject = new JSONObject(json);
+                JSONArray countriesArray = jsonObject.getJSONArray("countries");
+                Gson gson = new Gson();
+                Type listType = new TypeToken<ArrayList<Country>>(){}.getType();
+                 countriesList = new Gson().fromJson(countriesArray.toString(), listType);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return countriesList;
+
     }
 }

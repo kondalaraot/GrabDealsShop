@@ -82,22 +82,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_marginTop="@dimen/fields_margin_top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+         <LinearLayout
+             android:orientation="horizontal"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/phone_no"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_mobile_no"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+             <Spinner
+                 android:layout_gravity="center_vertical"
+                 style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                 android:id="@+id/spinner_countries"
+                 android:layout_width="wrap_content"
+                 android:layout_height="match_parent">
 
-            </android.support.design.widget.TextInputLayout>
+             </Spinner>
+             <android.support.design.widget.TextInputLayout
+                 android:layout_marginTop="@dimen/fields_margin_top"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+                 <EditText
+                     android:id="@+id/phone_no"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:hint="@string/prompt_mobile_no"
+                     android:imeOptions="actionNext"
+                     android:inputType="phone"
+                     android:maxLines="1"
+                     android:singleLine="true" />
+
+             </android.support.design.widget.TextInputLayout>
+         </LinearLayout>
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_marginTop="@dimen/fields_margin"

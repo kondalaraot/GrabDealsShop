@@ -18,10 +18,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 
 import com.grabdeals.shop.R;
+import com.grabdeals.shop.adapter.CountriesAdapter;
+import com.grabdeals.shop.model.Country;
 import com.grabdeals.shop.util.APIParams;
 import com.grabdeals.shop.util.Constants;
+import com.grabdeals.shop.util.FileUtils;
 import com.grabdeals.shop.util.ImageUtils;
 import com.grabdeals.shop.util.NetworkManager;
 import com.grabdeals.shop.util.NetworkUtil;
@@ -31,7 +35,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements View.OnClickListener,VolleyCallbackListener{
@@ -51,6 +58,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     private LinearLayout mLlParentCreateAcc;
     private ImageView mImage;
     private ImageView mImageCamera;
+    private Spinner mSpinnerCountries;
     private EditText mPhoneNo;
     private EditText mShopName;
     private EditText mPassword;
@@ -60,6 +68,8 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
     Uri mImageCaptureUri;
     Bitmap mShopImageBitmap;
     Bitmap mShopImageCircleBitmap;
+
+    List<Country> mCountries;
 
     final CharSequence[] items = { "Take Photo", "Choose from Library",
             "Cancel" };
@@ -90,6 +100,7 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         mImage = (ImageView) findViewById( R.id.image_shop );
         mImageCamera = (ImageView) findViewById( R.id.iv_camera );
 
+        mSpinnerCountries = (Spinner) findViewById( R.id.spinner_countries );
         mPhoneNo = (EditText)findViewById( R.id.phone_no );
         mShopName = (EditText)findViewById( R.id.shop_name );
         mPassword = (EditText)findViewById( R.id.password );
@@ -100,7 +111,40 @@ public class RegisterShopKeeperActivity extends BaseAppCompatActivity implements
         mBtnLogin.setOnClickListener( this );
         mImageCamera.setOnClickListener( this );
 
+        mCountries = FileUtils.loadJSONFromAsset(this);
+//        ArrayAdapter<Country> myAdapter = new ArrayAdapter<Country>(this, android.R.layout.simple_spinner_item, mCountries);
+        String locale = this.getResources().getConfiguration().locale.getCountry();
+        Log.d(TAG,"locale");
+
+        CountriesAdapter adapter = new CountriesAdapter(this,android.R.layout.simple_spinner_item,mCountries);
+        mSpinnerCountries.setAdapter(adapter);
+
+
 //        mImage.setDefaultImageResIdsetDefaultImageResId(R.drawable.office_building_icon);
+
+    }
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+
+            InputStream is = getAssets().open("counties.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
 
     }
 
